@@ -10,7 +10,7 @@ HireKit is a recruiting toolkit a company can set up in about five minutes. You 
 
 It also includes a full **marketing landing page** for the service.
 
-> **Live demo:** `https://YOUR-DEPLOYMENT.vercel.app`
+> **Live demo:** `https://hirekit-ashen.vercel.app`
 > **Test login:** `demo@hirekit.dev` / `hirekit-demo-2026` (or press “Explore the demo workspace” on the login page)
 > **Widget on a third-party site:** `/demo.html`  ·  **Careers page:** `/careers/northwind-labs`
 
