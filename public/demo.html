@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Northwind Labs · Careers (widget demo)</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Georgia, 'Times New Roman', serif; color: #1b2a22; background: #f6f3ea; }
+      .banner { background: #0e1116; color: #fff; font: 13px/1.4 system-ui, sans-serif; padding: 10px 16px; text-align: center; }
+      .banner a { color: #d4f25a; }
+      nav { display: flex; justify-content: space-between; align-items: center; max-width: 1040px; margin: 0 auto; padding: 22px 20px; }
+      .brand { font-weight: bold; font-size: 20px; letter-spacing: -0.02em; }
+      .brand span { color: #0f766e; }
+      nav ul { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; font: 15px system-ui, sans-serif; }
+      .hero { max-width: 1040px; margin: 0 auto; padding: 48px 20px 24px; }
+      .hero h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05; margin: 0 0 16px; font-weight: normal; }
+      .hero p { font: 18px/1.6 system-ui, sans-serif; max-width: 560px; color: #4a5a50; }
+      .careers { max-width: 1040px; margin: 0 auto; padding: 24px 20px 80px; }
+      .careers h2 { font-size: 28px; font-weight: normal; margin: 0 0 20px; }
+      .code { font: 12px/1.5 ui-monospace, monospace; background: #fff; border: 1px dashed #b9b29d; border-radius: 10px; padding: 10px 14px; margin-bottom: 24px; color: #5b5442; overflow-x: auto; }
+      footer { text-align: center; font: 13px system-ui, sans-serif; color: #7a7a6a; padding: 32px; }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      Demo: a fictional company website. The jobs section below is the HireKit widget, added with one script tag.
+      <a href="/">Back to HireKit</a>
+    </div>
+
+    <nav>
+      <div class="brand">Northwind<span>Labs</span></div>
+      <ul>
+        <li>Product</li>
+        <li>Customers</li>
+        <li><strong>Careers</strong></li>
+      </ul>
+    </nav>
+
+    <section class="hero">
+      <h1>Build the software that keeps Europe moving.</h1>
+      <p>We are a Berlin team making route planning and warehouse software for mid-sized logistics companies. Come build with us.</p>
+    </section>
+
+    <section class="careers" id="careers">
+      <h2>Open positions</h2>
+      <div class="code">&lt;script src="/widget.js" data-company="northwind-labs"&gt;&lt;/script&gt;</div>
+
+      <!-- ↓ This single line is the whole integration ↓ -->
+      <script src="/widget.js" data-company="northwind-labs"></script>
+    </section>
+
+    <footer>© Northwind Labs (fictional demo company)</footer>
+  </body>
+</html>
