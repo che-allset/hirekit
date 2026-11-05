@@ -15,6 +15,13 @@ function toolInput(res: Anthropic.Messages.Message, name: string): Record<string
       return block.input as Record<string, unknown>;
     }
   }
+  const text = res.content.map((b) => (b.type === 'text' ? b.text : '')).join('');
+  const match = text.match(/\{[\s\S]*\}/);
+  if (match) {
+    try {
+      return JSON.parse(match[0]) as Record<string, unknown>;
+    } catch {}
+  }
   throw new Error(`Claude did not return ${name}`);
 }
 
@@ -122,7 +129,7 @@ Portfolio: ${candidate.portfolioUrl || 'not provided'}
 ### Cover letter / message
 ${candidate.coverLetter?.trim() || 'not provided'}
 
-Assess this application against the requirements and record your assessment.`,
+Assess this application against the requirements and record your assessment by calling the record_assessment tool.`,
   });
 
   const res = await client().messages.create({
@@ -130,7 +137,7 @@ Assess this application against the requirements and record your assessment.`,
     max_tokens: 1500,
     system: SCREENING_SYSTEM,
     tools: [SCREENING_TOOL],
-    tool_choice: { type: 'tool', name: SCREENING_TOOL.name },
+    tool_choice: { type: 'auto' },
     messages: [{ role: 'user', content }],
   });
 
@@ -192,7 +199,7 @@ export async function draftJobPost(input: {
     system:
       'You write clear, inclusive, jargon-free job posts. Use gender-neutral language, avoid clichés like "rockstar" or "ninja", and avoid inflated requirements that discourage good applicants.',
     tools: [JOB_TOOL],
-    tool_choice: { type: 'tool', name: JOB_TOOL.name },
+    tool_choice: { type: 'auto' },
     messages: [
       {
         role: 'user',
@@ -201,7 +208,7 @@ Role: ${input.title}
 Location: ${input.location || 'not specified'} (${input.workMode || 'not specified'})
 Hiring manager notes: ${input.notes?.trim() || 'none'}
 
-Write the job post.`,
+Write the job post by calling the write_job_post tool.`,
       },
     ],
   });
