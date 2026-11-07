@@ -7,60 +7,109 @@
 }
 
 body {
-  @apply bg-paper text-ink antialiased;
+  @apply bg-steel text-graphite antialiased;
+  font-feature-settings: 'kern', 'liga';
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Condensed display cut is bold-only; never synthesise extra weight. */
+.font-display {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+:focus-visible {
+  outline: 3px solid #ffd12e;
+  outline-offset: 2px;
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
-      disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-[15px] font-bold transition-colors
+      disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-primary {
-    @apply btn bg-ink text-white hover:bg-ink-soft;
+    @apply btn bg-graphite text-white hover:bg-graphite-700;
+  }
+  .btn-signal {
+    @apply btn bg-signal text-graphite hover:bg-signal-600;
   }
   .btn-brand {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700;
+    @apply btn bg-forest text-white hover:bg-forest-600;
   }
   .btn-ghost {
-    @apply btn border border-black/10 bg-white text-ink hover:bg-paper-warm;
+    @apply btn border border-graphite/15 bg-white text-graphite hover:border-graphite/40;
   }
   .input {
-    @apply w-full rounded-xl border border-black/10 bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-mute/70
-      focus:border-brand-400 focus:outline-none focus:ring-4 focus:ring-brand-100;
+    @apply w-full rounded-[10px] border border-graphite/15 bg-white px-3.5 py-3 text-[15px] text-graphite placeholder:text-graphite-400
+      focus:border-graphite focus:outline-none focus:ring-4 focus:ring-signal/40;
   }
   .label {
-    @apply mb-1.5 block text-sm font-medium text-ink;
+    @apply mb-1.5 block text-sm font-bold text-graphite;
   }
   .card {
-    @apply rounded-2xl border border-black/[0.06] bg-white shadow-card;
+    @apply rounded-[14px] border border-graphite/10 bg-white shadow-card;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold;
   }
 }
 
+/* Photo treatment: every photo gets the same graphite duotone so
+   pictures from different sources read as one brand. */
+.duotone {
+  position: relative;
+  overflow: hidden;
+  background: #23272d;
+}
+.duotone img {
+  filter: grayscale(1) contrast(1.08) brightness(1.04);
+  mix-blend-mode: luminosity;
+  opacity: 0.92;
+}
+.duotone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 209, 46, 0) 55%, rgba(255, 209, 46, 0.16));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Kept from v1 for the careers page header. */
 .bg-grid {
-  background-image: linear-gradient(rgba(14, 17, 22, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(14, 17, 22, 0.05) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(35, 39, 45, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(35, 39, 45, 0.06) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
-@keyframes float-up {
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
-.animate-float-up {
-  animation: float-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+.animate-float-up,
+.hero-in {
+  animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-float-up {
+  .animate-float-up,
+  .hero-in {
     animation: none;
   }
 }

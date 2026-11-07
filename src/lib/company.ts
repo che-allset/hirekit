@@ -7,14 +7,24 @@ import { slugify } from './utils';
 import type { Company } from './types';
 
 /** Creates a company with a unique slug for the given owner. */
-export async function createCompanyFor(ownerId: string, name: string): Promise<Company> {
+export async function createCompanyFor(
+  ownerId: string,
+  name: string,
+  extra: { website?: string | null; brand_color?: string } = {},
+): Promise<Company> {
   const admin = createAdminClient();
   const base = slugify(name);
   for (let attempt = 0; attempt < 5; attempt++) {
     const slug = attempt === 0 ? base : `${base}-${Math.random().toString(36).slice(2, 6)}`;
     const { data, error } = await admin
       .from('companies')
-      .insert({ owner_id: ownerId, name, slug })
+      .insert({
+        owner_id: ownerId,
+        name,
+        slug,
+        ...(extra.website ? { website: extra.website } : {}),
+        ...(extra.brand_color ? { brand_color: extra.brand_color } : {}),
+      })
       .select('*')
       .single();
     if (!error && data) return data as Company;

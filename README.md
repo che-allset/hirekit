@@ -16,6 +16,21 @@ It also includes a full **marketing landing page** for the service.
 
 ---
 
+## Brand and front end (round 2)
+
+| | |
+|---|---|
+| **Logo** | A plug whose prongs and crossbar form an H, for plug-and-play hiring (`src/components/Logo.tsx`, `src/app/icon.svg`) |
+| **Colour** | Graphite `#23272D`, steel `#E7E9EC`, signal yellow `#FFD12E`, forest `#1D5C47` for positive states |
+| **Type** | One self-hosted grotesque family: condensed bold for headlines, regular and bold for text |
+| **Photos** | Real photos (Unsplash/Pexels licenses) with one graphite duotone treatment, so they read as one brand (`public/photos/CREDITS.md`) |
+| **Intro film** | 14-second silent loop in the hero (`public/video/intro.mp4`) |
+| **Tour / VSL** | 1:26 video sales letter with on-screen text (`public/video/hirekit-tour.mp4`), plus a voiceover script in `docs/vsl-voiceover.md` |
+| **Multi-step forms** | 4-step company sign-up (company, hiring needs, brand colour with live preview, account) and a 3-step candidate application |
+| **Pricing** | Monthly/yearly toggle, three plans and a full comparison table |
+
+The videos are rendered from code: each scene is an HTML frame drawn at 30 fps and encoded with ffmpeg.
+
 ## How I read the brief
 
 > *“Build a framework for companies who are trying to recruit people… a plug and play tool.”*

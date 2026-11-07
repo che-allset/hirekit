@@ -1,47 +1,57 @@
 import Link from 'next/link';
-import { Logo } from '@/components/Logo';
+import { Logo, LogoMark } from '@/components/Logo';
+import { Photo } from '@/components/landing/Photo';
+import { IntroFilm, SalesVideo } from '@/components/landing/Videos';
+import { Pricing } from '@/components/landing/Pricing';
 import { getOrigin } from '@/lib/company';
 
 const DEMO_SLUG = 'northwind-labs';
 
 export default function LandingPage() {
+  const origin = getOrigin();
   return (
     <div className="overflow-x-hidden">
       <Nav />
-      <Hero />
-      <Steps />
-      <Features />
-      <EmbedShowcase origin={getOrigin()} />
-      <AiSection />
-      <Trust />
-      <Pricing />
-      <Faq />
-      <FinalCta />
+      <main>
+        <Hero />
+        <PhotoBand />
+        <Problem />
+        <Steps />
+        <Screening />
+        <Widget origin={origin} />
+        <Fairness />
+        <section id="pricing" className="scroll-mt-20 py-24 md:py-32">
+          <div className="mx-auto max-w-6xl px-5">
+            <Pricing />
+          </div>
+        </section>
+        <Faq />
+        <FinalCta />
+      </main>
       <Footer />
     </div>
   );
 }
 
-/* ───────────────────────────── Nav ───────────────────────────── */
+/* ───────────────────────── Nav ───────────────────────── */
 
 function Nav() {
   return (
-    <header className="sticky top-0 z-40 border-b border-black/5 bg-paper/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+    <header className="sticky top-0 z-40 border-b border-graphite/10 bg-steel/90 backdrop-blur">
+      <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between px-5">
         <Logo />
-        <nav className="hidden items-center gap-8 text-sm text-ink-soft md:flex">
-          <a href="#how" className="hover:text-ink">How it works</a>
-          <a href="#features" className="hover:text-ink">Features</a>
-          <a href="#ai" className="hover:text-ink">AI screening</a>
-          <a href="#pricing" className="hover:text-ink">Pricing</a>
-          <a href="#faq" className="hover:text-ink">FAQ</a>
+        <nav aria-label="Main" className="hidden items-center gap-8 text-[15px] text-graphite-600 md:flex">
+          <a href="#how" className="hover:text-graphite">How it works</a>
+          <a href="#screening" className="hover:text-graphite">Screening</a>
+          <a href="#pricing" className="hover:text-graphite">Pricing</a>
+          <a href="#faq" className="hover:text-graphite">Questions</a>
         </nav>
         <div className="flex items-center gap-2">
-          <Link href="/login" className="hidden px-3 py-2 text-sm font-medium text-ink-soft hover:text-ink sm:block">
+          <Link href="/login" className="hidden px-3 py-2 text-[15px] font-bold text-graphite-600 hover:text-graphite sm:block">
             Log in
           </Link>
-          <Link href="/signup" className="btn-primary">
-            Start free
+          <Link href="/signup" className="btn-signal py-2.5">
+            Start hiring
           </Link>
         </div>
       </div>
@@ -49,435 +59,280 @@ function Nav() {
   );
 }
 
-/* ───────────────────────────── Hero ───────────────────────────── */
+/* ───────────────────────── Hero ───────────────────────── */
 
 function Hero() {
   return (
     <section className="relative">
-      <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_70%)]" />
-      <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-16 md:pt-24">
-        <div className="mx-auto max-w-3xl text-center animate-float-up">
-          <span className="chip border border-black/10 bg-white text-ink-soft">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Set up in under 5 minutes
-          </span>
-          <h1 className="mt-6 font-display text-5xl leading-[1.02] tracking-tight md:text-7xl">
-            Your hiring team,
-            <br />
-            <em className="text-brand-600">ready to plug in.</em>
+      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 md:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-14">
+        <div className="hero-in">
+          <h1 className="font-display text-[56px] leading-[0.92] sm:text-7xl lg:text-[84px]">
+            Hire your next people without an HR department.
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-ink-soft">
-            HireKit gives any company a branded careers page, a jobs widget for its website and AI that ranks every
-            applicant against your requirements. One line of code. No IT project.
+          <p className="mt-7 max-w-[34rem] text-lg leading-relaxed text-graphite-600 md:text-xl">
+            HireKit gives your company a careers page, a jobs widget for the website you already have, and an assistant
+            that reads every application against your requirements.
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/signup" className="btn-primary px-6 py-3 text-base">
-              Create your hiring page
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link href="/signup" className="btn-signal px-7 py-4 text-base">
+              Start hiring free
             </Link>
-            <Link href={`/careers/${DEMO_SLUG}`} className="btn-ghost px-6 py-3 text-base">
-              See a live careers page →
-            </Link>
+            <a href="#tour" className="btn-ghost px-7 py-4 text-base">
+              Watch the tour (1:26)
+            </a>
           </div>
-          <p className="mt-4 text-xs text-ink-mute">Free for your first 3 open roles · No credit card</p>
+          <p className="mt-4 text-sm text-graphite-400">Free for up to 3 open roles. No card needed.</p>
         </div>
 
-        <div className="relative mx-auto mt-16 max-w-5xl animate-float-up [animation-delay:150ms]">
-          <ProductMock />
+        <div className="hero-in relative [animation-delay:120ms]">
+          <div className="absolute -right-5 -top-5 hidden h-[78%] w-[82%] rounded-[18px] bg-signal sm:block" aria-hidden="true" />
+          <div className="relative rounded-[18px] bg-graphite p-2 shadow-lift">
+            <IntroFilm />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function ProductMock() {
-  const columns = [
-    {
-      title: 'Applied',
-      cards: [
-        { name: 'Amara O.', role: 'Senior Full-Stack Engineer', score: 91, tone: 'strong' },
-        { name: 'Jonas W.', role: 'Product Designer', score: 68, tone: 'possible' },
-      ],
-    },
-    {
-      title: 'Interview',
-      cards: [
-        { name: 'Lea M.', role: 'Customer Success Manager', score: 86, tone: 'strong' },
-        { name: 'Diego R.', role: 'Data Analyst', score: 74, tone: 'possible' },
-      ],
-    },
-    {
-      title: 'Offer',
-      cards: [{ name: 'Sofia K.', role: 'Senior Full-Stack Engineer', score: 94, tone: 'strong' }],
-    },
-  ];
-  const tone: Record<string, string> = {
-    strong: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-    possible: 'bg-amber-50 text-amber-700 ring-amber-200',
-  };
+/* ───────────────────────── Photos ───────────────────────── */
 
+function PhotoBand() {
   return (
-    <div className="rounded-[28px] border border-black/10 bg-white/70 p-2 shadow-lift backdrop-blur">
-      <div className="rounded-[22px] border border-black/5 bg-paper">
-        <div className="flex items-center gap-1.5 border-b border-black/5 px-4 py-3">
-          <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
-          <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
-          <span className="h-2.5 w-2.5 rounded-full bg-black/10" />
-          <span className="ml-3 truncate text-xs text-ink-mute">app.hirekit · Candidates</span>
-        </div>
-        <div className="grid gap-4 p-4 md:grid-cols-[1fr_1fr_1fr_1.15fr]">
-          {columns.map((col) => (
-            <div key={col.title} className="hidden md:block">
-              <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold uppercase tracking-wide text-ink-mute">
-                {col.title}
-                <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px]">{col.cards.length}</span>
-              </div>
-              <div className="space-y-2">
-                {col.cards.map((c) => (
-                  <div key={c.name} className="rounded-xl border border-black/5 bg-white p-3 text-left shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold">{c.name}</span>
-                      <span className={`chip ring-1 ${tone[c.tone]}`}>{c.score}</span>
-                    </div>
-                    <p className="mt-1 text-xs text-ink-mute">{c.role}</p>
-                  </div>
-                ))}
-              </div>
+    <section aria-label="Teams using HireKit" className="mx-auto max-w-6xl px-5">
+      <div className="grid gap-3 md:grid-cols-[1.5fr_1fr] md:grid-rows-2">
+        <div className="relative md:row-span-2">
+          <Photo src="/photos/team.jpg" alt="A small team planning work around a table" className="h-80 rounded-[14px] md:h-full" priority />
+          <div className="absolute bottom-5 left-5 max-w-[18rem] rounded-[12px] bg-white p-4 shadow-lift">
+            <div className="flex items-center justify-between gap-6">
+              <p className="font-bold">Lea Müller</p>
+              <span className="chip bg-forest text-white">86</span>
             </div>
-          ))}
-          <div className="rounded-2xl bg-ink p-4 text-left text-white">
-            <div className="flex items-center gap-2 text-xs text-white/60">
-              <SparkIcon className="h-4 w-4 text-lime-accent" /> AI screening · Amara O.
-            </div>
-            <div className="mt-3 flex items-end gap-2">
-              <span className="font-display text-5xl leading-none">91</span>
-              <span className="mb-1 text-sm text-lime-accent">Strong match</span>
-            </div>
-            <p className="mt-3 text-sm leading-relaxed text-white/80">
-              7 years building TypeScript products, led a Postgres migration at scale. Matches 5 of 5 must-haves.
-            </p>
-            <div className="mt-4 space-y-1.5 text-xs">
-              <p className="text-white/50">Ask in interview</p>
-              <p className="rounded-lg bg-white/10 px-3 py-2">How did you handle zero-downtime cut-over?</p>
-            </div>
+            <p className="mt-1 text-sm text-graphite-600">Customer Success Manager</p>
+            <p className="mt-3 text-sm leading-snug">Owned 35 accounts and cut churn by 18%. Meets all four requirements.</p>
           </div>
         </div>
+        <Photo src="/photos/interview.jpg" alt="Colleagues working through documents at a table" className="h-64 rounded-[14px]" sizes="(min-width: 768px) 40vw, 100vw" />
+        <Photo src="/photos/laughing.jpg" alt="A team smiling around a laptop" className="h-64 rounded-[14px]" sizes="(min-width: 768px) 40vw, 100vw" />
       </div>
-    </div>
+    </section>
   );
 }
 
-/* ───────────────────────────── Steps ───────────────────────────── */
+/* ───────────────────────── Problem + VSL ───────────────────────── */
+
+function Problem() {
+  return (
+    <section id="tour" className="mt-24 scroll-mt-20 bg-graphite py-24 text-white md:mt-32 md:py-32">
+      <div className="mx-auto grid max-w-6xl gap-14 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div>
+          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">Good candidates don't wait in your inbox.</h2>
+          <div className="mt-8 space-y-5 text-lg leading-relaxed text-white/75">
+            <p>
+              Most small companies hire from a shared email address. Applications pile up, the owner reads them at night,
+              and the best people have accepted another offer by Friday.
+            </p>
+            <p>
+              HireKit puts every application in one place, reads it the moment it arrives and tells you who to call first.
+            </p>
+          </div>
+        </div>
+        <SalesVideo />
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── Steps ───────────────────────── */
 
 function Steps() {
   const steps = [
-    {
-      n: '01',
-      title: 'Create your hiring page',
-      body: 'Sign up, add your logo colour and post a role. AI drafts the job ad from a few notes if you want.',
-    },
-    {
-      n: '02',
-      title: 'Paste one line on your site',
-      body: 'Your open roles and the apply form appear on your own website, styled to fit and always up to date.',
-    },
-    {
-      n: '03',
-      title: 'Review a ranked shortlist',
-      body: 'Every applicant arrives scored against your must-haves, with strengths, gaps and interview questions.',
-    },
+    { title: 'Post a role', body: 'Add a title and a few notes. HireKit drafts the job ad and the must-have list for you to edit.' },
+    { title: 'Plug it into your site', body: 'Paste one line where your jobs should appear, or share your careers page link.' },
+    { title: 'Read a ranked shortlist', body: 'Every application arrives scored against your must-haves, with what to ask in the interview.' },
+    { title: 'Hire', body: 'Move people from Applied to Hired on one board. Your whole team sees the same picture.' },
   ];
   return (
-    <section id="how" className="border-y border-black/5 bg-white py-24">
+    <section id="how" className="scroll-mt-20 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading eyebrow="How it works" title="From zero to hiring in an afternoon" />
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {steps.map((s) => (
-            <div key={s.n} className="rounded-2xl border border-black/[0.06] bg-paper p-7">
-              <span className="font-display text-4xl text-brand-600">{s.n}</span>
-              <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-              <p className="mt-2 text-ink-soft">{s.body}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── Features ───────────────────────────── */
-
-function Features() {
-  const features = [
-    { icon: '◧', title: 'Branded careers page', body: 'A fast, mobile-ready jobs page at your own link, in your colours.' },
-    { icon: '⌘', title: 'One-line embed', body: 'Drop a script tag into WordPress, Webflow, Wix or custom code. Done.' },
-    { icon: '✦', title: 'AI candidate screening', body: 'Claude reads CVs and cover letters and scores fit against your requirements.' },
-    { icon: '▤', title: 'Visual pipeline', body: 'Move people from Applied to Hired on a clear board your whole team gets.' },
-    { icon: '✎', title: 'AI job writer', body: 'Turn three bullet points into an inclusive, well-structured job post.' },
-    { icon: '◎', title: 'Interview prep built in', body: 'Each candidate comes with targeted questions that resolve the open points.' },
-  ];
-  return (
-    <section id="features" className="py-24">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading
-          eyebrow="Everything in the kit"
-          title="The hiring tools big companies have, sized for yours"
-          sub="No ATS migration, no consultants. Each piece works on its own and together."
-        />
-        <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-black/[0.06] bg-black/[0.06] sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <div key={f.title} className="bg-white p-8">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-lg text-brand-600">
-                {f.icon}
+        <h2 className="max-w-2xl font-display text-5xl leading-[0.95] md:text-6xl">From open role to signed offer in four steps.</h2>
+        <div className="relative mt-16">
+          <div className="absolute left-0 right-0 top-[22px] hidden h-[3px] bg-graphite md:block" aria-hidden="true" />
+          <ol className="relative grid gap-10 md:grid-cols-4 md:gap-6">
+          {steps.map((s, i) => (
+            <li key={s.title} className="relative">
+              <span className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-signal font-display text-xl ring-[6px] ring-steel">
+                {i + 1}
               </span>
-              <h3 className="mt-5 font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{f.body}</p>
-            </div>
+              <h3 className="mt-6 text-xl font-bold">{s.title}</h3>
+              <p className="mt-2 leading-relaxed text-graphite-600">{s.body}</p>
+            </li>
           ))}
+          </ol>
         </div>
       </div>
     </section>
   );
 }
 
-/* ───────────────────────────── Embed showcase ───────────────────────────── */
+/* ───────────────────────── Screening ───────────────────────── */
 
-function EmbedShowcase({ origin }: { origin: string }) {
+function Screening() {
   return (
-    <section className="bg-ink py-24 text-white">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 md:grid-cols-2">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-lime-accent">Plug and play</p>
-          <h2 className="mt-4 font-display text-4xl leading-tight md:text-5xl">
-            One line of code.
-            <br />
-            Your whole hiring flow.
-          </h2>
-          <p className="mt-5 max-w-md text-white/70">
-            Paste the snippet where you want your jobs to appear. Candidates browse roles and apply without leaving your
-            site, and every application lands in your HireKit pipeline already screened.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="/demo.html" className="btn bg-white text-ink hover:bg-white/90">
-              See it on a demo website →
-            </a>
-          </div>
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-2">
-          <div className="flex items-center justify-between rounded-t-xl px-4 py-2 text-xs text-white/50">
-            <span>index.html</span>
-            <span>Works with any website</span>
-          </div>
-          <pre className="overflow-x-auto rounded-xl bg-black/40 p-5 text-[13px] leading-relaxed">
-            <code>
-              <span className="text-white/40">{'<!-- Your careers section -->'}</span>
-              {'\n'}
-              <span className="text-sky-300">{'<script'}</span>
-              {'\n  '}
-              <span className="text-lime-accent">src</span>=<span className="text-amber-200">{`"${origin}/widget.js"`}</span>
-              {'\n  '}
-              <span className="text-lime-accent">data-company</span>=<span className="text-amber-200">{'"your-company"'}</span>
-              <span className="text-sky-300">{'>'}</span>
-              <span className="text-sky-300">{'</script>'}</span>
-            </code>
-          </pre>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── AI ───────────────────────────── */
-
-function AiSection() {
-  return (
-    <section id="ai" className="py-24">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 md:grid-cols-2">
-        <div className="order-2 md:order-1">
-          <div className="card p-6">
-            <div className="flex items-start justify-between">
+    <section id="screening" className="scroll-mt-20 bg-white py-24 md:py-32">
+      <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-2">
+        <div className="relative">
+          <Photo src="/photos/resume.jpg" alt="A team going through notes and laptops at a table" className="h-[420px] rounded-[14px] md:h-[520px]" />
+          <div className="absolute -bottom-8 right-4 w-[min(92%,24rem)] rounded-[14px] border border-graphite/10 bg-white p-6 shadow-lift sm:-right-8">
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-ink-mute">Customer Success Manager</p>
-                <p className="mt-1 text-lg font-semibold">Lea M.</p>
+                <p className="text-sm text-graphite-600">Senior Full-Stack Engineer</p>
+                <p className="mt-0.5 text-lg font-bold">Amara Okafor</p>
               </div>
               <div className="text-right">
-                <p className="font-display text-5xl leading-none text-emerald-600">86</p>
-                <p className="text-xs font-medium text-emerald-700">Strong match</p>
+                <p className="font-display text-5xl leading-none text-forest">92</p>
+                <p className="text-xs font-bold text-forest">Strong match</p>
               </div>
             </div>
-            <div className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
-              <div>
-                <p className="font-semibold text-emerald-700">Strengths</p>
-                <ul className="mt-2 space-y-1.5 text-ink-soft">
-                  <li>• 4 years owning B2B SaaS accounts</li>
-                  <li>• Cut churn 18% with onboarding playbooks</li>
-                  <li>• Fluent German and English</li>
-                </ul>
-              </div>
-              <div>
-                <p className="font-semibold text-amber-700">To explore</p>
-                <ul className="mt-2 space-y-1.5 text-ink-soft">
-                  <li>• No logistics industry exposure</li>
-                  <li>• Salesforce level unclear</li>
-                </ul>
-              </div>
-            </div>
+            <ul className="mt-5 space-y-2 text-sm">
+              <li className="flex gap-2"><Dot className="bg-forest" />Led a zero-downtime Postgres migration</li>
+              <li className="flex gap-2"><Dot className="bg-forest" />7 years of TypeScript, front and back</li>
+              <li className="flex gap-2"><Dot className="bg-signal-600" />No logistics experience mentioned</li>
+            </ul>
+            <p className="mt-5 rounded-[10px] bg-steel-50 p-3 text-sm">
+              <span className="font-bold">Ask:</span> How did you plan the cut-over without downtime?
+            </p>
           </div>
         </div>
-        <div className="order-1 md:order-2">
-          <SectionHeading
-            align="left"
-            eyebrow="AI screening"
-            title="Read 200 applications in the time it takes to read one"
-            sub="You set the must-haves. HireKit reads each CV and cover letter, scores fit from 0 to 100 and explains why, so your team spends time on the right conversations."
-          />
-          <ul className="mt-8 space-y-3 text-ink-soft">
-            <Check>Scores each person against your own requirements</Check>
-            <Check>Names, age, gender and nationality are ignored by design</Check>
-            <Check>Suggests interview questions for every open point</Check>
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── Trust ───────────────────────────── */
-
-function Trust() {
-  const items = [
-    { title: 'Humans decide', body: 'AI suggests, your team decides. Nobody is rejected automatically.' },
-    { title: 'GDPR-minded', body: 'Explicit applicant consent, private CV storage and short-lived download links.' },
-    { title: 'Your data stays yours', body: 'Row-level security isolates every company. Export or delete anytime.' },
-  ];
-  return (
-    <section className="border-y border-black/5 bg-paper-warm py-20">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading eyebrow="Responsible by default" title="Built for European hiring rules" />
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {items.map((i) => (
-            <div key={i.title} className="rounded-2xl bg-white p-7 shadow-card">
-              <h3 className="font-semibold">{i.title}</h3>
-              <p className="mt-2 text-sm text-ink-soft">{i.body}</p>
+        <div className="lg:pl-6">
+          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">Read 200 applications in the time it takes to read one.</h2>
+          <p className="mt-6 text-lg leading-relaxed text-graphite-600">
+            You write the must-haves for each role. HireKit reads every CV and cover letter against them, scores the fit
+            from 0 to 100 and explains its reasoning in plain language.
+          </p>
+          <dl className="mt-10 grid gap-6 sm:grid-cols-2">
+            <div>
+              <dt className="font-bold">Reads the actual CV</dt>
+              <dd className="mt-1 text-graphite-600">PDF CVs are read in full, not just keyword-matched.</dd>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── Pricing ───────────────────────────── */
-
-function Pricing() {
-  const plans = [
-    {
-      name: 'Starter',
-      price: '€0',
-      period: 'forever',
-      body: 'For your first hires.',
-      features: ['3 open roles', 'Careers page + widget', '50 AI screenings / month', 'Pipeline board'],
-      cta: 'Start free',
-      highlight: false,
-    },
-    {
-      name: 'Growth',
-      price: '€79',
-      period: 'per month',
-      body: 'For teams hiring every month.',
-      features: ['Unlimited roles', 'Unlimited AI screenings', 'AI job writer', 'Custom brand colours', 'Priority support'],
-      cta: 'Start 14-day trial',
-      highlight: true,
-    },
-    {
-      name: 'Agency',
-      price: 'Custom',
-      period: '',
-      body: 'For recruiters running many clients.',
-      features: ['Multiple client workspaces', 'White-label careers pages', 'API access', 'Dedicated onboarding'],
-      cta: 'Talk to us',
-      highlight: false,
-    },
-  ];
-  return (
-    <section id="pricing" className="py-24">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeading eyebrow="Pricing" title="Simple plans that grow with your team" />
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {plans.map((p) => (
-            <div
-              key={p.name}
-              className={
-                p.highlight
-                  ? 'relative rounded-3xl bg-ink p-8 text-white shadow-lift'
-                  : 'rounded-3xl border border-black/[0.06] bg-white p-8'
-              }
-            >
-              {p.highlight && (
-                <span className="chip absolute -top-3 left-8 bg-lime-accent text-ink">Most popular</span>
-              )}
-              <h3 className="font-semibold">{p.name}</h3>
-              <p className={p.highlight ? 'mt-1 text-sm text-white/60' : 'mt-1 text-sm text-ink-mute'}>{p.body}</p>
-              <p className="mt-6">
-                <span className="font-display text-5xl">{p.price}</span>{' '}
-                <span className={p.highlight ? 'text-sm text-white/60' : 'text-sm text-ink-mute'}>{p.period}</span>
-              </p>
-              <ul className="mt-6 space-y-2.5 text-sm">
-                {p.features.map((f) => (
-                  <li key={f} className="flex gap-2">
-                    <span className={p.highlight ? 'text-lime-accent' : 'text-brand-600'}>✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/signup"
-                className={p.highlight ? 'btn mt-8 w-full bg-white text-ink hover:bg-white/90' : 'btn-ghost mt-8 w-full'}
-              >
-                {p.cta}
-              </Link>
+            <div>
+              <dt className="font-bold">Shows its working</dt>
+              <dd className="mt-1 text-graphite-600">Strengths, gaps and the questions worth asking.</dd>
             </div>
-          ))}
+            <div>
+              <dt className="font-bold">Flags thin applications</dt>
+              <dd className="mt-1 text-graphite-600">Unverified claims score low until you have evidence.</dd>
+            </div>
+            <div>
+              <dt className="font-bold">Writes your job ads</dt>
+              <dd className="mt-1 text-graphite-600">Three notes in, an inclusive job post out.</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </section>
   );
 }
 
-/* ───────────────────────────── FAQ ───────────────────────────── */
+function Dot({ className }: { className: string }) {
+  return <span className={`mt-1.5 h-2 w-2 flex-none rounded-full ${className}`} aria-hidden="true" />;
+}
+
+/* ───────────────────────── Widget ───────────────────────── */
+
+function Widget({ origin }: { origin: string }) {
+  return (
+    <section className="py-24 md:py-32">
+      <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-[1fr_1.1fr]">
+        <div>
+          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">One line on your website. Your whole hiring flow behind it.</h2>
+          <p className="mt-6 text-lg leading-relaxed text-graphite-600">
+            Paste the snippet into WordPress, Wix, Webflow or your own code. Your open roles and the application form
+            appear on your site, in your colours, and stay up to date on their own.
+          </p>
+          <a href="/demo.html" className="btn-primary mt-8">
+            See it on a sample company site
+          </a>
+        </div>
+        <div className="rounded-[14px] bg-graphite p-6 text-white shadow-lift md:p-8">
+          <div className="flex items-center gap-3 border-b border-white/10 pb-4 text-sm text-white/60">
+            <LogoMark className="h-6 w-6" />
+            Paste this where your jobs should appear
+          </div>
+          <pre className="mt-5 overflow-x-auto whitespace-pre-wrap break-all font-mono text-[14px] leading-relaxed">
+            <span className="text-white/50">&lt;script</span>
+            {'\n  '}src=<span className="text-signal">&quot;{origin}/widget.js&quot;</span>
+            {'\n  '}data-company=<span className="text-signal">&quot;your-company&quot;</span>
+            <span className="text-white/50">&gt;&lt;/script&gt;</span>
+          </pre>
+          <div className="mt-6 grid grid-cols-3 gap-3 text-sm">
+            {['WordPress', 'Webflow', 'Wix'].map((p) => (
+              <div key={p} className="rounded-[10px] bg-white/5 px-3 py-2.5 text-center text-white/80">
+                {p}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── Fairness ───────────────────────── */
+
+function Fairness() {
+  return (
+    <section className="bg-signal py-20 md:py-24">
+      <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[1fr_1.4fr]">
+        <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">The assistant advises. People decide.</h2>
+        <div className="grid gap-8 sm:grid-cols-3">
+          <div>
+            <h3 className="font-bold">Nobody is rejected by software</h3>
+            <p className="mt-2 leading-relaxed">Every stage change is made by someone on your team. Recruiting AI is high-risk under the EU AI Act, and HireKit is built that way from day one.</p>
+          </div>
+          <div>
+            <h3 className="font-bold">Personal details are ignored</h3>
+            <p className="mt-2 leading-relaxed">Name, age, gender and nationality play no part in the score. Only the requirements you wrote do.</p>
+          </div>
+          <div>
+            <h3 className="font-bold">Data stays private</h3>
+            <p className="mt-2 leading-relaxed">Applicants give consent, CVs sit in private storage and links to them expire after an hour.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────── FAQ ───────────────────────── */
 
 function Faq() {
   const faqs = [
-    {
-      q: 'Do I need a developer to install it?',
-      a: 'No. If you can edit a page on your website, you can paste the snippet. You can also just share your HireKit careers link.',
-    },
-    {
-      q: 'Will the AI reject candidates automatically?',
-      a: 'Never. It scores and explains fit so your team can prioritise. Every decision to move or reject a candidate is made by a person.',
-    },
-    {
-      q: 'How does the AI decide the score?',
-      a: 'It compares the CV and cover letter with the must-have requirements you write for each role, and shows its reasoning as strengths, gaps and questions.',
-    },
-    {
-      q: 'Where is applicant data stored?',
-      a: 'In an isolated Postgres database with row-level security. CVs live in private storage and are only shared through links that expire after an hour.',
-    },
-    {
-      q: 'Can I use it for several companies?',
-      a: 'Yes. The Agency plan gives every client their own workspace, careers page and widget.',
-    },
+    { q: 'Do I need a developer to set it up?', a: 'No. If you can edit a page on your website, you can paste the snippet. If you can’t, share your HireKit careers page link instead.' },
+    { q: 'How is the score worked out?', a: 'HireKit compares each CV and cover letter with the must-haves you wrote for that role, then shows strengths, gaps and suggested questions so you can check its reasoning.' },
+    { q: 'What do candidates see?', a: 'Your careers page or your own website, in your colours. A three-step application that works on a phone, then a confirmation. They never need an account.' },
+    { q: 'Where is applicant data stored?', a: 'In a Postgres database with row-level security, so each company only ever sees its own applicants. CVs are private files shared through links that expire after an hour.' },
+    { q: 'Can I cancel?', a: 'Yes, from your dashboard. Your careers page goes offline at the end of the billing period and you can export your candidates first.' },
   ];
   return (
-    <section id="faq" className="border-t border-black/5 bg-white py-24">
-      <div className="mx-auto max-w-3xl px-5">
-        <SectionHeading eyebrow="FAQ" title="Questions, answered" />
-        <div className="mt-12 divide-y divide-black/[0.06] rounded-2xl border border-black/[0.06]">
+    <section id="faq" className="scroll-mt-20 bg-white py-24 md:py-32">
+      <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[0.8fr_1.2fr]">
+        <div>
+          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">Questions before you start.</h2>
+          <div className="relative mt-10 hidden h-72 lg:block">
+            <Photo src="/photos/coffee.jpg" alt="Colleagues talking over coffee and laptops" className="h-full rounded-[14px]" sizes="30vw" />
+          </div>
+        </div>
+        <div className="divide-y divide-graphite/10 border-y border-graphite/10">
           {faqs.map((f) => (
-            <details key={f.q} className="group p-6 [&_summary::-webkit-details-marker]:hidden">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium">
+            <details key={f.q} className="group py-6 [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-bold">
                 {f.q}
-                <span className="text-xl text-ink-mute transition group-open:rotate-45">+</span>
+                <span className="text-2xl leading-none text-graphite-400 transition-transform group-open:rotate-45" aria-hidden="true">
+                  +
+                </span>
               </summary>
-              <p className="mt-3 text-ink-soft">{f.a}</p>
+              <p className="mt-3 max-w-2xl leading-relaxed text-graphite-600">{f.a}</p>
             </details>
           ))}
         </div>
@@ -486,23 +341,28 @@ function Faq() {
   );
 }
 
-/* ───────────────────────────── CTA + Footer ───────────────────────────── */
+/* ───────────────────────── Final CTA + Footer ───────────────────────── */
 
 function FinalCta() {
   return (
-    <section className="py-24">
+    <section className="py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5">
-        <div className="relative overflow-hidden rounded-[32px] bg-brand-600 px-8 py-16 text-center text-white md:py-20">
-          <div className="bg-grid absolute inset-0 opacity-20" />
-          <div className="relative">
-            <h2 className="font-display text-4xl md:text-6xl">Your next great hire is applying somewhere.</h2>
-            <p className="mx-auto mt-4 max-w-lg text-white/80">
-              Make it easy for them to find you. Set up HireKit in five minutes, free.
+        <div className="grid overflow-hidden rounded-[18px] bg-graphite text-white lg:grid-cols-2">
+          <div className="p-10 md:p-14">
+            <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">Post your first role today.</h2>
+            <p className="mt-5 max-w-md text-lg text-white/70">
+              Your careers page is live the moment you sign up, and the first application gets screened in seconds.
             </p>
-            <Link href="/signup" className="btn mt-8 bg-white px-6 py-3 text-base text-ink hover:bg-white/90">
-              Create your hiring page
-            </Link>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link href="/signup" className="btn-signal px-7 py-4 text-base">
+                Start hiring free
+              </Link>
+              <Link href={`/careers/${DEMO_SLUG}`} className="btn border border-white/20 px-7 py-4 text-base text-white hover:border-white/50">
+                See a live careers page
+              </Link>
+            </div>
           </div>
+          <Photo src="/photos/meeting.jpg" alt="A team meeting around a table with laptops" className="min-h-[280px]" sizes="(min-width: 1024px) 50vw, 100vw" />
         </div>
       </div>
     </section>
@@ -511,58 +371,20 @@ function FinalCta() {
 
 function Footer() {
   return (
-    <footer className="border-t border-black/5 py-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 text-sm text-ink-mute md:flex-row">
-        <Logo />
-        <div className="flex gap-6">
-          <a href="#features" className="hover:text-ink">Features</a>
-          <a href="#pricing" className="hover:text-ink">Pricing</a>
-          <Link href={`/careers/${DEMO_SLUG}`} className="hover:text-ink">Live demo</Link>
-          <Link href="/login" className="hover:text-ink">Log in</Link>
+    <footer className="border-t border-graphite/10 py-12">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 md:flex-row md:items-center md:justify-between">
+        <div>
+          <Logo />
+          <p className="mt-3 max-w-xs text-sm text-graphite-600">Hiring for companies without an HR department.</p>
         </div>
-        <p>© {new Date().getFullYear()} HireKit</p>
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-graphite-600">
+          <a href="#how" className="hover:text-graphite">How it works</a>
+          <a href="#pricing" className="hover:text-graphite">Pricing</a>
+          <Link href={`/careers/${DEMO_SLUG}`} className="hover:text-graphite">Sample careers page</Link>
+          <Link href="/login" className="hover:text-graphite">Log in</Link>
+        </nav>
+        <p className="text-sm text-graphite-400">© {new Date().getFullYear()} HireKit</p>
       </div>
     </footer>
-  );
-}
-
-/* ───────────────────────────── Bits ───────────────────────────── */
-
-function SectionHeading({
-  eyebrow,
-  title,
-  sub,
-  align = 'center',
-}: {
-  eyebrow: string;
-  title: string;
-  sub?: string;
-  align?: 'center' | 'left';
-}) {
-  return (
-    <div className={align === 'center' ? 'mx-auto max-w-2xl text-center' : 'max-w-xl'}>
-      <p className="text-sm font-semibold uppercase tracking-widest text-brand-600">{eyebrow}</p>
-      <h2 className="mt-3 font-display text-4xl leading-tight tracking-tight md:text-5xl">{title}</h2>
-      {sub && <p className="mt-4 text-lg text-ink-soft">{sub}</p>}
-    </div>
-  );
-}
-
-function Check({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex items-start gap-3">
-      <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-100 text-xs text-emerald-700">
-        ✓
-      </span>
-      {children}
-    </li>
-  );
-}
-
-function SparkIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9L12 2zm7 12l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z" />
-    </svg>
   );
 }

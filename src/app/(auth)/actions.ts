@@ -4,9 +4,15 @@ import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { createCompanyFor } from '@/lib/company';
-import { isEmail } from '@/lib/utils';
+import { isEmail, isHexColor, safeUrl } from '@/lib/utils';
 
-export async function signUp(input: { companyName: string; email: string; password: string }) {
+export async function signUp(input: {
+  companyName: string;
+  email: string;
+  password: string;
+  website?: string;
+  brandColor?: string;
+}) {
   const companyName = input.companyName.trim().slice(0, 80);
   const email = input.email.trim().toLowerCase();
   const password = input.password;
@@ -25,7 +31,10 @@ export async function signUp(input: { companyName: string; email: string; passwo
   }
 
   try {
-    await createCompanyFor(data.user.id, companyName);
+    await createCompanyFor(data.user.id, companyName, {
+      website: safeUrl(input.website),
+      brand_color: input.brandColor && isHexColor(input.brandColor) ? input.brandColor : undefined,
+    });
   } catch {
     await admin.auth.admin.deleteUser(data.user.id);
     return { error: 'We could not set up your company. Please try again.' };
