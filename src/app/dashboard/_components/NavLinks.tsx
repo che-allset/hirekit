@@ -4,15 +4,16 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-const LINKS = [
-  { href: '/dashboard', label: 'Overview', icon: '◐' },
-  { href: '/dashboard/candidates', label: 'Candidates', icon: '◎' },
-  { href: '/dashboard/ask', label: 'Ask your pipeline', icon: '✦' },
-  { href: '/dashboard/jobs', label: 'Jobs', icon: '▤' },
-  { href: '/dashboard/settings', label: 'Careers & widget', icon: '⌘' },
-];
+type Labels = { overview: string; candidates: string; ask: string; jobs: string; careers: string };
 
-export function NavLinks({ horizontal = false }: { horizontal?: boolean }) {
+export function NavLinks({ horizontal = false, labels }: { horizontal?: boolean; labels: Labels }) {
+  const LINKS = [
+    { href: '/dashboard', label: labels.overview, icon: '◐' },
+    { href: '/dashboard/candidates', label: labels.candidates, icon: '◎' },
+    { href: '/dashboard/ask', label: labels.ask, icon: '✦' },
+    { href: '/dashboard/jobs', label: labels.jobs, icon: '▤' },
+    { href: '/dashboard/settings', label: labels.careers, icon: '⌘' },
+  ];
   const pathname = usePathname();
   return (
     <nav className={cn(horizontal ? 'flex gap-1' : 'space-y-1')}>

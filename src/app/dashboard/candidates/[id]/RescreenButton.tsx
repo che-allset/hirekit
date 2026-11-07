@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { rescreen } from '../../actions';
 
-export function RescreenButton({ id, label }: { id: string; label: string }) {
+export function RescreenButton({ id, label, runningLabel }: { id: string; label: string; runningLabel: string }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export function RescreenButton({ id, label }: { id: string; label: string }) {
         }}
         className="btn-ghost px-3 py-1.5 text-xs"
       >
-        {pending ? 'Screening…' : label}
+        {pending ? runningLabel : label}
       </button>
     </div>
   );

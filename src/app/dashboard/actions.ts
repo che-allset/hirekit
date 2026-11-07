@@ -7,6 +7,8 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { askPipeline, draftJobPost, screenCandidate, type PipelineAnswer } from '@/lib/ai';
 import { EMPLOYMENT_TYPES, STAGES, WORK_MODES, type Job, type Stage } from '@/lib/types';
 import { isHexColor, safeUrl } from '@/lib/utils';
+import { AI_LANGUAGE, isLocale } from '@/i18n';
+import { getLocale } from '@/i18n/server';
 
 type Result = { error?: string; ok?: boolean };
 
@@ -76,6 +78,7 @@ export async function generateJobDraft(input: {
   location: string;
   workMode: string;
   notes: string;
+  locale?: string;
 }): Promise<{ error?: string; description?: string; requirements?: string }> {
   const { company } = await requireCompany();
   if (input.title.trim().length < 2) return { error: 'Add a job title first.' };
@@ -86,6 +89,7 @@ export async function generateJobDraft(input: {
       location: input.location.slice(0, 80),
       workMode: input.workMode,
       notes: input.notes.slice(0, 1500),
+      language: AI_LANGUAGE[isLocale(input.locale) ? input.locale : getLocale()],
     });
     return draft;
   } catch (err) {
@@ -147,6 +151,7 @@ export async function rescreen(applicationId: string): Promise<Result> {
       portfolioUrl: app.portfolio_url,
       coverLetter: app.cover_letter,
       cvPdfBase64,
+      language: AI_LANGUAGE[getLocale()],
     });
     await admin
       .from('applications')
@@ -232,7 +237,7 @@ export async function askAboutCandidates(
   }));
 
   try {
-    const answer = await askPipeline(q, people);
+    const answer = await askPipeline(q, people, AI_LANGUAGE[getLocale()]);
     const names: Record<string, string> = {};
     for (const p of people) names[p.id] = p.name;
     return { result: { ...answer, names } };

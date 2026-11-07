@@ -1,5 +1,6 @@
 import type { Verdict } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { getDict } from '@/i18n/server';
 
 export function PageHeader({
   title,
@@ -42,14 +43,15 @@ export function ScoreBadge({
   status: 'pending' | 'done' | 'failed';
   showLabel?: boolean;
 }) {
-  if (status === 'pending') return <span className="chip bg-black/5 text-ink-mute ring-1 ring-black/5">Screening…</span>;
+  const { t } = getDict();
+  if (status === 'pending') return <span className="chip bg-black/5 text-ink-mute ring-1 ring-black/5">{t.dash.screeningPending}</span>;
   if (status === 'failed' || score === null || !verdict)
-    return <span className="chip bg-black/5 text-ink-mute ring-1 ring-black/5">Not scored</span>;
+    return <span className="chip bg-black/5 text-ink-mute ring-1 ring-black/5">{t.dash.notScored}</span>;
   const s = VERDICT_STYLE[verdict];
   return (
     <span className={cn('chip ring-1', s.cls)}>
       <span className="font-semibold tabular-nums">{score}</span>
-      {showLabel && <span>· {s.label}</span>}
+      {showLabel && <span>· {t.dash.verdicts[verdict]}</span>}
     </span>
   );
 }

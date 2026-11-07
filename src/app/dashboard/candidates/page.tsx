@@ -5,6 +5,8 @@ import { cn, initials, timeAgo } from '@/lib/utils';
 import { EmptyState, PageHeader, ScoreBadge } from '../_components/ui';
 import { StageSelect } from '../_components/StageSelect';
 import { Filters } from './Filters';
+import { getDict } from '@/i18n/server';
+import type { Dict, Locale } from '@/i18n';
 
 type AppRow = Application & { jobs: { title: string } | null };
 
@@ -13,6 +15,8 @@ type Search = { view?: string; job?: string; verdict?: string; stage?: string; q
 export default async function CandidatesPage({ searchParams }: { searchParams: Search }) {
   const { supabase, company } = await requireCompany();
   const view = searchParams.view === 'list' ? 'list' : 'board';
+  const { locale, t } = getDict();
+  const c = t.dash.candidates;
 
   let query = supabase
     .from('applications')
@@ -41,34 +45,34 @@ export default async function CandidatesPage({ searchParams }: { searchParams: S
   return (
     <div className="mx-auto max-w-[1400px]">
       <PageHeader
-        title="Candidates"
-        sub="Ranked by AI fit. You make every decision."
-        action={<ViewToggle view={view} searchParams={searchParams} />}
+        title={c.title}
+        sub={c.sub}
+        action={<ViewToggle view={view} searchParams={searchParams} labels={{ board: c.board, list: c.list }} />}
       />
-      <Filters jobs={jobs} />
+      <Filters jobs={jobs} t={t.dash} />
 
       {apps.length === 0 ? (
         <div className="mt-6">
           <EmptyState
-            title="No candidates match"
-            body="When people apply through your careers page or website widget, they appear here already screened."
+            title={c.emptyTitle}
+            body={c.emptyBody}
             action={
               <a href={`/careers/${company.slug}`} target="_blank" rel="noreferrer" className="btn-ghost">
-                Open careers page ↗
+                {c.openCareers}
               </a>
             }
           />
         </div>
       ) : view === 'board' ? (
-        <Board apps={apps} />
+        <Board apps={apps} t={t} locale={locale} />
       ) : (
-        <List apps={apps} />
+        <List apps={apps} t={t} locale={locale} />
       )}
     </div>
   );
 }
 
-function ViewToggle({ view, searchParams }: { view: 'board' | 'list'; searchParams: Search }) {
+function ViewToggle({ view, searchParams, labels }: { view: 'board' | 'list'; searchParams: Search; labels: Record<'board' | 'list', string> }) {
   const href = (v: string) => {
     const p = new URLSearchParams();
     Object.entries({ ...searchParams, view: v }).forEach(([k, val]) => {
@@ -83,18 +87,18 @@ function ViewToggle({ view, searchParams }: { view: 'board' | 'list'; searchPara
           key={v}
           href={href(v)}
           className={cn(
-            'rounded-lg px-3 py-1.5 font-medium capitalize',
+            'rounded-lg px-3 py-1.5 font-medium',
             view === v ? 'bg-ink text-white' : 'text-ink-soft hover:text-ink',
           )}
         >
-          {v}
+          {labels[v]}
         </Link>
       ))}
     </div>
   );
 }
 
-function Board({ apps }: { apps: AppRow[] }) {
+function Board({ apps, t, locale }: { apps: AppRow[]; t: Dict; locale: Locale }) {
   return (
     <div className="-mx-4 mt-6 overflow-x-auto px-4 pb-4 md:-mx-10 md:px-10">
       <div className="grid min-w-[1100px] grid-cols-6 gap-3">
@@ -103,7 +107,7 @@ function Board({ apps }: { apps: AppRow[] }) {
           return (
             <div key={s.key} className="rounded-2xl bg-paper-warm/70 p-2">
               <div className="flex items-center justify-between px-2 py-2 text-xs font-semibold uppercase tracking-wide text-ink-mute">
-                {s.label}
+                {t.dash.stages[s.key]}
                 <span className="rounded-full bg-white px-2 py-0.5 tabular-nums">{items.length}</span>
               </div>
               <div className="space-y-2">
@@ -118,12 +122,12 @@ function Board({ apps }: { apps: AppRow[] }) {
                       {a.ai_summary && <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ink-soft">{a.ai_summary}</p>}
                     </Link>
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-[11px] text-ink-mute">{timeAgo(a.created_at)}</span>
-                      <StageSelect id={a.id} stage={a.stage} compact />
+                      <span className="text-[11px] text-ink-mute">{timeAgo(a.created_at, locale)}</span>
+                      <StageSelect id={a.id} stage={a.stage} compact labels={t.dash.stages} ariaLabel={t.dash.moveToStage} />
                     </div>
                   </div>
                 ))}
-                {items.length === 0 && <p className="px-2 py-6 text-center text-xs text-ink-mute">Empty</p>}
+                {items.length === 0 && <p className="px-2 py-6 text-center text-xs text-ink-mute">{t.dash.candidates.empty}</p>}
               </div>
             </div>
           );
@@ -133,17 +137,18 @@ function Board({ apps }: { apps: AppRow[] }) {
   );
 }
 
-function List({ apps }: { apps: AppRow[] }) {
+function List({ apps, t, locale }: { apps: AppRow[]; t: Dict; locale: Locale }) {
+  const c = t.dash.candidates;
   return (
     <div className="card mt-6 overflow-x-auto">
       <table className="w-full min-w-[760px] text-sm">
         <thead>
           <tr className="border-b border-black/5 text-left text-xs uppercase tracking-wide text-ink-mute">
-            <th className="px-5 py-3 font-medium">Candidate</th>
-            <th className="px-5 py-3 font-medium">Role</th>
-            <th className="px-5 py-3 font-medium">AI fit</th>
-            <th className="px-5 py-3 font-medium">Summary</th>
-            <th className="px-5 py-3 font-medium">Stage</th>
+            <th className="px-5 py-3 font-medium">{c.candidate}</th>
+            <th className="px-5 py-3 font-medium">{c.role}</th>
+            <th className="px-5 py-3 font-medium">{c.aiFit}</th>
+            <th className="px-5 py-3 font-medium">{c.summary}</th>
+            <th className="px-5 py-3 font-medium">{c.stage}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-black/5">
@@ -156,7 +161,7 @@ function List({ apps }: { apps: AppRow[] }) {
                   </span>
                   <span>
                     <span className="block font-medium hover:underline">{a.full_name}</span>
-                    <span className="block text-xs text-ink-mute">{timeAgo(a.created_at)}</span>
+                    <span className="block text-xs text-ink-mute">{timeAgo(a.created_at, locale)}</span>
                   </span>
                 </Link>
               </td>
@@ -168,7 +173,7 @@ function List({ apps }: { apps: AppRow[] }) {
                 <p className="line-clamp-2">{a.ai_summary ?? '—'}</p>
               </td>
               <td className="px-5 py-3">
-                <StageSelect id={a.id} stage={a.stage} compact />
+                <StageSelect id={a.id} stage={a.stage} compact labels={t.dash.stages} ariaLabel={t.dash.moveToStage} />
               </td>
             </tr>
           ))}

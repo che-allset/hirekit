@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { askAboutCandidates } from '../actions';
+import { fmt, type Dict } from '@/i18n';
 
 type Turn = {
   question: string;
@@ -13,14 +14,9 @@ type Turn = {
   error?: string;
 };
 
-const SUGGESTIONS = [
-  'Who should I interview first, and why?',
-  'Who has customer-facing experience and speaks German?',
-  'Compare my top three engineering candidates.',
-  'Which strong candidates haven’t been moved past Applied yet?',
-];
 
-export function AskPanel({ jobs }: { jobs: { id: string; title: string }[] }) {
+export function AskPanel({ jobs, t }: { jobs: { id: string; title: string }[]; t: Dict['dash']['ask'] }) {
+  const SUGGESTIONS = t.suggestions;
   const [question, setQuestion] = useState('');
   const [jobId, setJobId] = useState('');
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -68,33 +64,33 @@ export function AskPanel({ jobs }: { jobs: { id: string; title: string }[] }) {
       )}
 
       <div className="space-y-6">
-        {turns.map((t, i) => (
+        {turns.map((turn, i) => (
           <div key={i} className="space-y-3">
             <div className="ml-auto max-w-[85%] rounded-[14px] rounded-br-[4px] bg-graphite px-5 py-3.5 text-white sm:max-w-[70%]">
-              {t.question}
-              {t.jobTitle && <p className="mt-1 text-xs text-white/60">About: {t.jobTitle}</p>}
+              {turn.question}
+              {turn.jobTitle && <p className="mt-1 text-xs text-white/60">{fmt(t.about, { role: turn.jobTitle })}</p>}
             </div>
 
             <div className="max-w-[95%] rounded-[14px] rounded-bl-[4px] bg-white p-5 shadow-card sm:max-w-[85%]">
-              {!t.answer && !t.error && (
+              {!turn.answer && !turn.error && (
                 <p className="flex items-center gap-3 text-graphite-600">
                   <span className="h-4 w-4 animate-spin rounded-full border-2 border-graphite/15 border-t-graphite" />
-                  Reading your candidates…
+                  {t.reading}
                 </p>
               )}
-              {t.error && <p className="text-flag">{t.error}</p>}
-              {t.answer && (
+              {turn.error && <p className="text-flag">{turn.error}</p>}
+              {turn.answer && (
                 <>
-                  <p className="whitespace-pre-line leading-relaxed">{t.answer}</p>
-                  {t.candidates && t.candidates.length > 0 && (
+                  <p className="whitespace-pre-line leading-relaxed">{turn.answer}</p>
+                  {turn.candidates && turn.candidates.length > 0 && (
                     <ul className="mt-4 space-y-2">
-                      {t.candidates.map((c) => (
+                      {turn.candidates.map((c) => (
                         <li key={c.id}>
                           <Link
                             href={`/dashboard/candidates/${c.id}`}
                             className="flex flex-col gap-0.5 rounded-[10px] border border-graphite/10 px-4 py-3 hover:border-graphite/40 sm:flex-row sm:items-center sm:gap-3"
                           >
-                            <span className="font-bold">{t.names?.[c.id] ?? 'Candidate'}</span>
+                            <span className="font-bold">{turn.names?.[c.id] ?? t.candidate}</span>
                             <span className="text-sm text-graphite-600">{c.reason}</span>
                           </Link>
                         </li>
@@ -121,12 +117,12 @@ export function AskPanel({ jobs }: { jobs: { id: string; title: string }[] }) {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             maxLength={500}
-            placeholder="Ask about your candidates…"
+            placeholder={t.placeholder}
             className="input flex-1 border-transparent focus:border-graphite"
-            aria-label="Your question"
+            aria-label={t.yourQuestion}
           />
-          <select value={jobId} onChange={(e) => setJobId(e.target.value)} className="input sm:w-56" aria-label="Limit to a role">
-            <option value="">All roles</option>
+          <select value={jobId} onChange={(e) => setJobId(e.target.value)} className="input sm:w-56" aria-label={t.limit}>
+            <option value="">{t.allRoles}</option>
             {jobs.map((j) => (
               <option key={j.id} value={j.id}>
                 {j.title}
@@ -134,11 +130,11 @@ export function AskPanel({ jobs }: { jobs: { id: string; title: string }[] }) {
             ))}
           </select>
           <button type="submit" disabled={pending || !question.trim()} className="btn-signal">
-            {pending ? 'Thinking…' : 'Ask'}
+            {pending ? t.thinking : t.ask}
           </button>
         </div>
         <p className="px-2 pt-2 text-xs text-graphite-400">
-          Answers use only job-relevant information. Questions about age, gender, nationality and similar are declined.
+          {t.footnote}
         </p>
       </form>
     </div>

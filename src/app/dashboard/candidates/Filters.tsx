@@ -3,8 +3,10 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { STAGES } from '@/lib/types';
+import type { Dict } from '@/i18n';
 
-export function Filters({ jobs }: { jobs: { id: string; title: string }[] }) {
+export function Filters({ jobs, t }: { jobs: { id: string; title: string }[]; t: Dict['dash'] }) {
+  const c = t.candidates;
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -33,29 +35,29 @@ export function Filters({ jobs }: { jobs: { id: string; title: string }[] }) {
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Search name or email"
+        placeholder={c.search}
         className="input w-full sm:w-56"
-        aria-label="Search candidates"
+        aria-label={c.search}
       />
-      <select className="input w-auto" value={params.get('job') ?? ''} onChange={(e) => update('job', e.target.value)} aria-label="Filter by job">
-        <option value="">All roles</option>
+      <select className="input w-auto" value={params.get('job') ?? ''} onChange={(e) => update('job', e.target.value)} aria-label={c.allRoles}>
+        <option value="">{c.allRoles}</option>
         {jobs.map((j) => (
           <option key={j.id} value={j.id}>
             {j.title}
           </option>
         ))}
       </select>
-      <select className="input w-auto" value={params.get('verdict') ?? ''} onChange={(e) => update('verdict', e.target.value)} aria-label="Filter by AI fit">
-        <option value="">Any AI fit</option>
-        <option value="strong">Strong (80+)</option>
-        <option value="possible">Possible (55–79)</option>
-        <option value="weak">Weak (&lt;55)</option>
+      <select className="input w-auto" value={params.get('verdict') ?? ''} onChange={(e) => update('verdict', e.target.value)} aria-label={c.anyFit}>
+        <option value="">{c.anyFit}</option>
+        <option value="strong">{c.strongFit}</option>
+        <option value="possible">{c.possibleFit}</option>
+        <option value="weak">{c.weakFit}</option>
       </select>
-      <select className="input w-auto" value={params.get('stage') ?? ''} onChange={(e) => update('stage', e.target.value)} aria-label="Filter by stage">
-        <option value="">All stages</option>
+      <select className="input w-auto" value={params.get('stage') ?? ''} onChange={(e) => update('stage', e.target.value)} aria-label={c.allStages}>
+        <option value="">{c.allStages}</option>
         {STAGES.map((s) => (
           <option key={s.key} value={s.key}>
-            {s.label}
+            {t.stages[s.key]}
           </option>
         ))}
       </select>
@@ -69,7 +71,7 @@ export function Filters({ jobs }: { jobs: { id: string; title: string }[] }) {
           }}
           className="px-2 text-sm text-ink-mute underline hover:text-ink"
         >
-          Clear
+          {c.clear}
         </button>
       )}
     </div>

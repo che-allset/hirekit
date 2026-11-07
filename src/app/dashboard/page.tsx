@@ -5,11 +5,15 @@ import { STAGES } from '@/lib/types';
 import { timeAgo } from '@/lib/utils';
 import { EmptyState, PageHeader, ScoreBadge, StatCard } from './_components/ui';
 import { CopyButton } from './_components/CopyButton';
+import { getDict } from '@/i18n/server';
+import { fmt, type Dict } from '@/i18n';
 
 type AppRow = Application & { jobs: { title: string } | null };
 
 export default async function OverviewPage({ searchParams }: { searchParams: { welcome?: string } }) {
   const { supabase, company } = await requireCompany();
+  const { locale, t } = getDict();
+  const o = t.dash.overview;
 
   const [{ data: jobsData }, { data: appsData }] = await Promise.all([
     supabase.from('jobs').select('*').eq('company_id', company.id).order('created_at', { ascending: false }),
@@ -39,36 +43,36 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader
-        title={searchParams.welcome ? `Welcome, ${company.name}` : 'Overview'}
-        sub={isNew ? 'Three steps and you are hiring.' : 'Here is where your hiring stands today.'}
+        title={searchParams.welcome ? fmt(o.welcome, { company: company.name }) : o.title}
+        sub={isNew ? o.subNew : o.sub}
         action={
           <Link href="/dashboard/jobs/new" className="btn-primary">
-            + New job
+            {t.dash.newJob}
           </Link>
         }
       />
 
       {isNew ? (
-        <Onboarding slug={company.slug} snippet={snippet} />
+        <Onboarding slug={company.slug} snippet={snippet} t={t} />
       ) : (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <StatCard label="Open roles" value={openJobs.length} hint={`${jobs.length} total`} />
-            <StatCard label="Applicants" value={apps.length} hint={`${newThisWeek} new this week`} />
-            <StatCard label="Strong matches" value={strong} hint="Scored 80+ by AI" />
-            <StatCard label="In interview / offer" value={inInterview} />
+            <StatCard label={o.openRoles} value={openJobs.length} hint={fmt(o.total, { n: jobs.length })} />
+            <StatCard label={o.applicants} value={apps.length} hint={fmt(o.newThisWeek, { n: newThisWeek })} />
+            <StatCard label={o.strong} value={strong} hint={o.strongHint} />
+            <StatCard label={o.interviewOffer} value={inInterview} />
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
             <section className="card p-6">
               <div className="flex items-center justify-between">
-                <h2 className="font-semibold">Top candidates to review</h2>
+                <h2 className="font-semibold">{o.topToReview}</h2>
                 <Link href="/dashboard/candidates?view=list" className="text-sm text-ink-mute hover:text-ink">
-                  View all →
+                  {o.viewAll}
                 </Link>
               </div>
               {toReview.length === 0 ? (
-                <p className="mt-6 text-sm text-ink-mute">You are all caught up. New applicants will appear here.</p>
+                <p className="mt-6 text-sm text-ink-mute">{o.caughtUp}</p>
               ) : (
                 <ul className="mt-4 divide-y divide-black/5">
                   {toReview.map((a) => (
@@ -80,7 +84,7 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
                         <div className="min-w-0">
                           <p className="truncate font-medium">{a.full_name}</p>
                           <p className="truncate text-sm text-ink-mute">
-                            {a.jobs?.title ?? 'Role'} · {timeAgo(a.created_at)}
+                            {a.jobs?.title ?? o.role}, {timeAgo(a.created_at, locale)}
                           </p>
                         </div>
                         <ScoreBadge score={a.ai_score} verdict={a.ai_verdict} status={a.ai_status} />
@@ -92,7 +96,7 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
             </section>
 
             <section className="card p-6">
-              <h2 className="font-semibold">Pipeline</h2>
+              <h2 className="font-semibold">{o.pipeline}</h2>
               <div className="mt-5 space-y-3">
                 {STAGES.map((s) => {
                   const n = apps.filter((a) => a.stage === s.key).length;
@@ -100,7 +104,7 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
                   return (
                     <Link key={s.key} href={`/dashboard/candidates?stage=${s.key}&view=list`} className="block">
                       <div className="flex justify-between text-sm">
-                        <span className="text-ink-soft">{s.label}</span>
+                        <span className="text-ink-soft">{t.dash.stages[s.key]}</span>
                         <span className="font-medium tabular-nums">{n}</span>
                       </div>
                       <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-black/5">
@@ -117,18 +121,18 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
           </div>
 
           <section className="card mt-6 p-6">
-            <h2 className="font-semibold">Applicants per role</h2>
+            <h2 className="font-semibold">{o.perRole}</h2>
             {jobs.length === 0 ? (
-              <EmptyState title="No roles yet" body="Create your first role to start receiving applicants." />
+              <EmptyState title={o.noRoles} body={o.noRolesBody} />
             ) : (
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full min-w-[520px] text-sm">
                   <thead>
                     <tr className="text-left text-xs uppercase tracking-wide text-ink-mute">
-                      <th className="pb-3 font-medium">Role</th>
-                      <th className="pb-3 font-medium">Status</th>
-                      <th className="pb-3 text-right font-medium">Applicants</th>
-                      <th className="pb-3 text-right font-medium">Strong</th>
+                      <th className="pb-3 font-medium">{o.role}</th>
+                      <th className="pb-3 font-medium">{o.status}</th>
+                      <th className="pb-3 text-right font-medium">{o.applicants}</th>
+                      <th className="pb-3 text-right font-medium">{o.strongCol}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black/5">
@@ -149,7 +153,7 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
                                   : 'chip bg-black/5 text-ink-mute'
                               }
                             >
-                              {j.status === 'open' ? 'Open' : 'Closed'}
+                              {j.status === 'open' ? t.dash.open : t.dash.closed}
                             </span>
                           </td>
                           <td className="py-3 text-right tabular-nums">{forJob.length}</td>
@@ -170,22 +174,23 @@ export default async function OverviewPage({ searchParams }: { searchParams: { w
   );
 }
 
-function Onboarding({ slug, snippet }: { slug: string; snippet: string }) {
+function Onboarding({ slug, snippet, t }: { slug: string; snippet: string; t: Dict }) {
+  const o = t.dash.overview;
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <Step n={1} title="Post your first role" body="Add a title and a few notes. AI can write the rest.">
+      <Step n={1} title={o.step1} body={o.step1Body}>
         <Link href="/dashboard/jobs/new" className="btn-primary mt-4">
-          Create a job
+          {o.step1Cta}
         </Link>
       </Step>
-      <Step n={2} title="Share your careers page" body="Your branded jobs page is already live.">
+      <Step n={2} title={o.step2} body={o.step2Body}>
         <a href={`/careers/${slug}`} target="_blank" rel="noreferrer" className="btn-ghost mt-4">
-          Open careers page ↗
+          {o.step2Cta}
         </a>
       </Step>
-      <Step n={3} title="Add jobs to your website" body="Paste this line where your jobs should appear.">
+      <Step n={3} title={o.step3} body={o.step3Body}>
         <pre className="mt-4 overflow-x-auto rounded-xl bg-ink p-3 text-[11px] text-white/90">{snippet}</pre>
-        <CopyButton value={snippet} label="Copy code" className="mt-3" />
+        <CopyButton value={snippet} label={o.copyCode} copiedLabel={t.dash.copied} className="mt-3" />
       </Step>
     </div>
   );

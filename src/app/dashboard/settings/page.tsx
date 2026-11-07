@@ -2,9 +2,12 @@ import { getOrigin, requireCompany } from '@/lib/company';
 import { PageHeader } from '../_components/ui';
 import { CopyButton } from '../_components/CopyButton';
 import { SettingsForm } from './SettingsForm';
+import { getDict } from '@/i18n/server';
 
 export default async function SettingsPage() {
   const { company } = await requireCompany();
+  const { t } = getDict();
+  const st = t.dash.settings;
   const origin = getOrigin();
   const careersUrl = `${origin}/careers/${company.slug}`;
   const snippet = `<script src="${origin}/widget.js" data-company="${company.slug}"></script>`;
@@ -12,49 +15,55 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Careers & widget" sub="Everything you need to plug HireKit into your website." />
+      <PageHeader title={st.title} sub={st.sub} />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
         <div className="space-y-6">
           <section className="card p-6">
-            <h2 className="font-semibold">1 · Your careers page</h2>
-            <p className="mt-1 text-sm text-ink-soft">Share this link anywhere: LinkedIn, job boards, email signatures.</p>
+            <h2 className="font-semibold">{st.careersTitle}</h2>
+            <p className="mt-1 text-sm text-ink-soft">{st.careersBody}</p>
             <div className="mt-4 flex items-center gap-2 rounded-xl border border-black/10 bg-paper p-2 pl-3">
               <span className="min-w-0 flex-1 truncate text-sm">{careersUrl}</span>
-              <CopyButton value={careersUrl} />
+              <CopyButton value={careersUrl} label={t.dash.copy} copiedLabel={t.dash.copied} />
               <a href={careersUrl} target="_blank" rel="noreferrer" className="btn-ghost px-3 py-1.5 text-xs">
-                Open ↗
+                {t.dash.candidates.openLink}
               </a>
             </div>
           </section>
 
           <section className="card p-6">
-            <h2 className="font-semibold">2 · Website widget</h2>
+            <h2 className="font-semibold">{st.widgetTitle}</h2>
             <p className="mt-1 text-sm text-ink-soft">
-              Paste this where your jobs should appear. It lists open roles and lets people apply without leaving your
-              site. Works with WordPress, Webflow, Wix, Squarespace and custom code.
+              {st.widgetBody}
             </p>
             <pre className="mt-4 overflow-x-auto rounded-xl bg-ink p-4 text-xs leading-relaxed text-white/90">{snippet}</pre>
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <CopyButton value={snippet} label="Copy widget code" />
+              <CopyButton value={snippet} label={st.copyWidget} copiedLabel={t.dash.copied} />
               <span className="text-xs text-ink-mute">
-                Optional: add <code className="rounded bg-paper-warm px-1">data-target=&quot;#jobs&quot;</code> to render
-                inside a specific element.
+                {st.targetHint.split(/(\{code\}|\{lang\})/).map((part, i) =>
+                  part === '{code}' ? (
+                    <code key={i} className="rounded bg-paper-warm px-1">data-target=&quot;#jobs&quot;</code>
+                  ) : part === '{lang}' ? (
+                    <code key={i} className="rounded bg-paper-warm px-1">data-lang=&quot;de&quot;</code>
+                  ) : (
+                    <span key={i}>{part}</span>
+                  ),
+                )}
               </span>
             </div>
 
             <details className="mt-5 text-sm">
-              <summary className="cursor-pointer text-ink-soft">Site builder blocks scripts? Use an iframe instead</summary>
+              <summary className="cursor-pointer text-ink-soft">{st.iframeSummary}</summary>
               <pre className="mt-3 overflow-x-auto rounded-xl bg-paper-warm p-4 text-xs">{iframe}</pre>
-              <CopyButton value={iframe} label="Copy iframe code" className="mt-2" />
+              <CopyButton value={iframe} label={st.copyIframe} copiedLabel={t.dash.copied} className="mt-2" />
             </details>
           </section>
         </div>
 
         <section className="card p-6">
-          <h2 className="font-semibold">3 · Branding</h2>
-          <p className="mt-1 text-sm text-ink-soft">Used on your careers page, widget and apply buttons.</p>
-          <SettingsForm company={company} />
+          <h2 className="font-semibold">{st.brandTitle}</h2>
+          <p className="mt-1 text-sm text-ink-soft">{st.brandBody}</p>
+          <SettingsForm company={company} t={st} />
         </section>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
-export function CopyButton({ value, label = 'Copy', className }: { value: string; label?: string; className?: string }) {
+export function CopyButton({ value, label, copiedLabel, className }: { value: string; label: string; copiedLabel: string; className?: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -19,7 +19,7 @@ export function CopyButton({ value, label = 'Copy', className }: { value: string
       }}
       className={cn('btn-ghost px-3 py-1.5 text-xs', className)}
     >
-      {copied ? 'Copied ✓' : label}
+      {copied ? copiedLabel : label}
     </button>
   );
 }

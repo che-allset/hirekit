@@ -198,6 +198,7 @@ export async function draftJobPost(input: {
   location?: string | null;
   workMode?: string | null;
   notes?: string | null;
+  language?: string;
 }): Promise<JobDraft> {
   const res = await client().messages.create({
     model: MODEL,
@@ -214,7 +215,7 @@ Role: ${input.title}
 Location: ${input.location || 'not specified'} (${input.workMode || 'not specified'})
 Hiring manager notes: ${input.notes?.trim() || 'none'}
 
-Write the job post by calling the write_job_post tool.`,
+Write the job post in ${input.language || 'English'} by calling the write_job_post tool. Use section headings in that language too.`,
       },
     ],
   });
@@ -282,7 +283,7 @@ const PIPELINE_TOOL: Anthropic.Messages.Tool = {
   },
 };
 
-export async function askPipeline(question: string, people: PipelineCandidate[]): Promise<PipelineAnswer> {
+export async function askPipeline(question: string, people: PipelineCandidate[], language = 'English'): Promise<PipelineAnswer> {
   const data = people
     .map(
       (c) => `<candidate id="${c.id}">
@@ -308,7 +309,7 @@ Team notes: ${c.notes ?? 'none'}
     messages: [
       {
         role: 'user',
-        content: `Candidates (${people.length}):\n${data}\n\nQuestion from the hiring team: ${question}\n\nAnswer by calling the answer_question tool.`,
+        content: `Candidates (${people.length}):\n${data}\n\nQuestion from the hiring team: ${question}\n\nAnswer in ${language} by calling the answer_question tool. Write the reasons in ${language} too.`,
       },
     ],
   });

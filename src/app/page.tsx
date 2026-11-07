@@ -22,7 +22,7 @@ export default function LandingPage() {
       <main>
         <Hero t={t} />
         <PhotoBand t={t} />
-        <Problem t={t} />
+        <Problem t={t} locale={locale} />
         <Steps t={t} />
         <Screening t={t} />
         <TrySection t={t} locale={locale} />
@@ -128,7 +128,7 @@ function PhotoBand({ t }: P) {
 
 /* ───────────────────────── Problem + VSL ───────────────────────── */
 
-function Problem({ t }: P) {
+function Problem({ t, locale }: P & { locale: Locale }) {
   return (
     <section id="tour" className="mt-24 scroll-mt-20 bg-graphite py-24 text-white md:mt-32 md:py-32">
       <div className="mx-auto grid max-w-6xl gap-14 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
@@ -139,7 +139,7 @@ function Problem({ t }: P) {
             <p>{t.problem.p2}</p>
           </div>
         </div>
-        <SalesVideo watch={t.problem.watch} videoAria={t.problem.videoAria} playAria={t.problem.playAria} />
+        <SalesVideo watch={t.problem.watch} videoAria={t.problem.videoAria} playAria={t.problem.playAria} poster={`/video/tour-poster-${locale}.jpg`} />
       </div>
     </section>
   );

@@ -33,7 +33,17 @@ export function IntroFilm({ label }: { label: string }) {
 }
 
 /** The sales video. Cover image; the play button sits below it so it never hides the cover text. */
-export function SalesVideo({ watch, videoAria, playAria }: { watch: string; videoAria: string; playAria: string }) {
+export function SalesVideo({
+  watch,
+  videoAria,
+  playAria,
+  poster = '/video/tour-poster-en.jpg',
+}: {
+  watch: string;
+  videoAria: string;
+  playAria: string;
+  poster?: string;
+}) {
   const ref = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
   const play = () => {
@@ -48,7 +58,7 @@ export function SalesVideo({ watch, videoAria, playAria }: { watch: string; vide
           ref={ref}
           className="block aspect-video w-full"
           src="/video/hirekit-tour.mp4"
-          poster="/video/tour-poster.jpg"
+          poster={poster}
           controls={started}
           playsInline
           preload="none"

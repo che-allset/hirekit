@@ -39,13 +39,12 @@ The videos are rendered from code: each scene is an HTML frame drawn at 30 fps a
 
 ## Languages
 
-The public side of HireKit is available in **English, German, Spanish and French**: the landing page, sign-up, login, careers pages, the website widget and the application form.
+All of HireKit is available in **English, German, Spanish and French**: the landing page, sign-up, login, careers pages, the website widget, the application form and the recruiter dashboard.
 
 - Visitors get their **browser language automatically**, and can switch at any time from the language menu. The choice is remembered.
 - Companies can force a language on the widget with `data-lang="de"`.
-- The **Try it** assessment is written by Claude in the visitor's language.
+- The AI answers in the chosen language too: the **Try it** assessment, **Ask your pipeline**, the **job post writer** and re-run screenings.
 - All wording lives in `src/i18n/` (one file per language, type-checked against English, so a missing translation fails the build).
-- The recruiter dashboard is English for now; it is the next candidate for translation.
 
 ## How I read the brief
 

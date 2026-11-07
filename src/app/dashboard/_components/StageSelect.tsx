@@ -6,13 +6,25 @@ import { STAGES, type Stage } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { setStage } from '../actions';
 
-export function StageSelect({ id, stage, compact = false }: { id: string; stage: Stage; compact?: boolean }) {
+export function StageSelect({
+  id,
+  stage,
+  compact = false,
+  labels,
+  ariaLabel,
+}: {
+  id: string;
+  stage: Stage;
+  compact?: boolean;
+  labels: Record<Stage, string>;
+  ariaLabel: string;
+}) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [value, setValue] = useState<Stage>(stage);
   return (
     <select
-      aria-label="Move to stage"
+      aria-label={ariaLabel}
       value={value}
       disabled={pending}
       onClick={(e) => e.stopPropagation()}
@@ -32,7 +44,7 @@ export function StageSelect({ id, stage, compact = false }: { id: string; stage:
     >
       {STAGES.map((s) => (
         <option key={s.key} value={s.key}>
-          {s.label}
+          {labels[s.key]}
         </option>
       ))}
     </select>

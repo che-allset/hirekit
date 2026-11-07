@@ -5,10 +5,11 @@ import { useState } from 'react';
 import type { Company } from '@/lib/types';
 import { initials } from '@/lib/utils';
 import { saveSettings } from '../actions';
+import { fmt, type Dict } from '@/i18n';
 
 const PRESETS = ['#4A45E0', '#0F766E', '#E11D48', '#EA580C', '#0E1116', '#2563EB'];
 
-export function SettingsForm({ company }: { company: Company }) {
+export function SettingsForm({ company, t }: { company: Company; t: Dict['dash']['settings'] }) {
   const router = useRouter();
   const [values, setValues] = useState({
     name: company.name,
@@ -48,35 +49,35 @@ export function SettingsForm({ company }: { company: Company }) {
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 text-xs font-semibold">
               {initials(values.name || 'Co')}
             </span>
-            <span className="text-sm font-semibold">{values.name || 'Your company'}</span>
+            <span className="text-sm font-semibold">{values.name || t.yourCompany}</span>
           </div>
-          <p className="mt-6 font-display text-2xl">Join {values.name || 'us'}</p>
+          <p className="mt-6 font-display text-2xl">{fmt(t.join, { company: values.name || t.us })}</p>
           {values.tagline && <p className="mt-1 text-sm text-white/80">{values.tagline}</p>}
         </div>
         <div className="bg-paper p-4">
           <div className="flex items-center justify-between rounded-xl bg-white p-3 text-sm shadow-sm">
-            <span className="font-medium">Example role</span>
+            <span className="font-medium">{t.exampleRole}</span>
             <span className="h-6 w-6 rounded-full" style={{ backgroundColor: values.brand_color }} />
           </div>
         </div>
       </div>
 
       <div>
-        <label className="label" htmlFor="name">Company name</label>
+        <label className="label" htmlFor="name">{t.companyName}</label>
         <input id="name" className="input" value={values.name} onChange={(e) => set('name', e.target.value)} />
       </div>
       <div>
-        <label className="label" htmlFor="tagline">Tagline</label>
+        <label className="label" htmlFor="tagline">{t.tagline}</label>
         <input
           id="tagline"
           className="input"
           value={values.tagline}
           onChange={(e) => set('tagline', e.target.value)}
-          placeholder="We build software that keeps Europe moving."
+          placeholder={t.taglinePh}
         />
       </div>
       <div>
-        <label className="label" htmlFor="website">Website</label>
+        <label className="label" htmlFor="website">{t.website}</label>
         <input
           id="website"
           className="input"
@@ -86,7 +87,7 @@ export function SettingsForm({ company }: { company: Company }) {
         />
       </div>
       <div>
-        <span className="label">Brand colour</span>
+        <span className="label">{t.colour}</span>
         <div className="flex flex-wrap items-center gap-2">
           {PRESETS.map((c) => (
             <button
@@ -106,14 +107,14 @@ export function SettingsForm({ company }: { company: Company }) {
             value={values.brand_color}
             onChange={(e) => set('brand_color', e.target.value)}
             className="h-8 w-12 cursor-pointer rounded border border-black/10 bg-white"
-            aria-label="Custom colour"
+            aria-label={t.customColour}
           />
         </div>
       </div>
 
       {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
       <button type="submit" disabled={status === 'saving'} className="btn-primary w-full">
-        {status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved ✓' : 'Save branding'}
+        {status === 'saving' ? t.saving : status === 'saved' ? t.saved : t.save}
       </button>
     </form>
   );

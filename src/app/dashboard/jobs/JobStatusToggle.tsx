@@ -4,7 +4,17 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { setJobStatus } from '../actions';
 
-export function JobStatusToggle({ id, status }: { id: string; status: 'open' | 'closed' }) {
+export function JobStatusToggle({
+  id,
+  status,
+  closeLabel,
+  reopenLabel,
+}: {
+  id: string;
+  status: 'open' | 'closed';
+  closeLabel: string;
+  reopenLabel: string;
+}) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const next = status === 'open' ? 'closed' : 'open';
@@ -20,7 +30,7 @@ export function JobStatusToggle({ id, status }: { id: string; status: 'open' | '
       }}
       className="btn-ghost px-3 py-1.5 text-xs"
     >
-      {pending ? '…' : status === 'open' ? 'Close role' : 'Reopen'}
+      {pending ? '…' : status === 'open' ? closeLabel : reopenLabel}
     </button>
   );
 }

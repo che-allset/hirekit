@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { EMPLOYMENT_TYPES, WORK_MODES, type Job } from '@/lib/types';
 import { deleteJob, generateJobDraft, saveJob, type JobInput } from '../actions';
+import type { Dict, Locale } from '@/i18n';
 
-export function JobForm({ job }: { job?: Job }) {
+export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale: Locale }) {
+  const f = t.jobs.form;
   const [values, setValues] = useState<JobInput>({
     title: job?.title ?? '',
     department: job?.department ?? '',
@@ -31,6 +33,7 @@ export function JobForm({ job }: { job?: Job }) {
       location: values.location,
       workMode: values.work_mode,
       notes,
+      locale,
     });
     setDrafting(false);
     if (res.error) return setError(res.error);
@@ -52,59 +55,59 @@ export function JobForm({ job }: { job?: Job }) {
       <div className="space-y-6">
         <section className="card space-y-4 p-6">
           <div>
-            <label className="label" htmlFor="title">Job title</label>
+            <label className="label" htmlFor="title">{f.title}</label>
             <input
               id="title"
               className="input"
               required
               value={values.title}
               onChange={(e) => set('title', e.target.value)}
-              placeholder="e.g. Senior Backend Engineer"
+              placeholder={f.titlePh}
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="label" htmlFor="department">Department</label>
-              <input id="department" className="input" value={values.department} onChange={(e) => set('department', e.target.value)} placeholder="Engineering" />
+              <label className="label" htmlFor="department">{f.department}</label>
+              <input id="department" className="input" value={values.department} onChange={(e) => set('department', e.target.value)} placeholder={f.departmentPh} />
             </div>
             <div>
-              <label className="label" htmlFor="location">Location</label>
-              <input id="location" className="input" value={values.location} onChange={(e) => set('location', e.target.value)} placeholder="Berlin" />
+              <label className="label" htmlFor="location">{f.location}</label>
+              <input id="location" className="input" value={values.location} onChange={(e) => set('location', e.target.value)} placeholder={f.locationPh} />
             </div>
             <div>
-              <label className="label" htmlFor="work_mode">Work mode</label>
+              <label className="label" htmlFor="work_mode">{f.workMode}</label>
               <select id="work_mode" className="input" value={values.work_mode} onChange={(e) => set('work_mode', e.target.value)}>
-                {WORK_MODES.map((m) => <option key={m}>{m}</option>)}
+                {WORK_MODES.map((m) => <option key={m} value={m}>{t.workModes[m] ?? m}</option>)}
               </select>
             </div>
             <div>
-              <label className="label" htmlFor="employment_type">Employment type</label>
+              <label className="label" htmlFor="employment_type">{f.employmentType}</label>
               <select id="employment_type" className="input" value={values.employment_type} onChange={(e) => set('employment_type', e.target.value)}>
-                {EMPLOYMENT_TYPES.map((m) => <option key={m}>{m}</option>)}
+                {EMPLOYMENT_TYPES.map((m) => <option key={m} value={m}>{t.employmentTypes[m] ?? m}</option>)}
               </select>
             </div>
           </div>
           <div>
-            <label className="label" htmlFor="salary_range">Salary range <span className="font-normal text-ink-mute">(optional, recommended)</span></label>
+            <label className="label" htmlFor="salary_range">{f.salary} <span className="font-normal text-ink-mute">{f.salaryHint}</span></label>
             <input id="salary_range" className="input" value={values.salary_range} onChange={(e) => set('salary_range', e.target.value)} placeholder="€65–80k" />
           </div>
         </section>
 
         <section className="card space-y-4 p-6">
           <div>
-            <label className="label" htmlFor="description">Job description</label>
+            <label className="label" htmlFor="description">{f.description}</label>
             <textarea
               id="description"
               rows={12}
               className="input resize-y leading-relaxed"
               value={values.description}
               onChange={(e) => set('description', e.target.value)}
-              placeholder={'Intro paragraph…\n\nWhat you will do\n- …\n- …'}
+              placeholder={f.descriptionPh}
             />
-            <p className="mt-1.5 text-xs text-ink-mute">Start lines with “- ” to make bullet points.</p>
+            <p className="mt-1.5 text-xs text-ink-mute">{f.descriptionHint}</p>
           </div>
           <div>
-            <label className="label" htmlFor="requirements">Must-have requirements</label>
+            <label className="label" htmlFor="requirements">{f.requirements}</label>
             <textarea
               id="requirements"
               rows={6}
@@ -114,7 +117,7 @@ export function JobForm({ job }: { job?: Job }) {
               placeholder={'- 5+ years with TypeScript\n- Experience running Postgres in production'}
             />
             <p className="mt-1.5 text-xs text-ink-mute">
-              The AI scores every applicant against this list. Be specific.
+              {f.requirementsHint}
             </p>
           </div>
         </section>
@@ -123,17 +126,17 @@ export function JobForm({ job }: { job?: Job }) {
       <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
         <section className="rounded-2xl bg-ink p-6 text-white">
           <p className="flex items-center gap-2 font-semibold">
-            <span className="text-lime-accent">✦</span> Draft with AI
+            <span className="text-lime-accent">✦</span> {f.aiTitle}
           </p>
           <p className="mt-1 text-sm text-white/70">
-            Add a title and a few notes. Claude writes an inclusive job post and a must-have list.
+            {f.aiBody}
           </p>
           <textarea
             rows={4}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             className="mt-4 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-lime-accent/50"
-            placeholder="e.g. small team, owns the API, Postgres + Node, mentoring 2 juniors, German a plus"
+            placeholder={f.aiPh}
           />
           <button
             type="button"
@@ -141,13 +144,13 @@ export function JobForm({ job }: { job?: Job }) {
             disabled={drafting}
             className="btn mt-3 w-full bg-lime-accent text-ink hover:brightness-95"
           >
-            {drafting ? 'Writing…' : values.description ? 'Rewrite with AI' : 'Write it for me'}
+            {drafting ? f.aiWriting : values.description ? f.aiRewrite : f.aiWrite}
           </button>
         </section>
 
         <section className="card space-y-4 p-6">
           <label className="flex items-center justify-between gap-3 text-sm font-medium">
-            Accepting applications
+            {f.accepting}
             <input
               type="checkbox"
               className="h-5 w-5 accent-[#4A45E0]"
@@ -157,17 +160,17 @@ export function JobForm({ job }: { job?: Job }) {
           </label>
           {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p>}
           <button type="submit" disabled={saving} className="btn-primary w-full py-3">
-            {saving ? 'Saving…' : job ? 'Save changes' : 'Publish job'}
+            {saving ? f.saving : job ? f.save : f.publish}
           </button>
           {job && (
             <button
               type="button"
               onClick={async () => {
-                if (confirm('Delete this job and all its applications? This cannot be undone.')) await deleteJob(job.id);
+                if (confirm(f.confirmDelete)) await deleteJob(job.id);
               }}
               className="w-full text-center text-xs text-red-600 hover:underline"
             >
-              Delete job
+              {f.delete}
             </button>
           )}
         </section>

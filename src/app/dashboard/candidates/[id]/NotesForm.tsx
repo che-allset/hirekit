@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { saveNotes } from '../../actions';
+import type { Dict } from '@/i18n';
 
-export function NotesForm({ id, initial }: { id: string; initial: string }) {
+export function NotesForm({ id, initial, t }: { id: string; initial: string; t: Dict['dash']['candidates'] }) {
   const [notes, setNotes] = useState(initial);
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const dirty = notes !== initial && status !== 'saved';
@@ -26,14 +27,14 @@ export function NotesForm({ id, initial }: { id: string; initial: string }) {
         }}
         rows={6}
         className="input resize-y"
-        placeholder="Impressions, interview feedback, next steps…"
+        placeholder={t.notesPh}
       />
       <div className="mt-3 flex items-center justify-between">
         <span className="text-xs text-ink-mute">
-          {status === 'saved' ? 'Saved ✓' : status === 'error' ? 'Could not save' : dirty ? 'Unsaved changes' : ''}
+          {status === 'saved' ? t.saved : status === 'error' ? t.couldNotSave : dirty ? t.unsaved : ''}
         </span>
         <button type="submit" disabled={status === 'saving'} className="btn-ghost px-3 py-1.5 text-xs">
-          {status === 'saving' ? 'Saving…' : 'Save notes'}
+          {status === 'saving' ? t.saving : t.saveNotes}
         </button>
       </div>
     </form>
