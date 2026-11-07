@@ -32,41 +32,26 @@ export function IntroFilm() {
   );
 }
 
-/** The 90-second sales video. Poster with a play button; plays with sound and controls. */
+/** The sales video. Play button sits below the cover so it never hides the cover text. */
 export function SalesVideo() {
   const ref = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
-
+  const play = () => {
+    setStarted(true);
+    ref.current?.play().catch(() => {});
+  };
   return (
-    <div className="relative overflow-hidden rounded-[14px] bg-signal shadow-lift ring-1 ring-white/10">
-      <video
-        ref={ref}
-        className="block aspect-video w-full"
-        src="/video/hirekit-tour.mp4"
-        poster="/video/tour-poster.jpg"
-        controls={started}
-        playsInline
-        preload="none"
-        aria-label="HireKit tour: the hiring problem, how HireKit works and pricing, told in on-screen text."
-      />
+    <div>
+      <div className="relative overflow-hidden rounded-[14px] bg-signal shadow-lift">
+        <video ref={ref} className="block aspect-video w-full" src="/video/hirekit-tour.mp4" poster="/video/tour-poster.jpg" controls={started} playsInline preload="none" aria-label="HireKit tour, told in on-screen text." />
+        {!started && <button type="button" onClick={play} className="absolute inset-0" aria-label="Play the HireKit tour, 1 minute 26 seconds" />}
+      </div>
       {!started && (
-        <button
-          type="button"
-          onClick={() => {
-            setStarted(true);
-            ref.current?.play().catch(() => {});
-          }}
-          className="group absolute inset-0 flex items-end justify-start p-[5%]"
-          aria-label="Play the HireKit tour, 1 minute 26 seconds"
-        >
-          <span className="flex items-center gap-3 rounded-full bg-graphite py-2.5 pl-2.5 pr-6 font-bold text-white shadow-lift transition-transform group-hover:scale-[1.03]">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-signal">
-              <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5 fill-graphite" aria-hidden="true">
-                <path d="M7 4.5v15l13-7.5z" />
-              </svg>
-            </span>
-            Watch the tour (1:26)
+        <button type="button" onClick={play} className="mt-5 flex items-center gap-3 rounded-full bg-signal py-2.5 pl-2.5 pr-6 font-bold text-graphite transition-transform hover:scale-[1.02]">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-graphite">
+            <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5 fill-signal" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" /></svg>
           </span>
+          Watch the tour (1:26)
         </button>
       )}
     </div>
