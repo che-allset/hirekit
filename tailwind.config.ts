@@ -36,7 +36,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        display: ['var(--font-display)', 'Arial Narrow', 'sans-serif'],
+        display: ['var(--font-display)', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       boxShadow: {
         card: '0 1px 0 rgba(35,39,45,0.06), 0 2px 8px rgba(35,39,45,0.05)',

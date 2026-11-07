@@ -3,8 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { getLocale } from '@/i18n/server';
 
-// Self-hosted grotesque (TeX Gyre Heros, GUST Font License). One family:
-// the condensed bold cut for display, regular/bold for everything else.
+// Body: TeX Gyre Heros (GUST Font License). Titles: Inter Display SemiBold (SIL OFL).
 const sans = localFont({
   src: [
     { path: '../fonts/texgyreheros-regular.otf', weight: '400', style: 'normal' },
@@ -15,7 +14,7 @@ const sans = localFont({
 });
 
 const display = localFont({
-  src: [{ path: '../fonts/texgyreheroscn-bold.otf', weight: '700', style: 'normal' }],
+  src: [{ path: '../fonts/InterDisplay-SemiBold.otf', weight: '600', style: 'normal' }],
   variable: '--font-display',
   display: 'swap',
 });

@@ -21,7 +21,7 @@ export function Pricing({ t }: { t: Dict['pricing'] }) {
     <div>
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <div className="max-w-xl">
-          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.title}</h2>
           <p className="mt-4 text-lg text-graphite-600">
             {t.sub}
           </p>
@@ -64,7 +64,7 @@ export function Pricing({ t }: { t: Dict['pricing'] }) {
               </div>
               <p className={cn('mt-1 text-sm', featured ? 'text-white/70' : 'text-graphite-600')}>{p.who}</p>
               <p className="mt-8 flex items-baseline gap-2">
-                <span className="font-display text-6xl tabular-nums">€{price}</span>
+                <span className="font-display text-5xl tabular-nums">€{price}</span>
                 <span className={cn('text-sm', featured ? 'text-white/70' : 'text-graphite-600')}>
                   {price === 0 ? t.forever : billing === 'monthly' ? t.perMonth : t.perMonthYearly}
                 </span>

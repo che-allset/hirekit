@@ -52,7 +52,7 @@ export default async function CareersPage({ params }: Props) {
               <LanguageSwitcher locale={locale} label={t.nav.language} tone="dark" />
             </div>
           </div>
-          <h1 className="mt-14 font-display text-5xl leading-tight md:text-6xl">{fmt(t.careers.join, { company: company.name })}</h1>
+          <h1 className="mt-14 font-display text-4xl leading-[1.08] md:text-5xl">{fmt(t.careers.join, { company: company.name })}</h1>
           {company.tagline && <p className="mt-3 max-w-xl text-lg text-white/85">{company.tagline}</p>}
           <p className="mt-6 text-sm text-white/70">
             {jobs.length === 1 ? t.careers.openRole : fmt(t.careers.openRoles, { n: jobs.length })}

@@ -80,7 +80,7 @@ export function SignupForm({ t, locale, languageLabel }: { t: T; locale: Locale;
     <div className="grid min-h-screen lg:grid-cols-[1fr_0.9fr]">
       <div className="flex flex-col px-6 py-8 sm:px-12">
         <div className="flex items-center justify-between gap-3">
-          <Link href="/" className="inline-flex items-center gap-2.5 font-display text-[26px] leading-none">
+          <Link href="/" className="inline-flex items-center gap-2.5 font-display text-[24px] leading-none">
             <LogoMark />
             HireKit
           </Link>
@@ -225,7 +225,7 @@ function Progress({ step, steps, label }: { step: number; steps: string[]; label
 function Step({ title, sub, children }: { title: string; sub: string; children: React.ReactNode }) {
   return (
     <div>
-      <h1 className="font-display text-[44px] leading-[0.95]">{title}</h1>
+      <h1 className="font-display text-4xl leading-[1.05]">{title}</h1>
       <p className="mt-3 text-graphite-600">{sub}</p>
       <div className="mt-8 space-y-6">{children}</div>
     </div>

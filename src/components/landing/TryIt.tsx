@@ -172,7 +172,7 @@ function ResultCard({ r, t }: { r: Result; t: T }) {
             strokeDashoffset={C * (1 - r.score / 100)}
             transform="rotate(-90 52 52)"
           />
-          <text x="52" y="64" textAnchor="middle" fill="#fff" style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700 }}>
+          <text x="52" y="64" textAnchor="middle" fill="#fff" style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 600 }}>
             {r.score}
           </text>
         </svg>

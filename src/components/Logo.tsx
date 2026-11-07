@@ -31,7 +31,7 @@ export function Logo({
     <Link
       href={href}
       className={cn(
-        'inline-flex items-center gap-2.5 font-display text-[26px] leading-none',
+        'inline-flex items-center gap-2.5 font-display text-[24px] leading-none',
         tone === 'light' ? 'text-white' : 'text-graphite',
         className,
       )}

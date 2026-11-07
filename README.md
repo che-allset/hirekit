@@ -22,7 +22,7 @@ It also includes a full **marketing landing page** for the service.
 |---|---|
 | **Logo** | A plug whose prongs and crossbar form an H, for plug-and-play hiring (`src/components/Logo.tsx`, `src/app/icon.svg`) |
 | **Colour** | Graphite `#23272D`, steel `#E7E9EC`, signal yellow `#FFD12E`, forest `#1D5C47` for positive states |
-| **Type** | One self-hosted grotesque family: condensed bold for headlines, regular and bold for text |
+| **Type** | Self-hosted: Inter Display SemiBold for headlines, TeX Gyre Heros for text |
 | **Photos** | Real full-colour photos (Pexels License) from one photographer's series, with a light shared grade (`public/photos/CREDITS.md`) |
 | **Intro film** | 14-second silent loop in the hero (`public/video/intro.mp4`) |
 | **Tour / VSL** | 1:26 video sales letter with on-screen text (`public/video/hirekit-tour.mp4`), plus a voiceover script in `docs/vsl-voiceover.md` |

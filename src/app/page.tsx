@@ -48,7 +48,7 @@ type P = { t: Dict };
 function Nav({ t, locale }: P & { locale: Locale }) {
   return (
     <header className="sticky top-0 z-40 border-b border-graphite/10 bg-steel/90 backdrop-blur">
-      <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between gap-3 px-5">
+      <div className="flex h-[68px] w-full items-center justify-between gap-3 px-5 md:px-8 lg:px-12">
         <Logo />
         <nav aria-label="Main" className="hidden items-center gap-7 text-[15px] text-graphite-600 lg:flex">
           <a href="#how" className="hover:text-graphite">{t.nav.howItWorks}</a>
@@ -76,9 +76,9 @@ function Nav({ t, locale }: P & { locale: Locale }) {
 function Hero({ t }: P) {
   return (
     <section className="relative">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 md:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-14">
+      <div className="grid w-full items-center gap-12 px-5 pb-20 pt-14 md:px-8 md:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-16 lg:px-12">
         <div className="hero-in">
-          <h1 className="font-display text-[56px] leading-[0.92] sm:text-7xl lg:text-[84px]">{t.hero.title}</h1>
+          <h1 className="font-display text-[44px] leading-[1.02] sm:text-6xl lg:text-[64px] xl:text-[72px] 2xl:text-[84px]">{t.hero.title}</h1>
           <p className="mt-7 max-w-[34rem] text-lg leading-relaxed text-graphite-600 md:text-xl">{t.hero.sub}</p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link href="/signup" className="btn-signal px-7 py-4 text-base">
@@ -133,7 +133,7 @@ function Problem({ t, locale }: P & { locale: Locale }) {
     <section id="tour" className="mt-24 scroll-mt-20 bg-graphite py-24 text-white md:mt-32 md:py-32">
       <div className="mx-auto grid max-w-6xl gap-14 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
-          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.problem.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.problem.title}</h2>
           <div className="mt-8 space-y-5 text-lg leading-relaxed text-white/75">
             <p>{t.problem.p1}</p>
             <p>{t.problem.p2}</p>
@@ -151,7 +151,7 @@ function Steps({ t }: P) {
   return (
     <section id="how" className="scroll-mt-20 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5">
-        <h2 className="max-w-2xl font-display text-5xl leading-[0.95] md:text-6xl">{t.steps.title}</h2>
+        <h2 className="max-w-2xl font-display text-4xl leading-[1.05] md:text-5xl">{t.steps.title}</h2>
         <div className="relative mt-16">
           <div className="absolute left-0 right-0 top-[22px] hidden h-[3px] bg-graphite md:block" aria-hidden="true" />
           <ol className="relative grid gap-10 md:grid-cols-4 md:gap-6">
@@ -202,7 +202,7 @@ function Screening({ t }: P) {
           </div>
         </div>
         <div className="lg:pl-6">
-          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{s.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{s.title}</h2>
           <p className="mt-6 text-lg leading-relaxed text-graphite-600">{s.sub}</p>
           <dl className="mt-10 grid gap-6 sm:grid-cols-2">
             {s.points.map((p) => (
@@ -229,7 +229,7 @@ function TrySection({ t, locale }: P & { locale: Locale }) {
     <section id="try" className="scroll-mt-20 bg-steel-200 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5">
         <div className="max-w-2xl">
-          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.tryIt.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.tryIt.title}</h2>
           <p className="mt-5 text-lg leading-relaxed text-graphite-600">{t.tryIt.sub}</p>
         </div>
         <div className="mt-12">
@@ -247,7 +247,7 @@ function Widget({ t, origin }: P & { origin: string }) {
     <section className="py-24 md:py-32">
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-[1fr_1.1fr]">
         <div>
-          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.widget.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.widget.title}</h2>
           <p className="mt-6 text-lg leading-relaxed text-graphite-600">{t.widget.sub}</p>
           <a href="/demo.html" className="btn-primary mt-8">
             {t.widget.cta}
@@ -283,7 +283,7 @@ function Fairness({ t }: P) {
   return (
     <section className="bg-signal py-20 md:py-24">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[1fr_1.4fr]">
-        <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.fairness.title}</h2>
+        <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.fairness.title}</h2>
         <div className="grid gap-8 sm:grid-cols-3">
           {t.fairness.items.map((i) => (
             <div key={i.t}>
@@ -304,7 +304,7 @@ function Faq({ t }: P) {
     <section id="faq" className="scroll-mt-20 bg-white py-24 md:py-32">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
-          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.faq.title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.faq.title}</h2>
           <div className="relative mt-10 hidden h-72 lg:block">
             <Photo src="/photos/coffee.jpg" alt={t.faq.alt} className="h-full rounded-[14px]" sizes="30vw" />
           </div>
@@ -335,7 +335,7 @@ function FinalCta({ t }: P) {
       <div className="mx-auto max-w-6xl px-5">
         <div className="grid overflow-hidden rounded-[18px] bg-graphite text-white lg:grid-cols-2">
           <div className="p-10 md:p-14">
-            <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">{t.final.title}</h2>
+            <h2 className="font-display text-4xl leading-[1.05] md:text-5xl">{t.final.title}</h2>
             <p className="mt-5 max-w-md text-lg text-white/70">{t.final.sub}</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/signup" className="btn-signal px-7 py-4 text-base">

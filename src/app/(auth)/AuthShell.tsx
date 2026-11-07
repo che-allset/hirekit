@@ -28,7 +28,7 @@ export function AuthShell({
           <LanguageSwitcher locale={locale} label={languageLabel} />
         </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
-          <h1 className="font-display text-5xl leading-[0.95]">{title}</h1>
+          <h1 className="font-display text-4xl leading-[1.05]">{title}</h1>
           <p className="mt-3 text-lg text-graphite-600">{sub}</p>
           <div className="mt-9">{children}</div>
         </div>

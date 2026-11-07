@@ -76,7 +76,7 @@ export default async function CandidatePage({ params }: { params: { id: string }
               <div className="p-6">
                 <div className="flex items-start gap-6">
                   <div className="flex-none text-center">
-                    <p className={`font-display text-6xl leading-none ${vs.text}`}>{app.ai_score}</p>
+                    <p className={`font-display text-5xl leading-none ${vs.text}`}>{app.ai_score}</p>
                     <p className="mt-1 text-xs text-ink-mute">{c.outOf}</p>
                   </div>
                   <p className="text-lg leading-relaxed">{app.ai_summary}</p>

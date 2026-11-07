@@ -21,10 +21,10 @@ p {
   text-wrap: pretty;
 }
 
-/* Condensed display cut is bold-only; never synthesise extra weight. */
+/* Inter Display SemiBold: one weight only; never synthesise extra weight. */
 .font-display {
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 :focus-visible {
