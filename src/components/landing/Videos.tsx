@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 /** Silent looping brand film for the hero. Pauses for reduced-motion users. */
-export function IntroFilm({ label }: { label: string }) {
+export function IntroFilm({ label, locale = 'en' }: { label: string; locale?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -20,8 +20,9 @@ export function IntroFilm({ label }: { label: string }) {
     <video
       ref={ref}
       className="block aspect-video w-full rounded-[14px] bg-graphite object-cover"
-      src="/video/intro.mp4"
-      poster="/video/intro-poster.jpg"
+      key={locale}
+      src={`/video/intro-${locale}.mp4`}
+      poster={`/video/intro-poster-${locale}.jpg`}
       muted
       loop
       playsInline
@@ -37,12 +38,12 @@ export function SalesVideo({
   watch,
   videoAria,
   playAria,
-  poster = '/video/tour-poster-en.jpg',
+  locale = 'en',
 }: {
   watch: string;
   videoAria: string;
   playAria: string;
-  poster?: string;
+  locale?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
@@ -57,8 +58,9 @@ export function SalesVideo({
         <video
           ref={ref}
           className="block aspect-video w-full"
-          src="/video/hirekit-tour.mp4"
-          poster={poster}
+          key={locale}
+          src={`/video/hirekit-tour-${locale}.mp4`}
+          poster={`/video/tour-poster-${locale}.jpg`}
           controls={started}
           playsInline
           preload="none"

@@ -20,7 +20,7 @@ export default function LandingPage() {
     <div className="overflow-x-hidden">
       <Nav t={t} locale={locale} />
       <main>
-        <Hero t={t} />
+        <Hero t={t} locale={locale} />
         <PhotoBand t={t} />
         <Problem t={t} locale={locale} />
         <Steps t={t} />
@@ -73,7 +73,7 @@ function Nav({ t, locale }: P & { locale: Locale }) {
 
 /* ───────────────────────── Hero ───────────────────────── */
 
-function Hero({ t }: P) {
+function Hero({ t, locale }: P & { locale: Locale }) {
   return (
     <section className="relative">
       <div className="grid w-full items-center gap-12 px-5 pb-20 pt-14 md:px-8 md:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-16 lg:px-12">
@@ -94,7 +94,7 @@ function Hero({ t }: P) {
         <div className="hero-in relative [animation-delay:120ms]">
           <div className="absolute -right-5 -top-5 hidden h-[78%] w-[82%] rounded-[18px] bg-signal sm:block" aria-hidden="true" />
           <div className="relative rounded-[18px] bg-graphite p-2 shadow-lift">
-            <IntroFilm label={t.hero.introAria} />
+            <IntroFilm label={t.hero.introAria} locale={locale} />
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@ function Problem({ t, locale }: P & { locale: Locale }) {
             <p>{t.problem.p2}</p>
           </div>
         </div>
-        <SalesVideo watch={t.problem.watch} videoAria={t.problem.videoAria} playAria={t.problem.playAria} poster={`/video/tour-poster-${locale}.jpg`} />
+        <SalesVideo watch={t.problem.watch} videoAria={t.problem.videoAria} playAria={t.problem.playAria} locale={locale} />
       </div>
     </section>
   );

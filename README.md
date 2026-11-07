@@ -164,3 +164,7 @@ supabase/schema.sql              Database, RLS, storage
 - Job board syndication (LinkedIn, Indeed, StepStone)
 - Rate limiting on `/api/apply` (e.g. Upstash) and Stripe billing for the pricing plans
 - GDPR tooling: automatic data retention and deletion, candidate data export
+
+## Videos
+
+The intro film and the 86-second tour are rendered from HTML scenes in `design/video/` (no voice-over, on-screen text only), in all four languages. Text lives in `design/video/strings.js`. The site loads `/video/intro-{lang}.mp4` and `/video/hirekit-tour-{lang}.mp4` for the visitor's language.

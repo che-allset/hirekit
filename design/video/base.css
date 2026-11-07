@@ -1,0 +1,15 @@
+@font-face { font-family: D; font-weight: 600; src: url(../../src/fonts/InterDisplay-SemiBold.otf); }
+@font-face { font-family: H; src: url(../../src/fonts/texgyreheros-regular.otf); }
+@font-face { font-family: H; font-weight: 700; src: url(../../src/fonts/texgyreheros-bold.otf); }
+:root { --g: #23272D; --g7: #2E333A; --g6: #454B54; --g4: #7A818B; --s: #E7E9EC; --s50: #F4F5F7; --y: #FFD12E; --f: #1D5C47; --f1: #DCEBE4; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: var(--g); font-family: H, sans-serif; color: var(--g); -webkit-font-smoothing: antialiased; }
+#stage { position: relative; width: 1280px; height: 720px; overflow: hidden; }
+.scene { position: absolute; inset: 0; overflow: hidden; }
+.cn { font-family: D, sans-serif; font-weight: 600; letter-spacing: -0.025em; line-height: 1.05; }
+.abs { position: absolute; }
+.card { background: #fff; border-radius: 16px; box-shadow: 0 30px 70px -30px rgba(0,0,0,.45); }
+.chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 12px; font-weight: 700; font-size: 15px; }
+.score { font-family: D; font-weight: 600; letter-spacing: -0.02em; }
+.mute { color: var(--g4); }
+.row { display: flex; align-items: center; }

@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"></head><body><div id="stage"></div>
+<script src="strings.js"></script><script src="engine.js"></script><script src="scenes.js"></script>
+<script>
+window.SCENES = [
+  logoScene(3.0, S.slogan),
+  fast(postScene(3.8 * 1.7, S.postCap, ''), 1.7),
+  fast(rankScene(3.4 * 1.2, S.rankCapIntro, ''), 1.2),
+  fast(hireScene(3.4 * 1.1, S.hireCap, ''), 1.1),
+];
+</script></body></html>
