@@ -9,6 +9,7 @@ import { EMPLOYMENT_TYPES, STAGES, WORK_MODES, type Job, type Stage } from '@/li
 import { isHexColor, safeUrl } from '@/lib/utils';
 import { AI_LANGUAGE, isLocale } from '@/i18n';
 import { getLocale } from '@/i18n/server';
+import { DICTS } from '@/i18n';
 
 type Result = { error?: string; ok?: boolean };
 
@@ -222,12 +223,14 @@ export async function askAboutCandidates(
   if (error) return { error: error.message };
   if (!data || data.length === 0) return { error: 'There are no candidates to ask about yet.' };
 
+  const locale = getLocale();
+  const stageNames = DICTS[locale].dash.stages as Record<string, string>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const people = (data as any[]).map((a) => ({
     id: a.id as string,
     name: a.full_name as string,
     role: (a.jobs?.title as string) ?? 'Role',
-    stage: a.stage as string,
+    stage: stageNames[a.stage as string] ?? (a.stage as string),
     score: (a.ai_score as number | null) ?? null,
     summary: (a.ai_summary as string | null) ?? null,
     strengths: (a.ai_strengths as string[]) ?? [],
@@ -237,7 +240,7 @@ export async function askAboutCandidates(
   }));
 
   try {
-    const answer = await askPipeline(q, people, AI_LANGUAGE[getLocale()]);
+    const answer = await askPipeline(q, people, AI_LANGUAGE[locale]);
     const names: Record<string, string> = {};
     for (const p of people) names[p.id] = p.name;
     return { result: { ...answer, names } };

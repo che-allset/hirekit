@@ -257,8 +257,9 @@ Rules:
 - Never rank, filter or comment on anyone by age, gender, ethnicity, nationality, religion, disability, family status or appearance, and never guess these from names. If asked to, briefly decline and offer a job-relevant alternative.
 - Language skills count only when the candidate states them in their application.
 - You advise; the team decides. Don't tell them to reject anyone.
-- Keep the answer short: 2–5 sentences, plain language, no markdown headings.
-- List up to 5 candidates you relied on, each with one short job-relevant reason. Use the exact ids given.`;
+- Keep the answer short: at most 4 sentences and about 80 words, plain language, no markdown.
+- Refer to stages exactly as they are written in the data.
+- ALWAYS fill the candidates list with every candidate you name in the answer (up to 5), each with one short job-relevant reason. Use the exact ids given.`;
 
 const PIPELINE_TOOL: Anthropic.Messages.Tool = {
   name: 'answer_question',
@@ -266,7 +267,7 @@ const PIPELINE_TOOL: Anthropic.Messages.Tool = {
   input_schema: {
     type: 'object',
     properties: {
-      answer: { type: 'string', description: 'Short plain-language answer, 2-5 sentences.' },
+      answer: { type: 'string', description: 'Short plain-language answer, at most 4 sentences.' },
       candidates: {
         type: 'array',
         items: {
@@ -317,11 +318,18 @@ Team notes: ${c.notes ?? 'none'}
   const out = toolInput(res, PIPELINE_TOOL.name);
   const ids = new Set(people.map((p) => p.id));
   const list = Array.isArray(out.candidates) ? out.candidates : [];
-  return {
-    answer: typeof out.answer === 'string' ? out.answer.trim() : '',
-    candidates: list
-      .filter((c): c is { id: string; reason: string } => !!c && typeof c === 'object' && ids.has((c as { id?: string }).id ?? ''))
+  const answer = typeof out.answer === 'string' ? out.answer.trim() : '';
+  let candidates = list
+    .filter((c): c is { id: string; reason: string } => !!c && typeof c === 'object' && ids.has((c as { id?: string }).id ?? ''))
+    .slice(0, 5)
+    .map((c) => ({ id: c.id, reason: String(c.reason ?? '').slice(0, 200) }));
+
+  // Safety net: if the model named people but didn't list them, link them anyway.
+  if (candidates.length === 0 && answer) {
+    candidates = people
+      .filter((p) => answer.includes(p.name))
       .slice(0, 5)
-      .map((c) => ({ id: c.id, reason: String(c.reason ?? '').slice(0, 200) })),
-  };
+      .map((p) => ({ id: p.id, reason: [p.role, p.score !== null ? `${p.score}/100` : ''].filter(Boolean).join(', ') }));
+  }
+  return { answer, candidates };
 }
