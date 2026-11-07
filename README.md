@@ -23,13 +23,19 @@ It also includes a full **marketing landing page** for the service.
 | **Logo** | A plug whose prongs and crossbar form an H, for plug-and-play hiring (`src/components/Logo.tsx`, `src/app/icon.svg`) |
 | **Colour** | Graphite `#23272D`, steel `#E7E9EC`, signal yellow `#FFD12E`, forest `#1D5C47` for positive states |
 | **Type** | One self-hosted grotesque family: condensed bold for headlines, regular and bold for text |
-| **Photos** | Real photos (Unsplash/Pexels licenses) with one graphite duotone treatment, so they read as one brand (`public/photos/CREDITS.md`) |
+| **Photos** | Real full-colour photos (Pexels License) from one photographer's series, with a light shared grade (`public/photos/CREDITS.md`) |
 | **Intro film** | 14-second silent loop in the hero (`public/video/intro.mp4`) |
 | **Tour / VSL** | 1:26 video sales letter with on-screen text (`public/video/hirekit-tour.mp4`), plus a voiceover script in `docs/vsl-voiceover.md` |
 | **Multi-step forms** | 4-step company sign-up (company, hiring needs, brand colour with live preview, account) and a 3-step candidate application |
 | **Pricing** | Monthly/yearly toggle, three plans and a full comparison table |
 
 The videos are rendered from code: each scene is an HTML frame drawn at 30 fps and encoded with ffmpeg.
+
+## Two features beyond the brief
+
+**1. Try it on a real application (landing page, `/#try`).** Visitors edit the must-haves, paste a CV or upload a PDF, and get the same AI assessment a recruiter would see, with no sign-up. Nothing is stored. The endpoint (`/api/try`) has input limits and per-visitor rate limiting because it is public. It is the fastest way for a buyer, or a reviewer, to see the product's core value.
+
+**2. Ask your pipeline (dashboard, `/dashboard/ask`).** Recruiters ask questions in plain language, such as "Who should I interview first?" or "Who has customer-facing experience and speaks German?". Claude answers only from the candidates' applications, AI assessments and team notes, and links to each candidate it relied on. It declines to rank or filter by age, gender, nationality or other protected traits, and never guesses them from names. That keeps the feature useful and in line with the EU AI Act.
 
 ## How I read the brief
 

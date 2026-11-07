@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Downloads the landing-page photos into public/photos.
-# All photos are free to use: Unsplash License / Pexels License.
+# All photos are free to use: Pexels License.
 # Run once from the project root:  bash scripts/get-photos.sh
 set -u
 mkdir -p public/photos

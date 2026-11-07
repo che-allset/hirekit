@@ -64,24 +64,22 @@ p {
   }
 }
 
-/* Photo treatment: every photo gets the same graphite duotone so
-   pictures from different sources read as one brand. */
+/* Photo treatment: full colour with one shared, gentle grade so photos
+   from different shoots sit together. */
 .duotone {
   position: relative;
   overflow: hidden;
-  background: #23272d;
+  background: #2e333a;
 }
 .duotone img {
-  filter: grayscale(1) contrast(1.08) brightness(1.04);
-  mix-blend-mode: luminosity;
-  opacity: 0.92;
+  filter: saturate(1.08) contrast(1.04) brightness(1.02);
 }
 .duotone::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 209, 46, 0) 55%, rgba(255, 209, 46, 0.16));
-  mix-blend-mode: multiply;
+  box-shadow: inset 0 0 0 1px rgba(35, 39, 45, 0.08);
+  border-radius: inherit;
   pointer-events: none;
 }
 

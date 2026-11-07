@@ -1,4 +1,13 @@
 # Photo credits
 
-All photos: Pexels (fauxels), Pexels License, shown with HireKit's duotone treatment.
-IDs: team 3184663, coffee 3182795, resume 3183151, interview 3184354, laughing 3182804, meeting 3183172, candidate 3182777.
+All photos are from Pexels (photographer: fauxels), used under the Pexels License, and shown with a light, shared colour grade.
+
+| File | Pexels photo |
+|---|---|
+| team.jpg | 3184663 |
+| coffee.jpg | 3182795 |
+| resume.jpg | 3183151 |
+| interview.jpg | 3184354 |
+| laughing.jpg | 3182804 |
+| meeting.jpg | 3183172 |
+| candidate.jpg | 3182777 |

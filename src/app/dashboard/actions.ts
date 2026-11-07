@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { requireCompany } from '@/lib/company';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { draftJobPost, screenCandidate } from '@/lib/ai';
+import { askPipeline, draftJobPost, screenCandidate, type PipelineAnswer } from '@/lib/ai';
 import { EMPLOYMENT_TYPES, STAGES, WORK_MODES, type Job, type Stage } from '@/lib/types';
 import { isHexColor, safeUrl } from '@/lib/utils';
 
@@ -194,4 +194,50 @@ export async function saveSettings(input: {
   if (error) return { error: error.message };
   revalidatePath('/', 'layout');
   return { ok: true };
+}
+
+// ───────────────────────── Ask your pipeline ─────────────────────────
+
+export async function askAboutCandidates(
+  question: string,
+  jobId: string | null,
+): Promise<{ error?: string; result?: PipelineAnswer & { names: Record<string, string> } }> {
+  const q = question.trim().slice(0, 500);
+  if (q.length < 4) return { error: 'Type a question about your candidates.' };
+
+  const { supabase, company } = await requireCompany();
+  let query = supabase
+    .from('applications')
+    .select('id, full_name, stage, ai_score, ai_summary, ai_strengths, ai_gaps, cover_letter, notes, jobs(title)')
+    .eq('company_id', company.id)
+    .order('ai_score', { ascending: false, nullsFirst: false })
+    .limit(60);
+  if (jobId) query = query.eq('job_id', jobId);
+  const { data, error } = await query;
+  if (error) return { error: error.message };
+  if (!data || data.length === 0) return { error: 'There are no candidates to ask about yet.' };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const people = (data as any[]).map((a) => ({
+    id: a.id as string,
+    name: a.full_name as string,
+    role: (a.jobs?.title as string) ?? 'Role',
+    stage: a.stage as string,
+    score: (a.ai_score as number | null) ?? null,
+    summary: (a.ai_summary as string | null) ?? null,
+    strengths: (a.ai_strengths as string[]) ?? [],
+    gaps: (a.ai_gaps as string[]) ?? [],
+    coverLetter: (a.cover_letter as string | null) ?? null,
+    notes: (a.notes as string | null) ?? null,
+  }));
+
+  try {
+    const answer = await askPipeline(q, people);
+    const names: Record<string, string> = {};
+    for (const p of people) names[p.id] = p.name;
+    return { result: { ...answer, names } };
+  } catch (err) {
+    console.error('Ask pipeline failed', err);
+    return { error: 'The assistant is unavailable right now. Try again in a moment.' };
+  }
 }

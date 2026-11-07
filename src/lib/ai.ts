@@ -219,3 +219,102 @@ Write the job post by calling the write_job_post tool.`,
     requirements: typeof out.requirements === 'string' ? out.requirements.trim() : '',
   };
 }
+
+// ─────────────────────────────────────────────────────────────
+// Ask your pipeline: questions about candidates in plain language
+// ─────────────────────────────────────────────────────────────
+
+export interface PipelineCandidate {
+  id: string;
+  name: string;
+  role: string;
+  stage: string;
+  score: number | null;
+  summary: string | null;
+  strengths: string[];
+  gaps: string[];
+  coverLetter: string | null;
+  notes: string | null;
+}
+
+export interface PipelineAnswer {
+  answer: string;
+  candidates: { id: string; reason: string }[];
+}
+
+const PIPELINE_SYSTEM = `You help a small company's hiring team understand their own candidate pipeline.
+
+Rules:
+- Answer ONLY from the candidate data provided. If the data doesn't say, say so plainly and suggest what to ask the candidate.
+- Base comparisons on job-relevant evidence: experience, skills, results, the AI fit score and the team's notes.
+- Never rank, filter or comment on anyone by age, gender, ethnicity, nationality, religion, disability, family status or appearance, and never guess these from names. If asked to, briefly decline and offer a job-relevant alternative.
+- Language skills count only when the candidate states them in their application.
+- You advise; the team decides. Don't tell them to reject anyone.
+- Keep the answer short: 2–5 sentences, plain language, no markdown headings.
+- List up to 5 candidates you relied on, each with one short job-relevant reason. Use the exact ids given.`;
+
+const PIPELINE_TOOL: Anthropic.Messages.Tool = {
+  name: 'answer_question',
+  description: 'Return the answer and the candidates it refers to.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      answer: { type: 'string', description: 'Short plain-language answer, 2-5 sentences.' },
+      candidates: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            reason: { type: 'string', description: 'One short job-relevant reason.' },
+          },
+          required: ['id', 'reason'],
+        },
+      },
+    },
+    required: ['answer', 'candidates'],
+  },
+};
+
+export async function askPipeline(question: string, people: PipelineCandidate[]): Promise<PipelineAnswer> {
+  const data = people
+    .map(
+      (c) => `<candidate id="${c.id}">
+Name: ${c.name}
+Applied for: ${c.role}
+Stage: ${c.stage}
+AI fit score: ${c.score ?? 'not scored'}
+Summary: ${c.summary ?? 'n/a'}
+Strengths: ${c.strengths.join('; ') || 'n/a'}
+Gaps: ${c.gaps.join('; ') || 'n/a'}
+Application text: ${(c.coverLetter ?? 'n/a').slice(0, 900)}
+Team notes: ${c.notes ?? 'none'}
+</candidate>`,
+    )
+    .join('\n');
+
+  const res = await client().messages.create({
+    model: MODEL,
+    max_tokens: 1000,
+    system: PIPELINE_SYSTEM,
+    tools: [PIPELINE_TOOL],
+    tool_choice: { type: 'auto' },
+    messages: [
+      {
+        role: 'user',
+        content: `Candidates (${people.length}):\n${data}\n\nQuestion from the hiring team: ${question}\n\nAnswer by calling the answer_question tool.`,
+      },
+    ],
+  });
+
+  const out = toolInput(res, PIPELINE_TOOL.name);
+  const ids = new Set(people.map((p) => p.id));
+  const list = Array.isArray(out.candidates) ? out.candidates : [];
+  return {
+    answer: typeof out.answer === 'string' ? out.answer.trim() : '',
+    candidates: list
+      .filter((c): c is { id: string; reason: string } => !!c && typeof c === 'object' && ids.has((c as { id?: string }).id ?? ''))
+      .slice(0, 5)
+      .map((c) => ({ id: c.id, reason: String(c.reason ?? '').slice(0, 200) })),
+  };
+}

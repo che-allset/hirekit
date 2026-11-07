@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 const LINKS = [
   { href: '/dashboard', label: 'Overview', icon: '◐' },
   { href: '/dashboard/candidates', label: 'Candidates', icon: '◎' },
+  { href: '/dashboard/ask', label: 'Ask your pipeline', icon: '✦' },
   { href: '/dashboard/jobs', label: 'Jobs', icon: '▤' },
   { href: '/dashboard/settings', label: 'Careers & widget', icon: '⌘' },
 ];

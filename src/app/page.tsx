@@ -3,6 +3,7 @@ import { Logo, LogoMark } from '@/components/Logo';
 import { Photo } from '@/components/landing/Photo';
 import { IntroFilm, SalesVideo } from '@/components/landing/Videos';
 import { Pricing } from '@/components/landing/Pricing';
+import { TryIt } from '@/components/landing/TryIt';
 import { getOrigin } from '@/lib/company';
 
 const DEMO_SLUG = 'northwind-labs';
@@ -18,6 +19,7 @@ export default function LandingPage() {
         <Problem />
         <Steps />
         <Screening />
+        <TrySection />
         <Widget origin={origin} />
         <Fairness />
         <section id="pricing" className="scroll-mt-20 py-24 md:py-32">
@@ -43,6 +45,7 @@ function Nav() {
         <nav aria-label="Main" className="hidden items-center gap-8 text-[15px] text-graphite-600 md:flex">
           <a href="#how" className="hover:text-graphite">How it works</a>
           <a href="#screening" className="hover:text-graphite">Screening</a>
+          <a href="#try" className="hover:text-graphite">Try it</a>
           <a href="#pricing" className="hover:text-graphite">Pricing</a>
           <a href="#faq" className="hover:text-graphite">Questions</a>
         </nav>
@@ -67,11 +70,11 @@ function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-14 md:pt-20 lg:grid-cols-[1fr_1.08fr] lg:gap-14">
         <div className="hero-in">
           <h1 className="font-display text-[56px] leading-[0.92] sm:text-7xl lg:text-[84px]">
-            Hire your next people without an HR department.
+            Hire like you have an HR team.
           </h1>
           <p className="mt-7 max-w-[34rem] text-lg leading-relaxed text-graphite-600 md:text-xl">
-            HireKit gives your company a careers page, a jobs widget for the website you already have, and an assistant
-            that reads every application against your requirements.
+            HireKit gives small companies a careers page, a jobs widget for the website you already have, and an
+            assistant that reads every application against your requirements.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link href="/signup" className="btn-signal px-7 py-4 text-base">
@@ -220,8 +223,8 @@ function Screening() {
               <dd className="mt-1 text-graphite-600">Strengths, gaps and the questions worth asking.</dd>
             </div>
             <div>
-              <dt className="font-bold">Flags thin applications</dt>
-              <dd className="mt-1 text-graphite-600">Unverified claims score low until you have evidence.</dd>
+              <dt className="font-bold">Answers your questions</dt>
+              <dd className="mt-1 text-graphite-600">Ask “who should I call first?” and get an answer that links to each person.</dd>
             </div>
             <div>
               <dt className="font-bold">Writes your job ads</dt>
@@ -236,6 +239,26 @@ function Screening() {
 
 function Dot({ className }: { className: string }) {
   return <span className={`mt-1.5 h-2 w-2 flex-none rounded-full ${className}`} aria-hidden="true" />;
+}
+
+/* ───────────────────────── Try it live ───────────────────────── */
+
+function TrySection() {
+  return (
+    <section id="try" className="scroll-mt-20 bg-steel-200 py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-5">
+        <div className="max-w-2xl">
+          <h2 className="font-display text-5xl leading-[0.95] md:text-6xl">Try it on a real application.</h2>
+          <p className="mt-5 text-lg leading-relaxed text-graphite-600">
+            No sign-up. Edit the must-haves, paste a CV or upload a PDF, and see the same assessment your team would get.
+          </p>
+        </div>
+        <div className="mt-12">
+          <TryIt />
+        </div>
+      </div>
+    </section>
+  );
 }
 
 /* ───────────────────────── Widget ───────────────────────── */

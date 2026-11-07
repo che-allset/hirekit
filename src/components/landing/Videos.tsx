@@ -38,7 +38,7 @@ export function SalesVideo() {
   const [started, setStarted] = useState(false);
 
   return (
-    <div className="relative overflow-hidden rounded-[14px] bg-graphite shadow-lift">
+    <div className="relative overflow-hidden rounded-[14px] bg-signal shadow-lift ring-1 ring-white/10">
       <video
         ref={ref}
         className="block aspect-video w-full"
@@ -56,12 +56,12 @@ export function SalesVideo() {
             setStarted(true);
             ref.current?.play().catch(() => {});
           }}
-          className="group absolute inset-0 flex items-center justify-center"
+          className="group absolute inset-0 flex items-end justify-start p-[5%]"
           aria-label="Play the HireKit tour, 1 minute 26 seconds"
         >
-          <span className="flex items-center gap-3 rounded-full bg-signal py-3 pl-3 pr-6 font-bold text-graphite shadow-lift transition-transform group-hover:scale-[1.03]">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-graphite">
-              <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5 fill-signal" aria-hidden="true">
+          <span className="flex items-center gap-3 rounded-full bg-graphite py-2.5 pl-2.5 pr-6 font-bold text-white shadow-lift transition-transform group-hover:scale-[1.03]">
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-signal">
+              <svg viewBox="0 0 24 24" className="ml-0.5 h-5 w-5 fill-graphite" aria-hidden="true">
                 <path d="M7 4.5v15l13-7.5z" />
               </svg>
             </span>
