@@ -333,3 +333,52 @@ Team notes: ${c.notes ?? 'none'}
   }
   return { answer, candidates };
 }
+
+// ─────────────────────────────────────────────────────────────
+// Translation of company-written content (job posts, tagline)
+// ─────────────────────────────────────────────────────────────
+
+const TRANSLATE_TOOL = {
+  name: 'return_translations',
+  description: 'Return the translated strings, same count and order as the input.',
+  input_schema: {
+    type: 'object' as const,
+    properties: { translations: { type: 'array', items: { type: 'string' } } },
+    required: ['translations'],
+  },
+};
+
+/** Translate a list of strings into `language`. Throws if the result can't be trusted. */
+export async function translateStrings(strings: string[], language: string): Promise<string[]> {
+  if (strings.length === 0) return [];
+  const system = `You translate a company's job posts for its careers page into ${language}.
+Rules:
+- Return exactly ${strings.length} strings, in the same order, via the return_translations tool.
+- If a string is already in ${language}, return it unchanged.
+- Write job titles the way they usually appear in ${language} job ads (many tech titles stay in English).
+- Keep company and product names unchanged. Use the usual ${language} name for cities (e.g. Munich → München in German).
+- Keep numbers, currencies, salary ranges, markdown, bullet points and line breaks exactly as they are.
+- Translate naturally, not word for word. Do not add or remove information.`;
+  const models = Array.from(new Set([process.env.ANTHROPIC_TRANSLATE_MODEL || 'claude-haiku-5-5', MODEL]));
+  let lastError: unknown;
+  for (const model of models) {
+    try {
+      const res = await client().messages.create({
+        model,
+        max_tokens: 8000,
+        system,
+        tools: [TRANSLATE_TOOL],
+        tool_choice: { type: 'auto' },
+        messages: [{ role: 'user', content: JSON.stringify(strings) }],
+      });
+      const out = toolInput(res, TRANSLATE_TOOL.name).translations;
+      if (!Array.isArray(out) || out.length !== strings.length || !out.every((s) => typeof s === 'string')) {
+        throw new Error('Translation count mismatch');
+      }
+      return out as string[];
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}

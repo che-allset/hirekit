@@ -15,8 +15,8 @@ export function JobDetail({ company, job, backHref, t, locale }: { company: Comp
         <div className="mt-4 flex flex-wrap gap-2 text-sm text-ink-soft">
           {job.department && <span className="rounded-full bg-paper-warm px-3 py-1">{job.department}</span>}
           {job.location && <span className="rounded-full bg-paper-warm px-3 py-1">{job.location}</span>}
-          <span className="rounded-full bg-paper-warm px-3 py-1">{job.work_mode}</span>
-          <span className="rounded-full bg-paper-warm px-3 py-1">{job.employment_type}</span>
+          <span className="rounded-full bg-paper-warm px-3 py-1">{t.dash.workModes[job.work_mode] ?? job.work_mode}</span>
+          <span className="rounded-full bg-paper-warm px-3 py-1">{t.dash.employmentTypes[job.employment_type] ?? job.employment_type}</span>
           {job.salary_range && <span className="rounded-full bg-paper-warm px-3 py-1">{job.salary_range}</span>}
         </div>
 

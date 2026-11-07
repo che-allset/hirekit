@@ -4,6 +4,7 @@ import { getCareers } from '@/lib/careers';
 import { CompanyBadge } from '@/components/careers/CompanyBadge';
 import { JobList } from '@/components/careers/JobList';
 import { PoweredBy } from '@/components/careers/PoweredBy';
+import { translateCareers } from '@/lib/translate';
 import { safeUrl } from '@/lib/utils';
 import { getDict } from '@/i18n/server';
 import { fmt } from '@/i18n';
@@ -26,9 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CareersPage({ params }: Props) {
   const data = await getCareers(params.slug);
   if (!data) notFound();
-  const { company, jobs } = data;
-  const website = safeUrl(company.website);
   const { locale, t } = getDict();
+  const { company, jobs } = await translateCareers(data.company, data.jobs, locale);
+  const website = safeUrl(company.website);
 
   return (
     <div className="min-h-screen">
@@ -61,7 +62,7 @@ export default async function CareersPage({ params }: Props) {
 
       <main className="mx-auto -mt-8 max-w-3xl px-5 pb-16">
         <div className="rounded-3xl bg-paper p-1">
-          <JobList company={company} jobs={jobs} basePath={`/careers/${company.slug}`} t={t.careers} />
+          <JobList company={company} jobs={jobs} basePath={`/careers/${company.slug}`} t={t.careers} labels={t.dash} />
         </div>
         <PoweredBy label={t.careers.poweredBy} />
       </main>

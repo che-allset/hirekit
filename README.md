@@ -44,6 +44,7 @@ All of HireKit is available in **English, German, Spanish and French**: the land
 - Visitors get their **browser language automatically**, and can switch at any time from the language menu. The choice is remembered.
 - Companies can force a language on the widget with `data-lang="de"`.
 - The AI answers in the chosen language too: the **Try it** assessment, **Ask your pipeline**, the **job post writer** and re-run screenings.
+- **Job posts translate themselves.** A company writes each job once, in its own language. Candidates read it in theirs: Claude translates the title, description, requirements, location and tagline, and the result is cached for 30 days, so each post is translated only once per language. If translation ever fails, the original text is shown. (Model: `ANTHROPIC_TRANSLATE_MODEL`, default `claude-haiku-5-5`, falling back to the main model.)
 - All wording lives in `src/i18n/` (one file per language, type-checked against English, so a missing translation fails the build).
 
 ## How I read the brief

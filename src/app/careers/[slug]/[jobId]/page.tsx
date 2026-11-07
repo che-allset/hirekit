@@ -5,6 +5,7 @@ import { getPublicJob } from '@/lib/careers';
 import { CompanyBadge } from '@/components/careers/CompanyBadge';
 import { JobDetail } from '@/components/careers/JobDetail';
 import { PoweredBy } from '@/components/careers/PoweredBy';
+import { translateJob } from '@/lib/translate';
 import { getDict } from '@/i18n/server';
 import { fmt } from '@/i18n';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -23,8 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PublicJobPage({ params }: Props) {
   const data = await getPublicJob(params.slug, params.jobId);
   if (!data) notFound();
-  const { company, job } = data;
   const { locale, t } = getDict();
+  const { company } = data;
+  const job = await translateJob(data.job, locale);
 
   // Google for Jobs structured data, so roles can appear in Google's job search.
   const jsonLd = {

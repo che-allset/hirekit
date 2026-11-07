@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Company, Job } from '@/lib/types';
 import { fmt, type Dict } from '@/i18n';
 
-export function JobList({ company, jobs, basePath, t, query = '' }: { company: Company; jobs: Job[]; basePath: string; t: Dict['careers']; query?: string }) {
+export function JobList({ company, jobs, basePath, t, labels, query = '' }: { company: Company; jobs: Job[]; basePath: string; t: Dict['careers']; labels: Pick<Dict['dash'], 'workModes' | 'employmentTypes'>; query?: string }) {
   if (jobs.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-black/10 bg-white p-10 text-center">
@@ -34,8 +34,8 @@ export function JobList({ company, jobs, basePath, t, query = '' }: { company: C
                     <p className="truncate font-semibold group-hover:underline">{job.title}</p>
                     <div className="mt-2 flex flex-wrap gap-2 text-xs text-ink-soft">
                       {job.location && <Tag>{job.location}</Tag>}
-                      <Tag>{job.work_mode}</Tag>
-                      <Tag>{job.employment_type}</Tag>
+                      <Tag>{labels.workModes[job.work_mode] ?? job.work_mode}</Tag>
+                      <Tag>{labels.employmentTypes[job.employment_type] ?? job.employment_type}</Tag>
                       {job.salary_range && <Tag>{job.salary_range}</Tag>}
                     </div>
                   </div>
