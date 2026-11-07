@@ -2,13 +2,14 @@ import Link from 'next/link';
 import type { Company, Job } from '@/lib/types';
 import { ApplyForm } from './ApplyForm';
 import { RichText } from './RichText';
+import { fmt, type Dict, type Locale } from '@/i18n';
 
-export function JobDetail({ company, job, backHref }: { company: Company; job: Job; backHref: string }) {
+export function JobDetail({ company, job, backHref, t, locale }: { company: Company; job: Job; backHref: string; t: Dict; locale: Locale }) {
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_420px]">
       <article>
         <Link href={backHref} className="text-sm text-ink-mute hover:text-ink">
-          ← All roles at {company.name}
+          {fmt(t.careers.allRoles, { company: company.name })}
         </Link>
         <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">{job.title}</h1>
         <div className="mt-4 flex flex-wrap gap-2 text-sm text-ink-soft">
@@ -25,7 +26,7 @@ export function JobDetail({ company, job, backHref }: { company: Company; job: J
 
         {job.requirements && (
           <div className="mt-8">
-            <h2 className="mb-3 font-semibold">What we are looking for</h2>
+            <h2 className="mb-3 font-bold">{t.careers.lookingFor}</h2>
             <RichText text={job.requirements} />
           </div>
         )}
@@ -33,9 +34,9 @@ export function JobDetail({ company, job, backHref }: { company: Company; job: J
 
       <aside className="lg:sticky lg:top-6 lg:self-start">
         <div className="card p-6">
-          <h2 className="text-lg font-semibold">Apply for this role</h2>
-          <p className="mb-5 mt-1 text-sm text-ink-mute">Takes about two minutes.</p>
-          <ApplyForm jobId={job.id} jobTitle={job.title} companyName={company.name} brandColor={company.brand_color} />
+          <h2 className="text-lg font-bold">{t.careers.applyTitle}</h2>
+          <p className="mb-5 mt-1 text-sm text-ink-mute">{t.careers.applySub}</p>
+          <ApplyForm jobId={job.id} jobTitle={job.title} companyName={company.name} brandColor={company.brand_color} t={t.apply} locale={locale} />
         </div>
       </aside>
     </div>

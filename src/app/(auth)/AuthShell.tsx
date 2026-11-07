@@ -1,23 +1,32 @@
 import { Logo } from '@/components/Logo';
 import { Photo } from '@/components/landing/Photo';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import type { Locale } from '@/i18n';
 
 export function AuthShell({
   title,
   sub,
   children,
   photo = '/photos/candidate.jpg',
-  caption = 'Your careers page, your website widget and every application in one place.',
+  caption,
+  locale,
+  languageLabel,
 }: {
   title: string;
   sub: string;
   children: React.ReactNode;
   photo?: string;
-  caption?: string;
+  caption: string;
+  locale: Locale;
+  languageLabel: string;
 }) {
   return (
     <div className="grid min-h-screen lg:grid-cols-[1fr_0.9fr]">
       <div className="flex flex-col px-6 py-8 sm:px-12">
-        <Logo />
+        <div className="flex items-center justify-between gap-3">
+          <Logo />
+          <LanguageSwitcher locale={locale} label={languageLabel} />
+        </div>
         <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
           <h1 className="font-display text-5xl leading-[0.95]">{title}</h1>
           <p className="mt-3 text-lg text-graphite-600">{sub}</p>

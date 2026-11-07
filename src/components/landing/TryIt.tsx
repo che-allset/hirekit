@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import type { Dict, Locale } from '@/i18n';
 
 type Result = {
   score: number;
@@ -13,39 +14,18 @@ type Result = {
   questions: string[];
 };
 
-const ROLE = {
-  title: 'Customer Success Manager',
-  requirements: `- 3+ years in customer success or account management for B2B software
-- Fluent German and English
-- Proven record of improving retention or expansion
-- Confident running trainings and workshops`,
+const VERDICT_STYLE: Record<Result['verdict'], { color: string; bg: string }> = {
+  strong: { color: '#1D5C47', bg: '#DCEBE4' },
+  possible: { color: '#9A6B00', bg: '#FFF3C7' },
+  weak: { color: '#B3321F', bg: '#FBE3DF' },
 };
 
-const SAMPLES = [
-  {
-    label: 'Sample A',
-    text: `Customer Success Manager, SaaS company in Munich (2021–today)
-- Own 35 B2B accounts, €1.2M ARR
-- Built an onboarding playbook that cut churn from 14% to 9% in a year
-- Run monthly customer trainings in German and English
-Before: Account Executive, 2 years. Languages: German (native), English (C1).`,
-  },
-  {
-    label: 'Sample B',
-    text: `Retail store supervisor, 2 years. I manage a team of 6 and handle customer complaints.
-I'm good with people and want to move into tech. I speak English and some Spanish.`,
-  },
-];
+type T = Dict['tryIt'];
 
-const VERDICT: Record<Result['verdict'], { label: string; color: string; bg: string }> = {
-  strong: { label: 'Strong match', color: '#1D5C47', bg: '#DCEBE4' },
-  possible: { label: 'Possible match', color: '#9A6B00', bg: '#FFF3C7' },
-  weak: { label: 'Weak match', color: '#B3321F', bg: '#FBE3DF' },
-};
-
-export function TryIt() {
-  const [requirements, setRequirements] = useState(ROLE.requirements);
-  const [text, setText] = useState(SAMPLES[0]!.text);
+export function TryIt({ t, locale }: { t: T; locale: Locale }) {
+  const samples = t.samples;
+  const [requirements, setRequirements] = useState(t.requirements);
+  const [text, setText] = useState(samples[0]!);
   const [file, setFile] = useState<File | null>(null);
   const [state, setState] = useState<'idle' | 'loading'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -57,17 +37,18 @@ export function TryIt() {
     setState('loading');
     setResult(null);
     const fd = new FormData();
-    fd.set('title', ROLE.title);
+    fd.set('title', t.role);
+    fd.set('lang', locale);
     fd.set('requirements', requirements);
     fd.set('application', text);
     if (file) fd.set('cv', file);
     try {
       const res = await fetch('/api/try', { method: 'POST', body: fd });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error((json as { error?: string }).error || 'Something went wrong. Try again.');
+      if (!res.ok) throw new Error((json as { error?: string }).error || t.error);
       setResult(json as Result);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Something went wrong. Try again.');
+      setError(e instanceof Error ? e.message : t.error);
     } finally {
       setState('idle');
     }
@@ -77,33 +58,33 @@ export function TryIt() {
     <div className="grid gap-4 lg:grid-cols-2">
       {/* Input */}
       <div className="rounded-[14px] bg-white p-6 md:p-8">
-        <p className="text-sm font-bold text-graphite-600">Role: {ROLE.title}</p>
+        <p className="text-sm font-bold text-graphite-600">{t.roleLabel} {t.role}</p>
         <label className="label mt-5" htmlFor="try-req">
-          Must-haves
+          {t.mustHaves}
         </label>
         <textarea id="try-req" rows={5} className="input resize-y text-[14px] leading-relaxed" value={requirements} onChange={(e) => setRequirements(e.target.value)} maxLength={1500} />
 
         <div className="mt-5 flex items-center justify-between gap-3">
           <label className="label mb-0" htmlFor="try-app">
-            Application
+            {t.application}
           </label>
           <div className="flex gap-1.5">
-            {SAMPLES.map((s) => (
+            {samples.map((sample, i) => (
               <button
-                key={s.label}
+                key={i}
                 type="button"
                 onClick={() => {
-                  setText(s.text);
+                  setText(sample);
                   setFile(null);
                   if (fileRef.current) fileRef.current.value = '';
                   setResult(null);
                 }}
                 className={cn(
                   'rounded-full border px-3 py-1 text-xs font-bold',
-                  text === s.text ? 'border-graphite bg-graphite text-white' : 'border-graphite/15 hover:border-graphite/40',
+                  text === sample ? 'border-graphite bg-graphite text-white' : 'border-graphite/15 hover:border-graphite/40',
                 )}
               >
-                {s.label}
+                {i === 0 ? t.sampleA : t.sampleB}
               </button>
             ))}
           </div>
@@ -115,11 +96,11 @@ export function TryIt() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={6000}
-          placeholder="Paste a CV or a few lines about the candidate."
+          placeholder={t.placeholder}
         />
         <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
           <label className="cursor-pointer font-bold underline underline-offset-4">
-            {file ? 'Change PDF' : 'Or upload a PDF CV'}
+            {file ? t.change : t.upload}
             <input
               ref={fileRef}
               type="file"
@@ -132,16 +113,16 @@ export function TryIt() {
             <span className="text-graphite-600">
               {file.name}{' '}
               <button type="button" className="ml-1 text-flag" onClick={() => { setFile(null); if (fileRef.current) fileRef.current.value = ''; }}>
-                Remove
+                {t.remove}
               </button>
             </span>
           )}
         </div>
 
         <button type="button" onClick={run} disabled={state === 'loading'} className="btn-signal mt-6 w-full py-4 text-base">
-          {state === 'loading' ? 'Reading the application…' : 'Score this application'}
+          {state === 'loading' ? t.scoring : t.score}
         </button>
-        <p className="mt-3 text-xs text-graphite-400">Nothing you paste here is stored.</p>
+        <p className="mt-3 text-xs text-graphite-400">{t.stored}</p>
       </div>
 
       {/* Output */}
@@ -153,25 +134,26 @@ export function TryIt() {
             {state === 'loading' ? (
               <>
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-white/15 border-t-signal" />
-                <p className="mt-5 text-white/70">Reading against your must-haves…</p>
+                <p className="mt-5 text-white/70">{t.loading}</p>
               </>
             ) : (
               <>
-                <p className="font-display text-3xl">The assessment appears here.</p>
-                <p className="mt-3 text-white/60">Try Sample A, then Sample B, and compare.</p>
+                <p className="font-display text-3xl">{t.emptyTitle}</p>
+                <p className="mt-3 text-white/60">{t.emptySub}</p>
               </>
             )}
           </div>
         )}
 
-        {result && <ResultCard r={result} />}
+        {result && <ResultCard r={result} t={t} />}
       </div>
     </div>
   );
 }
 
-function ResultCard({ r }: { r: Result }) {
-  const v = VERDICT[r.verdict] ?? VERDICT.possible;
+function ResultCard({ r, t }: { r: Result; t: T }) {
+  const v = VERDICT_STYLE[r.verdict] ?? VERDICT_STYLE.possible;
+  const label = t.verdicts[r.verdict] ?? t.verdicts.possible;
   const C = 2 * Math.PI * 42;
   return (
     <div>
@@ -196,20 +178,20 @@ function ResultCard({ r }: { r: Result }) {
         </svg>
         <div>
           <span className="chip" style={{ background: v.bg, color: v.color }}>
-            {v.label}
+            {label}
           </span>
           <p className="mt-3 leading-relaxed text-white/85">{r.summary}</p>
         </div>
       </div>
 
       <div className="mt-7 grid gap-6 sm:grid-cols-2">
-        <List title="Strengths" items={r.strengths} dot="bg-[#5FBF95]" />
-        <List title="Gaps to explore" items={r.gaps} dot="bg-signal" />
+        <List title={t.strengths} none={t.none} items={r.strengths} dot="bg-[#5FBF95]" />
+        <List title={t.gaps} none={t.none} items={r.gaps} dot="bg-signal" />
       </div>
 
       {r.questions.length > 0 && (
         <div className="mt-7">
-          <p className="text-sm font-bold">Ask in the interview</p>
+          <p className="text-sm font-bold">{t.askInterview}</p>
           <ol className="mt-2 space-y-2 text-sm text-white/85">
             {r.questions.map((q, i) => (
               <li key={i} className="rounded-[10px] bg-white/[0.07] px-4 py-2.5">
@@ -221,13 +203,13 @@ function ResultCard({ r }: { r: Result }) {
       )}
 
       <Link href="/signup" className="btn-signal mt-8 w-full">
-        Screen your own applicants free
+        {t.cta}
       </Link>
     </div>
   );
 }
 
-function List({ title, items, dot }: { title: string; items: string[]; dot: string }) {
+function List({ title, items, dot, none }: { title: string; items: string[]; dot: string; none: string }) {
   return (
     <div>
       <p className="text-sm font-bold">{title}</p>
@@ -240,7 +222,7 @@ function List({ title, items, dot }: { title: string; items: string[]; dot: stri
             </li>
           ))
         ) : (
-          <li className="text-white/50">None noted</li>
+          <li className="text-white/50">{none}</li>
         )}
       </ul>
     </div>

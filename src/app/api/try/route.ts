@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { screenCandidate } from '@/lib/ai';
 import type { Job } from '@/lib/types';
+import { AI_LANGUAGE, isLocale } from '@/i18n';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -43,6 +44,8 @@ export async function POST(req: Request) {
   const title = str('title', 120) || 'Open role';
   const requirements = str('requirements', 1500);
   const text = str('application', 6000);
+  const lang = str('lang', 5);
+  const language = isLocale(lang) ? AI_LANGUAGE[lang] : 'English';
 
   if (requirements.length < 15) return bad('Add a few must-haves so there’s something to score against.');
 
@@ -72,7 +75,7 @@ export async function POST(req: Request) {
   };
 
   try {
-    const result = await screenCandidate(job, { fullName: 'Candidate', coverLetter: text || null, cvPdfBase64: pdf });
+    const result = await screenCandidate(job, { fullName: 'Candidate', coverLetter: text || null, cvPdfBase64: pdf, language });
     return NextResponse.json(result);
   } catch (err) {
     console.error('Try-it screening failed', err);

@@ -5,6 +5,10 @@ import { CompanyBadge } from '@/components/careers/CompanyBadge';
 import { JobList } from '@/components/careers/JobList';
 import { PoweredBy } from '@/components/careers/PoweredBy';
 import { safeUrl } from '@/lib/utils';
+import { getDict } from '@/i18n/server';
+import { fmt } from '@/i18n';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +28,7 @@ export default async function CareersPage({ params }: Props) {
   if (!data) notFound();
   const { company, jobs } = data;
   const website = safeUrl(company.website);
+  const { locale, t } = getDict();
 
   return (
     <div className="min-h-screen">
@@ -37,25 +42,28 @@ export default async function CareersPage({ params }: Props) {
               </span>
               <span className="font-semibold">{company.name}</span>
             </div>
-            {website && (
-              <a href={website} className="text-sm text-white/80 hover:text-white" target="_blank" rel="noreferrer">
-                Website ↗
-              </a>
-            )}
+            <div className="flex items-center gap-4">
+              {website && (
+                <a href={website} className="hidden text-sm text-white/80 hover:text-white sm:block" target="_blank" rel="noreferrer">
+                  {t.careers.website}
+                </a>
+              )}
+              <LanguageSwitcher locale={locale} label={t.nav.language} tone="dark" />
+            </div>
           </div>
-          <h1 className="mt-14 font-display text-5xl leading-tight md:text-6xl">Join {company.name}</h1>
+          <h1 className="mt-14 font-display text-5xl leading-tight md:text-6xl">{fmt(t.careers.join, { company: company.name })}</h1>
           {company.tagline && <p className="mt-3 max-w-xl text-lg text-white/85">{company.tagline}</p>}
           <p className="mt-6 text-sm text-white/70">
-            {jobs.length} open {jobs.length === 1 ? 'role' : 'roles'}
+            {jobs.length === 1 ? t.careers.openRole : fmt(t.careers.openRoles, { n: jobs.length })}
           </p>
         </div>
       </header>
 
       <main className="mx-auto -mt-8 max-w-3xl px-5 pb-16">
         <div className="rounded-3xl bg-paper p-1">
-          <JobList company={company} jobs={jobs} basePath={`/careers/${company.slug}`} />
+          <JobList company={company} jobs={jobs} basePath={`/careers/${company.slug}`} t={t.careers} />
         </div>
-        <PoweredBy />
+        <PoweredBy label={t.careers.poweredBy} />
       </main>
     </div>
   );

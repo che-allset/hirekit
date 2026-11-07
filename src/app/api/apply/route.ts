@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { screenCandidate } from '@/lib/ai';
 import { isEmail, safeUrl } from '@/lib/utils';
 import type { Job } from '@/lib/types';
+import { DICTS, fmt, isLocale } from '@/i18n';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // AI screening of a PDF can take a few seconds
@@ -27,8 +28,11 @@ export async function POST(req: Request) {
   try {
     form = await req.formData();
   } catch {
-    return bad('Invalid form submission.');
+    return bad(DICTS.en.apply.errors.invalid);
   }
+
+  const langRaw = text(form, 'lang', 5);
+  const E = DICTS[isLocale(langRaw) ? langRaw : 'en'].apply.errors;
 
   // Honeypot: real people never fill this hidden field.
   if (text(form, 'company_website')) return NextResponse.json({ ok: true });
@@ -41,24 +45,24 @@ export async function POST(req: Request) {
   const portfolioUrl = safeUrl(text(form, 'portfolio_url'));
   const coverLetter = text(form, 'cover_letter', 5000) || null;
 
-  if (!/^[0-9a-f-]{36}$/i.test(jobId)) return bad('This job could not be found.');
-  if (fullName.length < 2) return bad('Please enter your full name.');
-  if (!isEmail(email)) return bad('Please enter a valid email address.');
-  if (form.get('consent') !== 'on') return bad('Please agree to the processing of your application.');
+  if (!/^[0-9a-f-]{36}$/i.test(jobId)) return bad(E.jobNotFound);
+  if (fullName.length < 2) return bad(E.name);
+  if (!isEmail(email)) return bad(E.email);
+  if (form.get('consent') !== 'on') return bad(E.consent);
 
   const cv = form.get('cv');
   let cvBuffer: Buffer | null = null;
   if (cv instanceof File && cv.size > 0) {
-    if (cv.size > MAX_CV_BYTES) return bad('Your CV must be under 5 MB.');
+    if (cv.size > MAX_CV_BYTES) return bad(fmt(E.size, { n: 5 }));
     cvBuffer = Buffer.from(await cv.arrayBuffer());
     // Check the real file signature, not just the declared type.
-    if (cvBuffer.subarray(0, 5).toString('latin1') !== '%PDF-') return bad('Please upload your CV as a PDF.');
+    if (cvBuffer.subarray(0, 5).toString('latin1') !== '%PDF-') return bad(E.pdf);
   }
 
   const admin = createAdminClient();
 
   const { data: jobRow } = await admin.from('jobs').select('*').eq('id', jobId).eq('status', 'open').maybeSingle();
-  if (!jobRow) return bad('This job is no longer accepting applications.', 404);
+  if (!jobRow) return bad(E.closed, 404);
   const job = jobRow as Job;
 
   // Basic duplicate protection: one application per email per job.
@@ -67,7 +71,7 @@ export async function POST(req: Request) {
     .select('id', { count: 'exact', head: true })
     .eq('job_id', job.id)
     .eq('email', email);
-  if ((count ?? 0) > 0) return bad('You have already applied for this role. We will be in touch!', 409);
+  if ((count ?? 0) > 0) return bad(E.duplicate, 409);
 
   let cvPath: string | null = null;
   if (cvBuffer) {
@@ -77,7 +81,7 @@ export async function POST(req: Request) {
       .upload(cvPath, cvBuffer, { contentType: 'application/pdf', upsert: false });
     if (error) {
       console.error('CV upload failed', error);
-      return bad('We could not upload your CV. Please try again.', 500);
+      return bad(E.upload, 500);
     }
   }
 
@@ -99,7 +103,7 @@ export async function POST(req: Request) {
 
   if (insertError || !app) {
     console.error('Application insert failed', insertError);
-    return bad('We could not save your application. Please try again.', 500);
+    return bad(E.save, 500);
   }
 
   // AI screening. If it fails, the application is still saved and the

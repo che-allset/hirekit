@@ -5,6 +5,10 @@ import { getPublicJob } from '@/lib/careers';
 import { CompanyBadge } from '@/components/careers/CompanyBadge';
 import { JobDetail } from '@/components/careers/JobDetail';
 import { PoweredBy } from '@/components/careers/PoweredBy';
+import { getDict } from '@/i18n/server';
+import { fmt } from '@/i18n';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +24,7 @@ export default async function PublicJobPage({ params }: Props) {
   const data = await getPublicJob(params.slug, params.jobId);
   if (!data) notFound();
   const { company, job } = data;
+  const { locale, t } = getDict();
 
   // Google for Jobs structured data, so roles can appear in Google's job search.
   const jsonLd = {
@@ -42,16 +47,17 @@ export default async function PublicJobPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       <header className="border-b border-black/5 bg-white">
-        <div className="mx-auto flex h-16 max-w-6xl items-center px-5">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-5">
           <Link href={`/careers/${company.slug}`} className="flex items-center gap-3 font-semibold">
             <CompanyBadge company={company} />
             {company.name}
           </Link>
+          <LanguageSwitcher locale={locale} label={t.nav.language} />
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-10">
-        <JobDetail company={company} job={job} backHref={`/careers/${company.slug}`} />
-        <PoweredBy />
+        <JobDetail company={company} job={job} backHref={`/careers/${company.slug}`} t={t} locale={locale} />
+        <PoweredBy label={t.careers.poweredBy} />
       </main>
     </div>
   );

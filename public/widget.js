@@ -2,6 +2,7 @@
  * HireKit jobs widget
  * Usage: <script src="https://YOUR-HIREKIT-DOMAIN/widget.js" data-company="your-company-slug"></script>
  * Optional: data-target="#careers" to render inside a specific element.
+ * Optional: data-lang="de" (en, de, es, fr). Without it, the visitor's browser language is used.
  */
 (function () {
   'use strict';
@@ -20,7 +21,8 @@
   var origin = new URL(script.src, window.location.href).origin;
 
   var iframe = document.createElement('iframe');
-  iframe.src = origin + '/embed/' + encodeURIComponent(slug);
+  var lang = script.getAttribute('data-lang');
+  iframe.src = origin + '/embed/' + encodeURIComponent(slug) + (lang ? '?lang=' + encodeURIComponent(lang) : '');
   iframe.title = 'Open positions';
   iframe.setAttribute('loading', 'lazy');
   iframe.style.width = '100%';

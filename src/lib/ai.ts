@@ -47,6 +47,8 @@ export interface CandidateInput {
   portfolioUrl?: string | null;
   coverLetter?: string | null;
   cvPdfBase64?: string | null;
+  /** Language for the written assessment, e.g. 'German'. Defaults to English. */
+  language?: string;
 }
 
 const SCREENING_SYSTEM = `You are a careful, fair recruiting assistant. You screen job applications against the employer's own requirements and give the hiring team a short, honest first read.
@@ -129,7 +131,11 @@ Portfolio: ${candidate.portfolioUrl || 'not provided'}
 ### Cover letter / message
 ${candidate.coverLetter?.trim() || 'not provided'}
 
-Assess this application against the requirements and record your assessment by calling the record_assessment tool.`,
+Assess this application against the requirements and record your assessment by calling the record_assessment tool.${
+      candidate.language && candidate.language !== 'English'
+        ? `\nWrite the summary, strengths, gaps and interview questions in ${candidate.language}.`
+        : ''
+    }`,
   });
 
   const res = await client().messages.create({

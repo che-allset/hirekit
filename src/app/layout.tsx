@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
+import { getLocale } from '@/i18n/server';
 
 // Self-hosted grotesque (TeX Gyre Heros, GUST Font License). One family:
 // the condensed bold cut for display, regular/bold for everything else.
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable}`}>
+    <html lang={getLocale()} className={`${sans.variable} ${display.variable}`}>
       <body className="min-h-screen font-sans">{children}</body>
     </html>
   );

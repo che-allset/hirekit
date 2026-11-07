@@ -1,19 +1,20 @@
 import Link from 'next/link';
 import type { Company, Job } from '@/lib/types';
+import { fmt, type Dict } from '@/i18n';
 
-export function JobList({ company, jobs, basePath }: { company: Company; jobs: Job[]; basePath: string }) {
+export function JobList({ company, jobs, basePath, t, query = '' }: { company: Company; jobs: Job[]; basePath: string; t: Dict['careers']; query?: string }) {
   if (jobs.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-black/10 bg-white p-10 text-center">
-        <p className="font-medium">No open roles right now</p>
-        <p className="mt-1 text-sm text-ink-mute">Check back soon. {company.name} is growing.</p>
+        <p className="font-bold">{t.noRoles}</p>
+        <p className="mt-1 text-sm text-ink-mute">{fmt(t.noRolesSub, { company: company.name })}</p>
       </div>
     );
   }
 
   const groups = new Map<string, Job[]>();
   for (const job of jobs) {
-    const key = job.department || 'Open roles';
+    const key = job.department || t.otherRoles;
     groups.set(key, [...(groups.get(key) ?? []), job]);
   }
 
@@ -26,7 +27,7 @@ export function JobList({ company, jobs, basePath }: { company: Company; jobs: J
             {list.map((job) => (
               <li key={job.id}>
                 <Link
-                  href={`${basePath}/${job.id}`}
+                  href={`${basePath}/${job.id}${query}`}
                   className="group flex items-center justify-between gap-4 rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-card"
                 >
                   <div className="min-w-0">
