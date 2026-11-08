@@ -92,13 +92,14 @@ export function SettingsForm({ company, t }: { company: Company; t: Dict['dash']
         />
       </div>
       <div>
-        <span className="label">{t.colour}</span>
-        <div className="flex flex-wrap items-center gap-2">
-          {PRESETS.map((c) => (
+        <span className="label" id="settings-colour">{t.colour}</span>
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-labelledby="settings-colour">
+          {PRESETS.map((c, i) => (
             <button
               key={c}
               type="button"
-              aria-label={`Use ${c}`}
+              aria-label={fmt(t.useColour, { n: i + 1 })}
+              aria-pressed={values.brand_color.toLowerCase() === c.toLowerCase()}
               onClick={() => set('brand_color', c)}
               className="h-8 w-8 rounded-full ring-offset-2 transition"
               style={{
@@ -117,7 +118,7 @@ export function SettingsForm({ company, t }: { company: Company; t: Dict['dash']
         </div>
       </div>
 
-      {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+      {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p>}
       <button type="submit" disabled={status === 'saving'} className="btn-primary w-full">
         {status === 'saving' ? t.saving : status === 'saved' ? t.saved : t.save}
       </button>

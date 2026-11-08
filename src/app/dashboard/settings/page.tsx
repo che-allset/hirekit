@@ -16,7 +16,7 @@ export default async function SettingsPage({
   const origin = getOrigin();
   const careersUrl = `${origin}/careers/${company.slug}`;
   const snippet = `<script src="${origin}/widget.js" data-company="${company.slug}"></script>`;
-  const iframe = `<iframe src="${origin}/embed/${company.slug}" style="width:100%;min-height:600px;border:0" title="Open positions"></iframe>`;
+  const iframe = `<iframe src="${origin}/embed/${company.slug}" style="width:100%;min-height:600px;border:0" title="${st.iframeTitle}"></iframe>`;
 
   return (
     <div className="mx-auto max-w-5xl">

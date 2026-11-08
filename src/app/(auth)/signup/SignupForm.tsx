@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { cn, initials, isEmail } from '@/lib/utils';
 import { LogoMark } from '@/components/Logo';
 import { signUp } from '../actions';
@@ -100,11 +100,11 @@ export function SignupForm({ t, locale, languageLabel }: { t: T; locale: Locale;
           <form onSubmit={next} className="mt-10" noValidate>
             {step === 0 && (
               <Step title={t.companyTitle} sub={t.companySub}>
-                <Field label={t.companyName}>
-                  <input autoFocus className="input" value={data.company} onChange={(e) => set('company', e.target.value)} placeholder="Northwind Labs" autoComplete="organization" />
+                <Field label={t.companyName} htmlFor="signup-company">
+                  <input id="signup-company" autoFocus className="input" value={data.company} onChange={(e) => set('company', e.target.value)} placeholder="Northwind Labs" autoComplete="organization" />
                 </Field>
-                <Field label={t.website} hint={t.optional}>
-                  <input className="input" value={data.website} onChange={(e) => set('website', e.target.value)} placeholder="northwind.de" inputMode="url" />
+                <Field label={t.website} hint={t.optional} htmlFor="signup-website">
+                  <input id="signup-website" className="input" value={data.website} onChange={(e) => set('website', e.target.value)} placeholder="northwind.de" inputMode="url" />
                 </Field>
                 <Field label={t.teamSize}>
                   <Chips options={SIZES} value={data.size} onChange={(v) => set('size', v)} />
@@ -132,13 +132,13 @@ export function SignupForm({ t, locale, languageLabel }: { t: T; locale: Locale;
 
             {step === 2 && (
               <Step title={t.brandTitle} sub={t.brandSub}>
-                <div className="flex flex-wrap gap-3">
-                  {COLOURS.map((c) => (
+                <div className="flex flex-wrap gap-3" role="group" aria-label={t.brandTitle}>
+                  {COLOURS.map((c, i) => (
                     <button
                       key={c}
                       type="button"
                       onClick={() => set('colour', c)}
-                      aria-label={`Use colour ${c}`}
+                      aria-label={fmt(t.useColour, { n: i + 1 })}
                       aria-pressed={data.colour === c}
                       className={cn('h-11 w-11 rounded-full ring-offset-2 ring-offset-steel transition', data.colour === c && 'ring-[3px] ring-graphite')}
                       style={{ backgroundColor: c }}
@@ -167,11 +167,11 @@ export function SignupForm({ t, locale, languageLabel }: { t: T; locale: Locale;
 
             {step === 3 && (
               <Step title={t.accountTitle} sub={t.accountSub}>
-                <Field label={t.workEmail}>
-                  <input autoFocus type="email" className="input" value={data.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" />
+                <Field label={t.workEmail} htmlFor="signup-email">
+                  <input id="signup-email" autoFocus type="email" className="input" value={data.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" />
                 </Field>
-                <Field label={t.password} hint={t.passwordHint}>
-                  <input type="password" className="input" value={data.password} onChange={(e) => set('password', e.target.value)} autoComplete="new-password" />
+                <Field label={t.password} hint={t.passwordHint} htmlFor="signup-password">
+                  <input id="signup-password" type="password" className="input" value={data.password} onChange={(e) => set('password', e.target.value)} autoComplete="new-password" />
                 </Field>
                 <div className="rounded-[12px] bg-white p-4 text-sm">
                   <p className="font-bold">{data.company}</p>
@@ -239,11 +239,31 @@ function Step({ title, sub, children }: { title: string; sub: string; children: 
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+/**
+ * With `htmlFor` the label is linked to its input (screen readers read it, clicking it focuses the field).
+ * Without it (chip groups), the label names the group of buttons.
+ */
+function Field({ label, hint, htmlFor, children }: { label: string; hint?: string; htmlFor?: string; children: React.ReactNode }) {
+  const groupId = useId();
+  const text = (
+    <>
+      {label} {hint && <span className="font-normal text-graphite-400">({hint})</span>}
+    </>
+  );
+  if (htmlFor) {
+    return (
+      <div>
+        <label className="label" htmlFor={htmlFor}>
+          {text}
+        </label>
+        {children}
+      </div>
+    );
+  }
   return (
-    <div>
-      <p className="label">
-        {label} {hint && <span className="font-normal text-graphite-400">({hint})</span>}
+    <div role="group" aria-labelledby={groupId}>
+      <p className="label" id={groupId}>
+        {text}
       </p>
       {children}
     </div>

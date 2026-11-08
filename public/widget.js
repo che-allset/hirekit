@@ -23,7 +23,12 @@
   var iframe = document.createElement('iframe');
   var lang = script.getAttribute('data-lang');
   iframe.src = origin + '/embed/' + encodeURIComponent(slug) + (lang ? '?lang=' + encodeURIComponent(lang) : '');
-  iframe.title = 'Open positions';
+  // Screen readers announce this title. Same texts as dash.settings.iframeTitle in src/i18n
+  // (this script runs on the company's own website, so it can't load the dictionaries).
+  var TITLES = { en: 'Open positions', de: 'Offene Stellen', es: 'Ofertas de empleo', fr: 'Offres d’emploi' };
+  // Same rule as the widget content: data-lang if set, otherwise the visitor's browser language.
+  var titleLang = (lang || navigator.language || 'en').slice(0, 2).toLowerCase();
+  iframe.title = TITLES[titleLang] || TITLES.en;
   iframe.setAttribute('loading', 'lazy');
   iframe.style.width = '100%';
   iframe.style.minHeight = '320px';

@@ -64,7 +64,7 @@ export function PlanPicker({
       </div>
 
       {!configured && <p className="mt-6 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">{t.notConfigured}</p>}
-      {error && configured && <p className="mt-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800">{error}</p>}
+      {error && configured && <p className="mt-6 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">{error}</p>}
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {PAID_PLANS.map((plan, i) => {

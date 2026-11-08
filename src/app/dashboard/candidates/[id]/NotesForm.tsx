@@ -32,9 +32,10 @@ export function NotesForm({ id, initial, t }: { id: string; initial: string; t: 
         rows={6}
         className="input resize-y"
         placeholder={t.notesPh}
+        aria-label={t.notes}
       />
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-ink-mute">
+        <span className="text-xs text-ink-mute" aria-live="polite">
           {status === 'saved' ? t.saved : status === 'error' ? t.couldNotSave : dirty ? t.unsaved : ''}
         </span>
         <button type="submit" disabled={status === 'saving'} className="btn-ghost px-3 py-1.5 text-xs">

@@ -195,6 +195,7 @@ export function SchedulePanel({
             value={customLink}
             onChange={(e) => setCustomLink(e.target.value)}
             placeholder={t.linkPlaceholder}
+            aria-label={t.linkPlaceholder}
             className="input mt-3"
           />
         )}
@@ -268,9 +269,13 @@ export function SchedulePanel({
         <textarea id="note" rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t.notePlaceholder} className="input mt-2" />
       </div>
 
-      {result?.error && <p className="mt-4 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800">{result.error}</p>}
+      {result?.error && (
+        <p className="mt-4 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+          {result.error}
+        </p>
+      )}
       {result?.ok && (
-        <div className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <div className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-900" role="status">
           <p className="font-semibold">{result.invited ? fmt(t.sent, { email: candidateEmail }) : t.created}</p>
           {result.joinUrl && (
             <a href={result.joinUrl} target="_blank" rel="noreferrer" className="mt-1 block break-all underline">

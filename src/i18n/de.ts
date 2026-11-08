@@ -23,6 +23,8 @@ const de: typeof en = {
     faq: 'Fragen',
     login: 'Anmelden',
     startHiring: 'Jetzt einstellen',
+    mainMenu: 'Hauptmenü',
+    footerMenu: 'Fußzeilenmenü',
     language: 'Sprache',
   },
   hero: {
@@ -267,6 +269,7 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
       creating: 'Ihr Bereich wird erstellt …',
       create: 'Meine Karriereseite erstellen',
       haveAccount: 'Schon ein Konto?',
+      useColour: 'Farbe {n}',
       login: 'Anmelden',
       errors: {
         company: 'Geben Sie Ihren Firmennamen ein.',
@@ -528,6 +531,8 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
     },
     settings: {
       failed: 'Ihre Einstellungen wurden nicht gespeichert. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.',
+      useColour: 'Farbe {n}',
+      iframeTitle: 'Offene Stellen',
       title: 'Karriereseite & Widget',
       sub: 'Alles, was Sie brauchen, um HireKit in Ihre Website einzubinden.',
       careersTitle: '1. Ihre Karriereseite',

@@ -24,6 +24,8 @@ const en = {
     faq: 'Questions',
     login: 'Log in',
     startHiring: 'Start hiring',
+    mainMenu: 'Main menu',
+    footerMenu: 'Footer menu',
     language: 'Language',
   },
   hero: {
@@ -268,6 +270,7 @@ I'm good with people and want to move into tech. I speak English and some Spanis
       creating: 'Creating your workspace…',
       create: 'Create my careers page',
       haveAccount: 'Already have an account?',
+      useColour: 'Colour {n}',
       login: 'Log in',
       errors: {
         company: 'Enter your company name.',
@@ -529,6 +532,8 @@ I'm good with people and want to move into tech. I speak English and some Spanis
     },
     settings: {
       failed: 'Your settings weren’t saved. Check your connection and try again.',
+      useColour: 'Colour {n}',
+      iframeTitle: 'Open positions',
       title: 'Careers & widget',
       sub: 'Everything you need to plug HireKit into your website.',
       careersTitle: '1. Your careers page',

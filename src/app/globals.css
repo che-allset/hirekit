@@ -32,6 +32,13 @@ p {
   outline-offset: 2px;
 }
 
+/* File inputs are visually hidden (sr-only); show the same focus ring on their visible label. */
+label:has(input.sr-only:focus-visible),
+label:has(+ input.sr-only:focus-visible) {
+  outline: 3px solid #ffd12e;
+  outline-offset: 2px;
+}
+
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-[15px] font-bold transition-colors

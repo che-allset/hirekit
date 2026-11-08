@@ -153,6 +153,7 @@ export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale
             onChange={(e) => setNotes(e.target.value)}
             className="mt-4 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-lime-accent/50"
             placeholder={f.aiPh}
+            aria-label={f.aiTitle}
           />
           <button
             type="button"

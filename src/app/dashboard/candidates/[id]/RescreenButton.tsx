@@ -20,7 +20,11 @@ export function RescreenButton({
   const [error, setError] = useState<string | null>(null);
   return (
     <div className="flex items-center gap-3">
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {error && (
+        <span className="text-xs text-red-600" role="alert">
+          {error}
+        </span>
+      )}
       <button
         type="button"
         disabled={pending}

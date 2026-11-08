@@ -23,6 +23,8 @@ const fr: typeof en = {
     faq: 'Questions',
     login: 'Connexion',
     startHiring: 'Commencer à recruter',
+    mainMenu: 'Menu principal',
+    footerMenu: 'Menu de pied de page',
     language: 'Langue',
   },
   hero: {
@@ -267,6 +269,7 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
       creating: 'Création de votre espace…',
       create: 'Créer ma page carrières',
       haveAccount: 'Déjà un compte ?',
+      useColour: 'Couleur {n}',
       login: 'Se connecter',
       errors: {
         company: 'Saisissez le nom de votre entreprise.',
@@ -528,6 +531,8 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
     },
     settings: {
       failed: 'Vos paramètres n’ont pas été enregistrés. Vérifiez votre connexion et réessayez.',
+      useColour: 'Couleur {n}',
+      iframeTitle: 'Offres d’emploi',
       title: 'Page carrières et widget',
       sub: 'Tout ce qu’il faut pour intégrer HireKit à votre site.',
       careersTitle: '1. Votre page carrières',

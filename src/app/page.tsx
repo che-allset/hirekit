@@ -50,7 +50,7 @@ function Nav({ t, locale }: P & { locale: Locale }) {
     <header className="sticky top-0 z-40 border-b border-graphite/10 bg-steel/90 backdrop-blur">
       <div className="flex h-[68px] w-full items-center justify-between gap-3 px-5 md:px-8 lg:px-12">
         <Logo />
-        <nav aria-label="Main" className="hidden items-center gap-7 text-[15px] text-graphite-600 lg:flex">
+        <nav aria-label={t.nav.mainMenu} className="hidden items-center gap-7 text-[15px] text-graphite-600 lg:flex">
           <a href="#how" className="hover:text-graphite">{t.nav.howItWorks}</a>
           <a href="#screening" className="hover:text-graphite">{t.nav.screening}</a>
           <a href="#try" className="hover:text-graphite">{t.nav.tryIt}</a>
@@ -361,7 +361,7 @@ function Footer({ t, locale }: P & { locale: Locale }) {
           <Logo />
           <p className="mt-3 max-w-xs text-sm text-graphite-600">{t.footer.tagline}</p>
         </div>
-        <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-graphite-600">
+        <nav aria-label={t.nav.footerMenu} className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-graphite-600">
           <a href="#how" className="hover:text-graphite">{t.nav.howItWorks}</a>
           <a href="#pricing" className="hover:text-graphite">{t.nav.pricing}</a>
           <Link href={`/careers/${DEMO_SLUG}`} className="hover:text-graphite">{t.footer.sample}</Link>

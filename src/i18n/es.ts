@@ -23,6 +23,8 @@ const es: typeof en = {
     faq: 'Preguntas',
     login: 'Iniciar sesión',
     startHiring: 'Empieza a contratar',
+    mainMenu: 'Menú principal',
+    footerMenu: 'Menú del pie de página',
     language: 'Idioma',
   },
   hero: {
@@ -267,6 +269,7 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
       creating: 'Creando tu espacio…',
       create: 'Crear mi página de empleo',
       haveAccount: '¿Ya tienes cuenta?',
+      useColour: 'Color {n}',
       login: 'Iniciar sesión',
       errors: {
         company: 'Escribe el nombre de tu empresa.',
@@ -528,6 +531,8 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
     },
     settings: {
       failed: 'Tus ajustes no se guardaron. Revisa tu conexión e inténtalo de nuevo.',
+      useColour: 'Color {n}',
+      iframeTitle: 'Ofertas de empleo',
       title: 'Página de empleo y widget',
       sub: 'Todo lo que necesitas para conectar HireKit a tu web.',
       careersTitle: '1. Tu página de empleo',
