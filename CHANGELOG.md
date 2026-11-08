@@ -12,6 +12,7 @@ _(The polish session lists bigger ideas here instead of building them.)_
   - The intro poster images (`public/video/intro-poster-*.jpg`) show the slogan too, so re-render them with the videos. Link previews use the tour poster for now, so they don't show the slogan.
 
 ## 2026-11-08 · Company Claude Code (polish)
+- **Mobile landing page: Log in and language.** On phones (under 640px), "Already have an account? Log in" and the language picker now sit just below the hero buttons, using existing texts. The phone header itself is unchanged: a globe button there pushed "Empieza a contratar" onto two lines in Spanish, so I didn't put it there. From 640px up the header shows the language picker and Log in (Log in used to appear only from 768px). Checked in the browser at 375px (Spanish) and 640px (Spanish and French): one-line header, no sideways scrolling. Why: returning users on phones had to scroll to the footer to log in or change language.
 - **Grammar and wording slips.**
   - Singular/plural: "1 applicants", "1 days left", "1 roles planned", "1 open role(s)" now read "1 applicant", "1 day left", and so on, in all four languages. New `…One` keys, picked by a small `plural()` helper in `src/i18n/index.ts` that follows each language's rule (French uses the singular for 0 too).
   - French: "offre" is now used everywhere for an open role; pricing and billing used to say "annonce". "Annonce" stays where it means the written job ad.

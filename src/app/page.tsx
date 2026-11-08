@@ -59,7 +59,7 @@ function Nav({ t, locale }: P & { locale: Locale }) {
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher locale={locale} label={t.nav.language} className="hidden sm:inline-flex" />
-          <Link href="/login" className="hidden px-3 py-2 text-[15px] font-bold text-graphite-600 hover:text-graphite md:block">
+          <Link href="/login" className="hidden px-3 py-2 text-[15px] font-bold text-graphite-600 hover:text-graphite sm:block">
             {t.nav.login}
           </Link>
           <Link href="/signup" className="btn-signal py-2.5">
@@ -89,6 +89,16 @@ function Hero({ t, locale }: P & { locale: Locale }) {
             </a>
           </div>
           <p className="mt-4 text-sm text-graphite-400">{t.hero.note}</p>
+          {/* Phones: the header has no room for "Log in" or the language picker, so they sit here. */}
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 sm:hidden">
+            <p className="text-sm text-graphite-600">
+              {t.auth.signup.haveAccount}{' '}
+              <Link href="/login" className="font-bold text-graphite underline">
+                {t.nav.login}
+              </Link>
+            </p>
+            <LanguageSwitcher locale={locale} label={t.nav.language} />
+          </div>
         </div>
 
         <div className="hero-in relative [animation-delay:120ms]">
