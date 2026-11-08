@@ -82,16 +82,19 @@ export async function setJobStatus(jobId: string, status: 'open' | 'closed'): Pr
     const blocked = await openRoleBlocked(company, jobId);
     if (blocked) return { error: blocked };
   }
-  await supabase.from('jobs').update({ status }).eq('id', jobId).eq('company_id', company.id);
+  const { error } = await supabase.from('jobs').update({ status }).eq('id', jobId).eq('company_id', company.id);
+  if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   revalidatePath('/dashboard', 'layout');
   return { ok: true };
 }
 
-export async function deleteJob(jobId: string) {
+/** The client navigates back to the jobs list on success, so a failed delete can be shown. */
+export async function deleteJob(jobId: string): Promise<Result> {
   const { supabase, company } = await requireCompany();
-  await supabase.from('jobs').delete().eq('id', jobId).eq('company_id', company.id);
+  const { error } = await supabase.from('jobs').delete().eq('id', jobId).eq('company_id', company.id);
+  if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   revalidatePath('/dashboard', 'layout');
-  redirect('/dashboard/jobs');
+  return { ok: true };
 }
 
 export async function generateJobDraft(input: {
@@ -129,7 +132,7 @@ export async function setStage(applicationId: string, stage: Stage): Promise<Res
     .update({ stage })
     .eq('id', applicationId)
     .eq('company_id', company.id);
-  if (error) return { error: error.message };
+  if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   revalidatePath('/dashboard', 'layout');
   return { ok: true };
 }

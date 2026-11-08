@@ -80,7 +80,7 @@ export default async function JobsPage() {
                 <Link href={`/dashboard/jobs/${job.id}`} className="btn-ghost px-3 py-1.5 text-xs">
                   {j.edit}
                 </Link>
-                <JobStatusToggle id={job.id} status={job.status} closeLabel={j.close} reopenLabel={j.reopen} />
+                <JobStatusToggle id={job.id} status={job.status} closeLabel={j.close} reopenLabel={j.reopen} errorLabel={t.dash.errors.saveFailed} />
               </div>
             </li>
           ))}

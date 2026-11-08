@@ -12,28 +12,46 @@ export function StageSelect({
   compact = false,
   labels,
   ariaLabel,
+  errorLabel,
 }: {
   id: string;
   stage: Stage;
   compact?: boolean;
   labels: Record<Stage, string>;
   ariaLabel: string;
+  errorLabel: string;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [value, setValue] = useState<Stage>(stage);
+  const [failed, setFailed] = useState(false);
   return (
+    <span className="inline-flex flex-col items-start gap-1">
     <select
       aria-label={ariaLabel}
       value={value}
       disabled={pending}
       onClick={(e) => e.stopPropagation()}
       onChange={async (e) => {
+        const previous = value;
         const next = e.target.value as Stage;
         setValue(next);
         setPending(true);
-        await setStage(id, next);
-        setPending(false);
+        setFailed(false);
+        let ok = false;
+        try {
+          ok = !(await setStage(id, next))?.error;
+        } catch {
+          ok = false;
+        } finally {
+          setPending(false);
+        }
+        if (!ok) {
+          // Show the stage that is really saved, not the one that failed.
+          setValue(previous);
+          setFailed(true);
+          return;
+        }
         router.refresh();
       }}
       className={cn(
@@ -48,5 +66,11 @@ export function StageSelect({
         </option>
       ))}
     </select>
+    {failed && (
+      <span role="alert" className="max-w-[220px] text-xs text-rose-700">
+        {errorLabel}
+      </span>
+    )}
+    </span>
   );
 }

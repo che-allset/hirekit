@@ -46,6 +46,8 @@ export function SchedulePanel({
   const [note, setNote] = useState('');
   const [result, setResult] = useState<ScheduleResult | null>(null);
   const [pending, startTransition] = useTransition();
+  const [cancelling, setCancelling] = useState<string | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!hasCalendar) return;
@@ -118,20 +120,34 @@ export function SchedulePanel({
                 </div>
                 <button
                   type="button"
-                  className="text-xs text-emerald-800 hover:text-rose-700"
-                  onClick={() =>
-                    startTransition(async () => {
-                      await cancelInterview(iv.id);
-                      router.refresh();
-                    })
-                  }
+                  disabled={cancelling !== null}
+                  className="text-xs text-emerald-800 hover:text-rose-700 disabled:opacity-50"
+                  onClick={async () => {
+                    if (!confirm(t.confirmCancel)) return;
+                    setCancelError(null);
+                    setCancelling(iv.id);
+                    try {
+                      const res = await cancelInterview(iv.id);
+                      if (res?.error) setCancelError(res.error);
+                      else router.refresh();
+                    } catch {
+                      setCancelError(t.errors.cancel);
+                    } finally {
+                      setCancelling(null);
+                    }
+                  }}
                 >
-                  {t.cancel}
+                  {cancelling === iv.id ? t.cancelling : t.cancel}
                 </button>
               </div>
             </li>
           ))}
         </ul>
+      )}
+      {cancelError && (
+        <p role="alert" className="mt-2 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {cancelError}
+        </p>
       )}
 
       <fieldset className="mt-5">

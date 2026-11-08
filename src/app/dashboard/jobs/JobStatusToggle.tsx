@@ -9,11 +9,13 @@ export function JobStatusToggle({
   status,
   closeLabel,
   reopenLabel,
+  errorLabel,
 }: {
   id: string;
   status: 'open' | 'closed';
   closeLabel: string;
   reopenLabel: string;
+  errorLabel: string;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
@@ -27,10 +29,15 @@ export function JobStatusToggle({
       onClick={async () => {
         setPending(true);
         setError(null);
-        const res = await setJobStatus(id, next);
-        setPending(false);
-        if (res?.error) setError(res.error);
-        else router.refresh();
+        try {
+          const res = await setJobStatus(id, next);
+          if (res?.error) setError(res.error);
+          else router.refresh();
+        } catch {
+          setError(errorLabel);
+        } finally {
+          setPending(false);
+        }
       }}
       className="btn-ghost px-3 py-1.5 text-xs"
     >

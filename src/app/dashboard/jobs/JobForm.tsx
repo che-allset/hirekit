@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { EMPLOYMENT_TYPES, WORK_MODES, type Job } from '@/lib/types';
 import { deleteJob, generateJobDraft, saveJob, type JobInput } from '../actions';
 import type { Dict, Locale } from '@/i18n';
@@ -22,6 +23,8 @@ export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [drafting, setDrafting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const router = useRouter();
 
   const set = <K extends keyof JobInput>(key: K, value: JobInput[K]) => setValues((v) => ({ ...v, [key]: value }));
 
@@ -165,12 +168,27 @@ export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale
           {job && (
             <button
               type="button"
+              disabled={deleting}
               onClick={async () => {
-                if (confirm(f.confirmDelete)) await deleteJob(job.id);
+                if (!confirm(f.confirmDelete)) return;
+                setError(null);
+                setDeleting(true);
+                try {
+                  const res = await deleteJob(job.id);
+                  if (res?.error) {
+                    setError(res.error);
+                    setDeleting(false);
+                  } else {
+                    router.push('/dashboard/jobs');
+                  }
+                } catch {
+                  setError(t.errors.saveFailed);
+                  setDeleting(false);
+                }
               }}
-              className="w-full text-center text-xs text-red-600 hover:underline"
+              className="w-full text-center text-xs text-red-600 hover:underline disabled:opacity-50"
             >
-              {f.delete}
+              {deleting ? '…' : f.delete}
             </button>
           )}
         </section>

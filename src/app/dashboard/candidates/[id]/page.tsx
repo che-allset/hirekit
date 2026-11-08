@@ -72,7 +72,7 @@ export default async function CandidatePage({ params }: { params: { id: string }
             {t.dash.schedule.inviteCta}
           </a>
           <span className="text-sm text-ink-mute">{c.stage}</span>
-          <StageSelect id={app.id} stage={app.stage} labels={t.dash.stages} ariaLabel={t.dash.moveToStage} />
+          <StageSelect id={app.id} stage={app.stage} labels={t.dash.stages} ariaLabel={t.dash.moveToStage} errorLabel={t.dash.errors.saveFailed} />
         </div>
       </div>
 

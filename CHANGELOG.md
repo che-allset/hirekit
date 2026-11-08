@@ -5,6 +5,9 @@ Newest first. Every session (Chee's Claude or the company's Claude Code) adds an
 ## Suggestions for Chee's session
 _(The polish session lists bigger ideas here instead of building them.)_
 
+## 2026-11-08 · Company Claude Code (polish)
+- **No more silent save failures in the dashboard.** If moving a candidate to another stage fails, the dropdown goes back to the real stage and says the change wasn't saved (it used to show the new stage anyway). Opening/closing a job and deleting a job now report database errors instead of pretending they worked; the delete button greys out while it runs. Cancelling an interview now asks "Are you sure?" first, can't be double-tapped and shows an error if it fails. New messages in EN/DE/ES/FR (`dash.errors.saveFailed`, `dash.schedule.confirmCancel`, `cancelling`, `errors.cancel`). Why: recruiters could believe a change was saved when it wasn't.
+
 ## 2026-11-08 · Chee's Claude: emails
 - Transactional emails over Resend, built up to the key: candidate confirmation (candidate's language, company colour), recruiter alert with AI score (recruiter's dashboard language), password reset (forgot / reset pages, one-time link, demo account protected).
 - Migration `003_email_language.sql`: `companies.locale` remembers the dashboard language. Needs to be run in Supabase.

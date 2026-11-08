@@ -222,7 +222,12 @@ export async function cancelInterview(interviewId: string): Promise<{ ok?: boole
     // Still cancel locally; the event may already be gone or the connection removed.
     console.error('Cancel in provider failed', err);
   }
-  await createAdminClient().from('interviews').update({ status: 'cancelled' }).eq('id', iv.id).eq('company_id', company.id);
+  const { error } = await createAdminClient()
+    .from('interviews')
+    .update({ status: 'cancelled' })
+    .eq('id', iv.id)
+    .eq('company_id', company.id);
+  if (error) return { error: t.errors.cancel };
   revalidatePath(`/dashboard/candidates/${iv.application_id}`);
   return { ok: true };
 }

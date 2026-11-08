@@ -123,7 +123,7 @@ function Board({ apps, t, locale }: { apps: AppRow[]; t: Dict; locale: Locale })
                     </Link>
                     <div className="mt-3 flex items-center justify-between">
                       <span className="text-[11px] text-ink-mute">{timeAgo(a.created_at, locale)}</span>
-                      <StageSelect id={a.id} stage={a.stage} compact labels={t.dash.stages} ariaLabel={t.dash.moveToStage} />
+                      <StageSelect id={a.id} stage={a.stage} compact labels={t.dash.stages} ariaLabel={t.dash.moveToStage} errorLabel={t.dash.errors.saveFailed} />
                     </div>
                   </div>
                 ))}
@@ -173,7 +173,7 @@ function List({ apps, t, locale }: { apps: AppRow[]; t: Dict; locale: Locale }) 
                 <p className="line-clamp-2">{a.ai_summary ?? '—'}</p>
               </td>
               <td className="px-5 py-3">
-                <StageSelect id={a.id} stage={a.stage} compact labels={t.dash.stages} ariaLabel={t.dash.moveToStage} />
+                <StageSelect id={a.id} stage={a.stage} compact labels={t.dash.stages} ariaLabel={t.dash.moveToStage} errorLabel={t.dash.errors.saveFailed} />
               </td>
             </tr>
           ))}
