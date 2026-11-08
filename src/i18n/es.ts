@@ -2,6 +2,14 @@ import type en from './en';
 
 const es: typeof en = {
   languageName: 'Español',
+  loading: 'Cargando…',
+  errorPage: {
+    title: 'Algo salió mal',
+    body: 'Esta página no se cargó bien. Suele ser algo pasajero: inténtalo de nuevo en un momento.',
+    retry: 'Reintentar',
+    home: 'Volver al inicio',
+    dashboard: 'Volver al resumen',
+  },
   nav: {
     howItWorks: 'Cómo funciona',
     screening: 'Evaluación',

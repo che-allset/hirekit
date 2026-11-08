@@ -2,6 +2,14 @@ import type en from './en';
 
 const fr: typeof en = {
   languageName: 'Français',
+  loading: 'Chargement…',
+  errorPage: {
+    title: 'Un problème est survenu',
+    body: 'Cette page ne s’est pas chargée correctement. C’est généralement passager : réessayez dans un instant.',
+    retry: 'Réessayer',
+    home: 'Retour à l’accueil',
+    dashboard: 'Retour à l’aperçu',
+  },
   nav: {
     howItWorks: 'Fonctionnement',
     screening: 'Évaluation',

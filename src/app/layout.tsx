@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import { getLocale } from '@/i18n/server';
+import { getDict } from '@/i18n/server';
+import { ErrorTextProvider } from '@/components/ErrorView';
 
 // Body: TeX Gyre Heros (GUST Font License). Titles: Inter Display SemiBold (SIL OFL).
 const sans = localFont({
@@ -26,9 +27,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const { locale, t } = getDict();
   return (
-    <html lang={getLocale()} className={`${sans.variable} ${display.variable}`}>
-      <body className="min-h-screen font-sans">{children}</body>
+    <html lang={locale} className={`${sans.variable} ${display.variable}`}>
+      <body className="min-h-screen font-sans">
+        <ErrorTextProvider text={t.errorPage}>{children}</ErrorTextProvider>
+      </body>
     </html>
   );
 }

@@ -3,6 +3,14 @@
 
 const en = {
   languageName: 'English',
+  loading: 'Loading…',
+  errorPage: {
+    title: 'Something went wrong',
+    body: 'This page didn’t load properly. It’s usually temporary: try again in a moment.',
+    retry: 'Try again',
+    home: 'Back to home',
+    dashboard: 'Back to overview',
+  },
   nav: {
     howItWorks: 'How it works',
     screening: 'Screening',

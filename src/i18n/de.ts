@@ -2,6 +2,14 @@ import type en from './en';
 
 const de: typeof en = {
   languageName: 'Deutsch',
+  loading: 'Wird geladen …',
+  errorPage: {
+    title: 'Etwas ist schiefgelaufen',
+    body: 'Diese Seite wurde nicht richtig geladen. Meist ist das nur vorübergehend: Versuchen Sie es gleich noch einmal.',
+    retry: 'Erneut versuchen',
+    home: 'Zur Startseite',
+    dashboard: 'Zur Übersicht',
+  },
   nav: {
     howItWorks: 'So funktioniert’s',
     screening: 'Bewertung',
