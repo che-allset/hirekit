@@ -185,6 +185,7 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
       forgot: 'Mot de passe oublié ?',
     },
     forgot: {
+      failed: 'Un problème est survenu. Vérifiez votre connexion et réessayez.',
       title: 'Réinitialiser le mot de passe',
       sub: 'Saisissez votre e-mail, nous vous enverrons un lien pour choisir un nouveau mot de passe.',
       email: 'E-mail',
@@ -250,6 +251,7 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
         roles: 'Indiquez à peu près combien de postes vous voulez pourvoir.',
         email: 'Saisissez un e-mail professionnel valide.',
         password: 'Le mot de passe doit contenir au moins 8 caractères.',
+        failed: 'Nous n’avons pas pu créer votre compte. Veuillez réessayer.',
       },
       panel: [
         'Votre page carrières est en ligne dès que vous avez fini. Sans développeur.',
@@ -345,7 +347,7 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
     screeningPending: 'Évaluation…',
     notScored: 'Non évalué',
     moveToStage: 'Changer d’étape',
-    errors: { saveFailed: 'La modification n’a pas été enregistrée. Veuillez réessayer.' },
+    errors: { saveFailed: 'La modification n’a pas été enregistrée. Veuillez réessayer.', generic: 'Un problème est survenu. Vérifiez votre connexion et réessayez.' },
     workModes: { 'On-site': 'Sur site', Hybrid: 'Hybride', Remote: 'Télétravail' },
     employmentTypes: { 'Full-time': 'Temps plein', 'Part-time': 'Temps partiel', Contract: 'CDD', Internship: 'Stage' },
     copy: 'Copier',
@@ -487,6 +489,7 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
       unsaved: 'Modifications non enregistrées',
     },
     settings: {
+      failed: 'Vos paramètres n’ont pas été enregistrés. Vérifiez votre connexion et réessayez.',
       title: 'Page carrières et widget',
       sub: 'Tout ce qu’il faut pour intégrer HireKit à votre site.',
       careersTitle: '1. Votre page carrières',
@@ -514,6 +517,7 @@ J’aime le contact humain et je veux me reconvertir dans la tech. Je parle angl
       us: 'nous',
     },
     ask: {
+      failed: 'Pas de réponse cette fois. Vérifiez votre connexion et reposez la question.',
       title: 'Interroger le vivier',
       sub: 'Posez n’importe quelle question sur vos {n} candidats, simplement. Les réponses viennent uniquement de leurs candidatures et de vos notes.',
       suggestions: [

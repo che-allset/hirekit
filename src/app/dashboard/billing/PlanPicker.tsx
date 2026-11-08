@@ -28,7 +28,7 @@ export function PlanPicker({
     setError(null);
     setPendingKey(key);
     startTransition(async () => {
-      const res = await fn();
+      const res = await fn().catch(() => ({ url: undefined, error: t.error }));
       if (res.url) window.location.href = res.url;
       else {
         setError(res.error ?? t.error);

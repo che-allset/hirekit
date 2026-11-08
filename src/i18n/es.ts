@@ -185,6 +185,7 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
       forgot: '¿Has olvidado tu contraseña?',
     },
     forgot: {
+      failed: 'Algo salió mal. Revisa tu conexión e inténtalo de nuevo.',
       title: 'Restablecer contraseña',
       sub: 'Escribe tu email y te enviaremos un enlace para elegir una nueva contraseña.',
       email: 'Email',
@@ -250,6 +251,7 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
         roles: 'Elige aproximadamente cuántos puestos quieres cubrir.',
         email: 'Escribe un email de trabajo válido.',
         password: 'La contraseña debe tener al menos 8 caracteres.',
+        failed: 'No pudimos crear tu cuenta. Inténtalo de nuevo.',
       },
       panel: [
         'Tu página de empleo estará online al terminar. Sin desarrolladores.',
@@ -345,7 +347,7 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
     screeningPending: 'Evaluando…',
     notScored: 'Sin evaluar',
     moveToStage: 'Cambiar de fase',
-    errors: { saveFailed: 'El cambio no se guardó. Inténtalo de nuevo.' },
+    errors: { saveFailed: 'El cambio no se guardó. Inténtalo de nuevo.', generic: 'Algo salió mal. Revisa tu conexión e inténtalo de nuevo.' },
     workModes: { 'On-site': 'Presencial', Hybrid: 'Híbrido', Remote: 'Remoto' },
     employmentTypes: { 'Full-time': 'Jornada completa', 'Part-time': 'Media jornada', Contract: 'Temporal', Internship: 'Prácticas' },
     copy: 'Copiar',
@@ -487,6 +489,7 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
       unsaved: 'Cambios sin guardar',
     },
     settings: {
+      failed: 'Tus ajustes no se guardaron. Revisa tu conexión e inténtalo de nuevo.',
       title: 'Página de empleo y widget',
       sub: 'Todo lo que necesitas para conectar HireKit a tu web.',
       careersTitle: '1. Tu página de empleo',
@@ -514,6 +517,7 @@ Se me dan bien las personas y quiero pasarme al sector tecnológico. Hablo ingl�
       us: 'nosotros',
     },
     ask: {
+      failed: 'Esta vez no hubo respuesta. Revisa tu conexión y vuelve a preguntar.',
       title: 'Pregunta a tu lista',
       sub: 'Pregunta lo que quieras sobre tus {n} candidatos con tus palabras. Las respuestas salen solo de sus candidaturas y tus notas.',
       suggestions: [

@@ -34,8 +34,14 @@ export function AskPanel({ jobs, t }: { jobs: { id: string; title: string }[]; t
     setTurns((t) => [...t, { question: text, jobTitle }]);
     setQuestion('');
     setPending(true);
-    const res = await askAboutCandidates(text, jobId || null);
-    setPending(false);
+    let res: Awaited<ReturnType<typeof askAboutCandidates>>;
+    try {
+      res = await askAboutCandidates(text, jobId || null);
+    } catch {
+      res = { error: t.failed };
+    } finally {
+      setPending(false);
+    }
     setTurns((t) => {
       const copy = [...t];
       const last = copy[copy.length - 1]!;

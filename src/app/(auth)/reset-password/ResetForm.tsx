@@ -15,10 +15,17 @@ export function ResetForm({ t }: { t: Dict['auth']['reset'] }) {
     if (password !== String(f.get('confirm') ?? '')) return setError(t.mismatch);
     setPending(true);
     setError(null);
-    const res = await updatePassword(password);
-    // On success the action redirects to the dashboard.
-    if (res?.error) {
-      setError(res.error);
+    try {
+      const res = await updatePassword(password);
+      // On success the action redirects to the dashboard.
+      if (res?.error) {
+        setError(res.error);
+        setPending(false);
+      }
+    } catch (err) {
+      // A redirect after a successful reset is not an error.
+      if ((err as { digest?: string })?.digest?.startsWith('NEXT_REDIRECT')) throw err;
+      setError(t.failed);
       setPending(false);
     }
   }

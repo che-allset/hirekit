@@ -6,6 +6,7 @@ Newest first. Every session (Chee's Claude or the company's Claude Code) adds an
 _(The polish session lists bigger ideas here instead of building them.)_
 
 ## 2026-11-08 · Company Claude Code (polish)
+- **No more spinners that never stop.** If the connection drops or the server fails mid-request, these now stop loading and show a short message in the user's language instead of hanging: Ask your pipeline, Settings save, job save and "Draft with AI", notes save, re-run screening, plan/checkout buttons, interview booking, the free-slot lookup ("Checking your calendar…"), sign-up, and the new forgot-password and reset-password forms. New messages in EN/DE/ES/FR (`dash.errors.generic`, `dash.settings.failed`, `dash.ask.failed`, `auth.forgot.failed`, `auth.signup.errors.failed`). Why: a dropped connection used to freeze these screens until a page reload.
 - **No more silent save failures in the dashboard.** If moving a candidate to another stage fails, the dropdown goes back to the real stage and says the change wasn't saved (it used to show the new stage anyway). Opening/closing a job and deleting a job now report database errors instead of pretending they worked; the delete button greys out while it runs. Cancelling an interview now asks "Are you sure?" first, can't be double-tapped and shows an error if it fails. New messages in EN/DE/ES/FR (`dash.errors.saveFailed`, `dash.schedule.confirmCancel`, `cancelling`, `errors.cancel`). Why: recruiters could believe a change was saved when it wasn't.
 
 ## 2026-11-08 · Chee's Claude: emails

@@ -15,8 +15,12 @@ export function NotesForm({ id, initial, t }: { id: string; initial: string; t: 
       onSubmit={async (e) => {
         e.preventDefault();
         setStatus('saving');
-        const res = await saveNotes(id, notes);
-        setStatus(res.error ? 'error' : 'saved');
+        try {
+          const res = await saveNotes(id, notes);
+          setStatus(res.error ? 'error' : 'saved');
+        } catch {
+          setStatus('error');
+        }
       }}
     >
       <textarea

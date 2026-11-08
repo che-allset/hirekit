@@ -4,7 +4,17 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { rescreen } from '../../actions';
 
-export function RescreenButton({ id, label, runningLabel }: { id: string; label: string; runningLabel: string }) {
+export function RescreenButton({
+  id,
+  label,
+  runningLabel,
+  errorLabel,
+}: {
+  id: string;
+  label: string;
+  runningLabel: string;
+  errorLabel: string;
+}) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,10 +27,15 @@ export function RescreenButton({ id, label, runningLabel }: { id: string; label:
         onClick={async () => {
           setPending(true);
           setError(null);
-          const res = await rescreen(id);
-          setPending(false);
-          if (res.error) setError(res.error);
-          router.refresh();
+          try {
+            const res = await rescreen(id);
+            if (res.error) setError(res.error);
+            router.refresh();
+          } catch {
+            setError(errorLabel);
+          } finally {
+            setPending(false);
+          }
         }}
         className="btn-ghost px-3 py-1.5 text-xs"
       >

@@ -86,7 +86,7 @@ export default async function CandidatePage({ params }: { params: { id: string }
                 <h2 className="font-semibold">{c.aiScreening}</h2>
                 <ScoreBadge score={app.ai_score} verdict={app.ai_verdict} status={app.ai_status} showLabel />
               </div>
-              <RescreenButton id={app.id} label={app.ai_status === 'done' ? c.rerun : c.run} runningLabel={c.running} />
+              <RescreenButton id={app.id} label={app.ai_status === 'done' ? c.rerun : c.run} runningLabel={c.running} errorLabel={t.dash.errors.generic} />
             </div>
 
             {app.ai_status === 'done' && vs ? (

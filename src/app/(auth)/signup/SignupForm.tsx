@@ -64,16 +64,23 @@ export function SignupForm({ t, locale, languageLabel }: { t: T; locale: Locale;
     if (step < STEPS.length - 1) return setStep(step + 1);
 
     setPending(true);
-    const res = await signUp({
-      companyName: data.company,
-      email: data.email,
-      password: data.password,
-      website: data.website,
-      brandColor: data.colour,
-    });
-    // On success the action redirects; we only get here on error.
-    if (res?.error) setError(res.error);
-    setPending(false);
+    try {
+      const res = await signUp({
+        companyName: data.company,
+        email: data.email,
+        password: data.password,
+        website: data.website,
+        brandColor: data.colour,
+      });
+      // On success the action redirects; we only get here on error.
+      if (res?.error) setError(res.error);
+    } catch (err) {
+      // A redirect after a successful sign-up is not an error.
+      if ((err as { digest?: string })?.digest?.startsWith('NEXT_REDIRECT')) throw err;
+      setError(t.errors.failed);
+    } finally {
+      setPending(false);
+    }
   }
 
   return (

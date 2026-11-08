@@ -14,10 +14,16 @@ export function ForgotForm({ t }: { t: Dict['auth']['forgot'] }) {
     e.preventDefault();
     setPending(true);
     setError(null);
-    const res = await requestPasswordReset(String(new FormData(e.currentTarget).get('email') ?? ''));
-    setPending(false);
-    if (res.error) setError(res.error);
-    else setSent(true);
+    const email = String(new FormData(e.currentTarget).get('email') ?? '');
+    try {
+      const res = await requestPasswordReset(email);
+      if (res.error) setError(res.error);
+      else setSent(true);
+    } catch {
+      setError(t.failed);
+    } finally {
+      setPending(false);
+    }
   }
 
   if (sent) {

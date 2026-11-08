@@ -31,14 +31,20 @@ export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale
   async function onDraft() {
     setError(null);
     setDrafting(true);
-    const res = await generateJobDraft({
-      title: values.title,
-      location: values.location,
-      workMode: values.work_mode,
-      notes,
-      locale,
-    });
-    setDrafting(false);
+    let res: Awaited<ReturnType<typeof generateJobDraft>>;
+    try {
+      res = await generateJobDraft({
+        title: values.title,
+        location: values.location,
+        workMode: values.work_mode,
+        notes,
+        locale,
+      });
+    } catch {
+      res = { error: t.errors.generic };
+    } finally {
+      setDrafting(false);
+    }
     if (res.error) return setError(res.error);
     setValues((v) => ({ ...v, description: res.description ?? v.description, requirements: res.requirements ?? v.requirements }));
   }
@@ -47,10 +53,17 @@ export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale
     e.preventDefault();
     setError(null);
     setSaving(true);
-    const res = await saveJob(job?.id ?? null, values);
-    // saveJob redirects on success
-    if (res?.error) setError(res.error);
-    setSaving(false);
+    try {
+      const res = await saveJob(job?.id ?? null, values);
+      // saveJob redirects on success
+      if (res?.error) setError(res.error);
+    } catch (err) {
+      // A redirect after a successful save is not an error.
+      if ((err as { digest?: string })?.digest?.startsWith('NEXT_REDIRECT')) throw err;
+      setError(t.errors.generic);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (

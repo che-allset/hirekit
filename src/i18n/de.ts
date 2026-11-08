@@ -185,6 +185,7 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
       forgot: 'Passwort vergessen?',
     },
     forgot: {
+      failed: 'Etwas ist schiefgelaufen. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.',
       title: 'Passwort zurücksetzen',
       sub: 'Geben Sie Ihre E-Mail ein. Wir senden Ihnen einen Link, um ein neues Passwort zu wählen.',
       email: 'E-Mail',
@@ -250,6 +251,7 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
         roles: 'Wählen Sie ungefähr, wie viele Stellen Sie besetzen.',
         email: 'Geben Sie eine gültige geschäftliche E-Mail ein.',
         password: 'Das Passwort braucht mindestens 8 Zeichen.',
+        failed: 'Ihr Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut.',
       },
       panel: [
         'Ihre Karriereseite ist sofort online. Ganz ohne IT.',
@@ -345,7 +347,7 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
     screeningPending: 'Wird bewertet …',
     notScored: 'Nicht bewertet',
     moveToStage: 'Phase ändern',
-    errors: { saveFailed: 'Die Änderung wurde nicht gespeichert. Bitte versuchen Sie es erneut.' },
+    errors: { saveFailed: 'Die Änderung wurde nicht gespeichert. Bitte versuchen Sie es erneut.', generic: 'Etwas ist schiefgelaufen. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.' },
     workModes: { 'On-site': 'Vor Ort', Hybrid: 'Hybrid', Remote: 'Remote' },
     employmentTypes: { 'Full-time': 'Vollzeit', 'Part-time': 'Teilzeit', Contract: 'Befristet', Internship: 'Praktikum' },
     copy: 'Kopieren',
@@ -487,6 +489,7 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
       unsaved: 'Ungespeicherte Änderungen',
     },
     settings: {
+      failed: 'Ihre Einstellungen wurden nicht gespeichert. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.',
       title: 'Karriereseite & Widget',
       sub: 'Alles, was Sie brauchen, um HireKit in Ihre Website einzubinden.',
       careersTitle: '1. Ihre Karriereseite',
@@ -514,6 +517,7 @@ Ich kann gut mit Menschen und möchte in die Tech-Branche wechseln. Ich spreche 
       us: 'uns',
     },
     ask: {
+      failed: 'Diesmal kam keine Antwort. Bitte prüfen Sie Ihre Verbindung und fragen Sie erneut.',
       title: 'Bewerberliste fragen',
       sub: 'Fragen Sie alles über Ihre {n} Kandidaten in Alltagssprache. Antworten stammen nur aus deren Bewerbungen und Ihren Notizen.',
       suggestions: [

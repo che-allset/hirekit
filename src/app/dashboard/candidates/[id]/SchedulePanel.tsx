@@ -53,11 +53,18 @@ export function SchedulePanel({
     if (!hasCalendar) return;
     let alive = true;
     setSlots(null);
-    getSuggestedSlots({ tz, durationMin: duration }).then((res) => {
-      if (!alive) return;
-      setSlots(res.slots);
-      setSlotError(('error' in res && res.error) || null);
-    });
+    getSuggestedSlots({ tz, durationMin: duration })
+      .then((res) => {
+        if (!alive) return;
+        setSlots(res.slots);
+        setSlotError(('error' in res && res.error) || null);
+      })
+      .catch(() => {
+        // Don't leave "Checking your calendar…" on screen forever.
+        if (!alive) return;
+        setSlots([]);
+        setSlotError(t.errors.calendar);
+      });
     return () => {
       alive = false;
     };
@@ -71,7 +78,12 @@ export function SchedulePanel({
     if (!chosen) return;
     setResult(null);
     startTransition(async () => {
-      const res = await scheduleInterview({ applicationId, start: chosen, durationMin: duration, meetingType, customLink, note, tz });
+      let res: ScheduleResult;
+      try {
+        res = await scheduleInterview({ applicationId, start: chosen, durationMin: duration, meetingType, customLink, note, tz });
+      } catch {
+        res = { error: t.errors.save };
+      }
       setResult(res);
       if (res.ok) {
         setStart(null);

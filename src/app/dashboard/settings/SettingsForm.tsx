@@ -32,13 +32,18 @@ export function SettingsForm({ company, t }: { company: Company; t: Dict['dash']
         e.preventDefault();
         setError(null);
         setStatus('saving');
-        const res = await saveSettings(values);
-        if (res.error) {
-          setError(res.error);
+        try {
+          const res = await saveSettings(values);
+          if (res.error) {
+            setError(res.error);
+            setStatus('idle');
+          } else {
+            setStatus('saved');
+            router.refresh();
+          }
+        } catch {
+          setError(t.failed);
           setStatus('idle');
-        } else {
-          setStatus('saved');
-          router.refresh();
         }
       }}
     >

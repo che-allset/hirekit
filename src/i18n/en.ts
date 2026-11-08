@@ -186,6 +186,7 @@ I'm good with people and want to move into tech. I speak English and some Spanis
       forgot: 'Forgot your password?',
     },
     forgot: {
+      failed: 'Something went wrong. Check your connection and try again.',
       title: 'Reset your password',
       sub: 'Enter your email and we’ll send you a link to choose a new password.',
       email: 'Email',
@@ -251,6 +252,7 @@ I'm good with people and want to move into tech. I speak English and some Spanis
         roles: 'Choose roughly how many roles you’re hiring for.',
         email: 'Enter a valid work email.',
         password: 'Use at least 8 characters for your password.',
+        failed: 'We could not create your account. Please try again.',
       },
       panel: [
         'Your careers page is live the moment you finish. No developer needed.',
@@ -346,7 +348,7 @@ I'm good with people and want to move into tech. I speak English and some Spanis
     screeningPending: 'Screening…',
     notScored: 'Not scored',
     moveToStage: 'Move to stage',
-    errors: { saveFailed: 'That change wasn’t saved. Please try again.' },
+    errors: { saveFailed: 'That change wasn’t saved. Please try again.', generic: 'Something went wrong. Check your connection and try again.' },
     workModes: { 'On-site': 'On-site', Hybrid: 'Hybrid', Remote: 'Remote' } as Record<string, string>,
     employmentTypes: { 'Full-time': 'Full-time', 'Part-time': 'Part-time', Contract: 'Contract', Internship: 'Internship' } as Record<string, string>,
     copy: 'Copy',
@@ -488,6 +490,7 @@ I'm good with people and want to move into tech. I speak English and some Spanis
       unsaved: 'Unsaved changes',
     },
     settings: {
+      failed: 'Your settings weren’t saved. Check your connection and try again.',
       title: 'Careers & widget',
       sub: 'Everything you need to plug HireKit into your website.',
       careersTitle: '1. Your careers page',
@@ -515,6 +518,7 @@ I'm good with people and want to move into tech. I speak English and some Spanis
       us: 'us',
     },
     ask: {
+      failed: 'No answer this time. Check your connection and ask again.',
       title: 'Ask your pipeline',
       sub: 'Ask anything about your {n} candidates in plain language. Answers come only from their applications and your notes.',
       suggestions: [
