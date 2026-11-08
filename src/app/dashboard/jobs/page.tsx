@@ -5,7 +5,7 @@ import { timeAgo } from '@/lib/utils';
 import { EmptyState, PageHeader } from '../_components/ui';
 import { JobStatusToggle } from './JobStatusToggle';
 import { getDict } from '@/i18n/server';
-import { fmt } from '@/i18n';
+import { fmt, plural } from '@/i18n';
 
 export default async function JobsPage() {
   const { supabase, company } = await requireCompany();
@@ -65,7 +65,7 @@ export default async function JobsPage() {
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <Link href={`/dashboard/candidates?job=${job.id}`} className="btn-ghost px-3 py-1.5 text-xs">
-                  {fmt(j.applicants, { n: countFor(job.id) })}
+                  {fmt(plural(locale, countFor(job.id), j.applicantsOne, j.applicants), { n: countFor(job.id) })}
                 </Link>
                 {job.status === 'open' && (
                   <a

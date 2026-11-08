@@ -12,12 +12,14 @@ export function PlanPicker({
   current,
   hasSubscription,
   configured,
+  locale,
 }: {
   t: Dict['dash']['billing'];
   pricing: Dict['pricing'];
   current: string | null;
   hasSubscription: boolean;
   configured: boolean;
+  locale: string;
 }) {
   const [interval, setInterval] = useState<'month' | 'year'>('year');
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +88,7 @@ export function PlanPicker({
               <ul className="mt-6 flex-1 space-y-2 text-sm">
                 <li>{Number.isFinite(roles) ? `${roles} ${t.rolesSuffix}` : t.unlimitedRoles}</li>
                 <li>
-                  {PLAN_LIMITS[plan].screenings.toLocaleString()} {t.screeningsSuffix}
+                  {PLAN_LIMITS[plan].screenings.toLocaleString(locale)} {t.screeningsSuffix}
                 </li>
               </ul>
               <button

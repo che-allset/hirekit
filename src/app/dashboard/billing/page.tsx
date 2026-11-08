@@ -3,7 +3,7 @@ import { countOpenRoles, getBilling } from '@/lib/billing';
 import { isStripeConfigured } from '@/lib/stripe';
 import { PageHeader } from '../_components/ui';
 import { getDict } from '@/i18n/server';
-import { fmt } from '@/i18n';
+import { fmt, plural } from '@/i18n';
 import { PlanPicker } from './PlanPicker';
 
 export default async function BillingPage({ searchParams }: { searchParams: { checkout?: string } }) {
@@ -13,11 +13,11 @@ export default async function BillingPage({ searchParams }: { searchParams: { ch
   const billing = await getBilling(company);
   const openRoles = await countOpenRoles(company.id);
   const dateFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' });
-  const limit = (n: number) => (Number.isFinite(n) ? String(n) : b.unlimited);
+  const limit = (n: number) => (Number.isFinite(n) ? n.toLocaleString(locale) : b.unlimited);
 
   let status: string;
   if (billing.plan === 'demo') status = b.demoNote;
-  else if (billing.trial) status = billing.active ? fmt(b.trialActive, { days: billing.daysLeft }) : b.trialEnded;
+  else if (billing.trial) status = billing.active ? fmt(plural(locale, billing.daysLeft, b.trialActiveOne, b.trialActive), { days: billing.daysLeft }) : b.trialEnded;
   else if (!billing.active) status = b.inactive;
   else if (billing.row?.cancel_at_period_end && billing.row.current_period_end)
     status = fmt(b.endsOn, { date: dateFmt.format(new Date(billing.row.current_period_end)) });
@@ -64,6 +64,7 @@ export default async function BillingPage({ searchParams }: { searchParams: { ch
           current={billing.trial ? null : billing.plan === 'trial' ? null : billing.plan}
           hasSubscription={!!billing.row?.stripe_subscription_id}
           configured={isStripeConfigured()}
+          locale={locale}
         />
       )}
     </div>

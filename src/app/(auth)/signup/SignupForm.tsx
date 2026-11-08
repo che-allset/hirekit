@@ -176,7 +176,7 @@ export function SignupForm({ t, locale, languageLabel }: { t: T; locale: Locale;
                 <div className="rounded-[12px] bg-white p-4 text-sm">
                   <p className="font-bold">{data.company}</p>
                   <p className="mt-1 text-graphite-600">
-                    {[data.size && fmt(t.people, { n: data.size }), data.roles && fmt(t.rolesSummary, { n: data.roles })].filter(Boolean).join(', ') || t.ready}
+                    {[data.size && fmt(t.people, { n: data.size }), data.roles && fmt(data.roles === '1' ? t.rolesSummaryOne : t.rolesSummary, { n: data.roles })].filter(Boolean).join(', ') || t.ready}
                   </p>
                 </div>
               </Step>

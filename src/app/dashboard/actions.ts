@@ -9,7 +9,7 @@ import { EMPLOYMENT_TYPES, STAGES, WORK_MODES, type Job, type Stage } from '@/li
 import { isHexColor, safeUrl } from '@/lib/utils';
 import { AI_LANGUAGE, isLocale } from '@/i18n';
 import { getLocale } from '@/i18n/server';
-import { DICTS, fmt } from '@/i18n';
+import { DICTS, fmt, plural } from '@/i18n';
 import { canScreen, countOpenRoles, getBilling } from '@/lib/billing';
 
 type Result = { error?: string; ok?: boolean };
@@ -47,12 +47,13 @@ function cleanJob(input: JobInput) {
 
 /** Plan check before a role goes (or stays) live. Returns an error message or null. */
 async function openRoleBlocked(company: { id: string; slug: string }, exceptJobId: string | null) {
-  const t = DICTS[getLocale()].dash.billing;
+  const locale = getLocale();
+  const t = DICTS[locale].dash.billing;
   const billing = await getBilling(company);
   if (!billing.active) return t.inactiveAction;
   if (!Number.isFinite(billing.limits.roles)) return null;
   const open = await countOpenRoles(company.id, exceptJobId);
-  return open >= billing.limits.roles ? fmt(t.roleLimit, { n: billing.limits.roles }) : null;
+  return open >= billing.limits.roles ? fmt(plural(locale, billing.limits.roles, t.roleLimitOne, t.roleLimit), { n: billing.limits.roles }) : null;
 }
 
 export async function saveJob(jobId: string | null, input: JobInput): Promise<Result> {

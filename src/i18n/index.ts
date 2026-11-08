@@ -22,6 +22,14 @@ export function fmt(s: string, vars: Record<string, string | number>) {
   return s.replace(/\{(\w+)\}/g, (_, k: string) => (k in vars ? String(vars[k]) : `{${k}}`));
 }
 
+/**
+ * Singular or plural string for a count, by the language's own rules
+ * (French uses the singular for 0 and 1; English, German and Spanish only for 1).
+ */
+export function plural(locale: string, n: number, one: string, other: string) {
+  return new Intl.PluralRules(locale).select(n) === 'one' ? one : other;
+}
+
 /** Best match from an Accept-Language header. */
 export function fromAcceptLanguage(header: string | null): Locale {
   if (!header) return 'en';

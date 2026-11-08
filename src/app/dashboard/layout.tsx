@@ -6,7 +6,7 @@ import { signOut } from '../(auth)/actions';
 import { getDict } from '@/i18n/server';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { getBilling } from '@/lib/billing';
-import { fmt } from '@/i18n';
+import { fmt, plural } from '@/i18n';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
@@ -34,7 +34,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       : !billing.active
         ? { tone: 'bg-rose-600 text-white', text: billing.trial ? b.bannerTrialEnded : b.bannerInactive, cta: b.bannerChoose }
         : billing.trial
-          ? { tone: 'bg-signal text-graphite', text: fmt(b.bannerTrial, { days: billing.daysLeft }), cta: b.bannerUpgrade }
+          ? { tone: 'bg-signal text-graphite', text: fmt(plural(locale, billing.daysLeft, b.bannerTrialOne, b.bannerTrial), { days: billing.daysLeft }), cta: b.bannerUpgrade }
           : null;
 
   return (

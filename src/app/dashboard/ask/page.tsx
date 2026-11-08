@@ -2,7 +2,7 @@ import { requireCompany } from '@/lib/company';
 import { PageHeader } from '../_components/ui';
 import { AskPanel } from './AskPanel';
 import { getDict } from '@/i18n/server';
-import { fmt } from '@/i18n';
+import { fmt, plural } from '@/i18n';
 
 export default async function AskPage() {
   const { supabase, company } = await requireCompany();
@@ -16,7 +16,7 @@ export default async function AskPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title={t.dash.ask.title}
-        sub={fmt(t.dash.ask.sub, { n: count ?? 0 })}
+        sub={fmt(plural(locale, count ?? 0, t.dash.ask.subOne, t.dash.ask.sub), { n: count ?? 0 })}
       />
       <AskPanel key={locale} jobs={(jobs ?? []) as { id: string; title: string }[]} t={t.dash.ask} />
     </div>
