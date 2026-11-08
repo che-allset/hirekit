@@ -63,3 +63,35 @@ export interface Application {
   created_at: string;
   updated_at: string;
 }
+
+export type PlanKey = 'trial' | 'starter' | 'growth' | 'scale';
+
+export interface BillingRow {
+  company_id: string;
+  plan: PlanKey;
+  billing_interval: 'month' | 'year' | null;
+  status: string;
+  trial_ends_at: string;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+}
+
+export type IntegrationProvider = 'google' | 'microsoft' | 'zoom';
+export type MeetingType = 'google_meet' | 'teams' | 'zoom' | 'custom';
+
+export interface Interview {
+  id: string;
+  company_id: string;
+  application_id: string;
+  meeting_type: MeetingType;
+  calendar: 'google' | 'microsoft' | null;
+  starts_at: string;
+  duration_min: number;
+  join_url: string | null;
+  calendar_event_id: string | null;
+  zoom_meeting_id: string | null;
+  status: 'scheduled' | 'cancelled';
+  created_at: string;
+}

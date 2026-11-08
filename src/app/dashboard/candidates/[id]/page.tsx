@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireCompany } from '@/lib/company';
 import { createAdminClient } from '@/lib/supabase/admin';
-import type { Application, Job } from '@/lib/types';
+import type { Application, Interview, Job } from '@/lib/types';
+import { listConnections } from '@/lib/integrations';
+import { SchedulePanel } from './SchedulePanel';
 import { initials, safeUrl, timeAgo } from '@/lib/utils';
 import { ScoreBadge, verdictStyle } from '../../_components/ui';
 import { StageSelect } from '../../_components/StageSelect';
@@ -30,6 +32,18 @@ export default async function CandidatePage({ params }: { params: { id: string }
     cvUrl = signed?.signedUrl ?? null;
   }
 
+  const [{ data: ivData }, connections] = await Promise.all([
+    supabase
+      .from('interviews')
+      .select('*')
+      .eq('application_id', app.id)
+      .eq('company_id', company.id)
+      .gte('starts_at', new Date(Date.now() - 2 * 3600_000).toISOString())
+      .order('starts_at', { ascending: true }),
+    listConnections(company.id),
+  ]);
+  const has = (p: string) => connections.some((c) => c.provider === p);
+
   const vs = verdictStyle(app.ai_verdict);
   const linkedin = safeUrl(app.linkedin_url);
   const portfolio = safeUrl(app.portfolio_url);
@@ -53,7 +67,10 @@ export default async function CandidatePage({ params }: { params: { id: string }
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <a href="#schedule" className="btn-signal px-4 py-2 text-sm">
+            {t.dash.schedule.inviteCta}
+          </a>
           <span className="text-sm text-ink-mute">{c.stage}</span>
           <StageSelect id={app.id} stage={app.stage} labels={t.dash.stages} ariaLabel={t.dash.moveToStage} />
         </div>
@@ -158,6 +175,15 @@ export default async function CandidatePage({ params }: { params: { id: string }
               <p className="mt-6 rounded-xl bg-paper px-4 py-3 text-center text-sm text-ink-mute">{c.noCv}</p>
             )}
           </section>
+
+          <SchedulePanel
+            applicationId={app.id}
+            candidateEmail={app.email}
+            connected={{ google: has('google'), microsoft: has('microsoft'), zoom: has('zoom') }}
+            interviews={(ivData ?? []) as Interview[]}
+            locale={locale}
+            t={t.dash.schedule}
+          />
 
           <section className="card p-6">
             <h2 className="font-semibold">{c.notes}</h2>

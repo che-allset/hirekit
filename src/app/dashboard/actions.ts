@@ -9,7 +9,8 @@ import { EMPLOYMENT_TYPES, STAGES, WORK_MODES, type Job, type Stage } from '@/li
 import { isHexColor, safeUrl } from '@/lib/utils';
 import { AI_LANGUAGE, isLocale } from '@/i18n';
 import { getLocale } from '@/i18n/server';
-import { DICTS } from '@/i18n';
+import { DICTS, fmt } from '@/i18n';
+import { canScreen, countOpenRoles, getBilling } from '@/lib/billing';
 
 type Result = { error?: string; ok?: boolean };
 
@@ -44,11 +45,25 @@ function cleanJob(input: JobInput) {
   };
 }
 
+/** Plan check before a role goes (or stays) live. Returns an error message or null. */
+async function openRoleBlocked(company: { id: string; slug: string }, exceptJobId: string | null) {
+  const t = DICTS[getLocale()].dash.billing;
+  const billing = await getBilling(company);
+  if (!billing.active) return t.inactiveAction;
+  if (!Number.isFinite(billing.limits.roles)) return null;
+  const open = await countOpenRoles(company.id, exceptJobId);
+  return open >= billing.limits.roles ? fmt(t.roleLimit, { n: billing.limits.roles }) : null;
+}
+
 export async function saveJob(jobId: string | null, input: JobInput): Promise<Result> {
   const { supabase, company } = await requireCompany();
   const job = cleanJob(input);
   if (job.title.length < 2) return { error: 'Give the role a title.' };
   if (job.description.length < 20) return { error: 'Add a short description (or use “Draft with AI”).' };
+  if (job.status === 'open') {
+    const blocked = await openRoleBlocked(company, jobId);
+    if (blocked) return { error: blocked };
+  }
 
   if (jobId) {
     const { error } = await supabase.from('jobs').update(job).eq('id', jobId).eq('company_id', company.id);
@@ -61,10 +76,15 @@ export async function saveJob(jobId: string | null, input: JobInput): Promise<Re
   redirect('/dashboard/jobs');
 }
 
-export async function setJobStatus(jobId: string, status: 'open' | 'closed') {
+export async function setJobStatus(jobId: string, status: 'open' | 'closed'): Promise<Result> {
   const { supabase, company } = await requireCompany();
+  if (status === 'open') {
+    const blocked = await openRoleBlocked(company, jobId);
+    if (blocked) return { error: blocked };
+  }
   await supabase.from('jobs').update({ status }).eq('id', jobId).eq('company_id', company.id);
   revalidatePath('/dashboard', 'layout');
+  return { ok: true };
 }
 
 export async function deleteJob(jobId: string) {
@@ -137,6 +157,9 @@ export async function rescreen(applicationId: string): Promise<Result> {
     .eq('company_id', company.id)
     .maybeSingle();
   if (!app || !app.jobs) return { error: 'Application not found' };
+  if (app.ai_status !== 'done' && !(await canScreen(company))) {
+    return { error: DICTS[getLocale()].dash.billing.screenLimit };
+  }
 
   const admin = createAdminClient();
   let cvPdfBase64: string | null = null;
@@ -248,4 +271,14 @@ export async function askAboutCandidates(
     console.error('Ask pipeline failed', err);
     return { error: 'The assistant is unavailable right now. Try again in a moment.' };
   }
+}
+
+// ───────────────────────── Integrations ─────────────────────────
+
+export async function disconnectIntegration(provider: string) {
+  const { company } = await requireCompany();
+  const { disconnect, isProvider } = await import('@/lib/integrations');
+  if (!isProvider(provider)) return;
+  await disconnect(company.id, provider);
+  revalidatePath('/dashboard/settings');
 }

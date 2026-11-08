@@ -159,12 +159,53 @@ supabase/schema.sql              Database, RLS, storage
 
 - Email notifications (new strong match for recruiters, confirmation for candidates) via Resend
 - Team members with roles (recruiter, hiring manager) and @mentions in notes
-- Interview scheduling with calendar integration
 - Custom screening questions per job (knockout questions)
 - Job board syndication (LinkedIn, Indeed, StepStone)
-- Rate limiting on `/api/apply` (e.g. Upstash) and Stripe billing for the pricing plans
+- Rate limiting on `/api/apply` (e.g. Upstash)
 - GDPR tooling: automatic data retention and deletion, candidate data export
 
 ## Videos
 
 The intro film and the 86-second tour are rendered from HTML scenes in `design/video/` (no voice-over, on-screen text only), in all four languages. Text lives in `design/video/strings.js`. The site loads `/video/intro-{lang}.mp4` and `/video/hirekit-tour-{lang}.mp4` for the visitor's language.
+
+## Round 3: interviews, payments, pricing
+
+### Interview booking (Google Meet, Microsoft Teams, Zoom)
+
+- **Settings → Calendar & video calls**: connect Google (Calendar + Meet), Microsoft (Outlook + Teams) and/or Zoom with OAuth. Tokens are encrypted (AES-256-GCM) and stored in a table only the server can read.
+- **Candidate page → Schedule an interview** (also one click from *Ask your pipeline*): pick Meet, Teams, Zoom or your own link, see **free times from your calendar** (working hours, next week, your time zone), add a message and send. The event lands in your calendar and the **calendar sends the invite to the candidate** with the call link. The candidate moves to *Interview*. Cancelling also cancels the event and the Zoom meeting.
+- **No calendar connected?** HireKit still books it and gives you a ready-to-send email plus an `.ics` file.
+- The shared demo workspace can't connect calendars (it would expose a real calendar to every visitor).
+
+Setup (once per provider, then add the keys to Vercel):
+
+| Provider | Where | Redirect URI | Scopes / permissions |
+|---|---|---|---|
+| Google | Google Cloud → APIs & Services → enable *Google Calendar API* → OAuth client (Web) | `https://YOUR-DOMAIN/api/integrations/google/callback` | `calendar.events`, `calendar.freebusy`, `openid`, `email` |
+| Microsoft | Microsoft Entra → App registrations (accounts in any org + personal) | `https://YOUR-DOMAIN/api/integrations/microsoft/callback` | Graph delegated: `Calendars.ReadWrite`, `User.Read`, `offline_access` |
+| Zoom | Zoom App Marketplace → General app (user-managed OAuth) | `https://YOUR-DOMAIN/api/integrations/zoom/callback` | `meeting:write:meeting`, `user:read:user` |
+
+### Payments (Stripe), built up to the keys
+
+- **Plan & billing** page: current plan, trial days left, open roles used, plan cards (monthly / yearly), **Stripe Checkout** (card, SEPA and other methods you enable in Stripe; EU VAT IDs collected; Stripe Tax optional) and the **Stripe billing portal** for plan changes, invoices and cancellation.
+- Products and prices are **created automatically** on first checkout (lookup keys `hirekit_{plan}_{month|year}`), so Stripe needs no manual setup.
+- `/api/stripe/webhook` (signature-verified) keeps the plan in sync: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`.
+- Without keys, everything works and the pay buttons explain that payment isn't switched on yet.
+
+To go live: add `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` in Vercel, create the webhook in Stripe pointing at `https://YOUR-DOMAIN/api/stripe/webhook`, and save the default customer-portal settings once in Stripe.
+
+### Pricing
+
+Researched against JOIN (€17 per job/month), Homerun (€109+/month for 3 roles), Breezy HR ($157+/month), Workable ($299+/month), Recruitee ($199+/month) and Manatal ($15/user/month). HireKit's position: **flat price, every feature on every plan, AI screening included**.
+
+| | Free trial | Starter | Growth | Scale |
+|---|---|---|---|---|
+| Price | 7 days, no card | €49/mo (€39 yearly) | €99/mo (€79 yearly) | €199/mo (€159 yearly) |
+| Open roles | 1 | 3 | 10 | Unlimited |
+| AI-screened applications / month | 50 | 200 | 1,000 | 3,000 |
+
+Limits are enforced: publishing a role beyond the plan is blocked with a clear message; when a trial or subscription ends, roles go offline (careers page and widget show no roles, applications are refused) until a plan is chosen. Screening beyond the monthly allowance still saves the application; it can be screened later.
+
+### Database
+
+Run `supabase/migrations/002_billing_scheduling.sql` once in the Supabase SQL editor (adds `billing`, `integrations`, `interviews`).

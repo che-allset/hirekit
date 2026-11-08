@@ -4,15 +4,12 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { Dict } from '@/i18n';
+import { FEATURED_PLAN, PAID_PLANS, PRICES } from '@/lib/plans';
 
 type Billing = 'monthly' | 'yearly';
 
-// Prices stay in code; all wording comes from the dictionary.
-const PRICES = [
-  { monthly: 0, yearly: 0 },
-  { monthly: 49, yearly: 39, featured: true },
-  { monthly: 129, yearly: 99 },
-];
+// Prices and limits live in lib/plans; all wording comes from the dictionary.
+const PLANS = PAID_PLANS.map((key) => ({ key, ...PRICES[key], featured: key === FEATURED_PLAN }));
 
 export function Pricing({ t }: { t: Dict['pricing'] }) {
   const [billing, setBilling] = useState<Billing>('yearly');
@@ -45,10 +42,15 @@ export function Pricing({ t }: { t: Dict['pricing'] }) {
         </div>
       </div>
 
-      <div className="mt-12 grid gap-4 lg:grid-cols-3">
+      <div className="mt-10 flex flex-col gap-1 rounded-[14px] border-2 border-dashed border-graphite/20 px-6 py-4 sm:flex-row sm:items-center sm:gap-3">
+        <span className="font-bold">{t.trialTitle}</span>
+        <span className="text-graphite-600">{t.trialText}</span>
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-3">
         {t.plans.map((p, i) => {
-          const pr = PRICES[i]!;
-          const price = billing === 'monthly' ? pr.monthly : pr.yearly;
+          const pr = PLANS[i]!;
+          const price = billing === 'monthly' ? pr.month : pr.year;
           const featured = !!pr.featured;
           return (
             <div
@@ -66,7 +68,7 @@ export function Pricing({ t }: { t: Dict['pricing'] }) {
               <p className="mt-8 flex items-baseline gap-2">
                 <span className="font-display text-5xl tabular-nums">€{price}</span>
                 <span className={cn('text-sm', featured ? 'text-white/70' : 'text-graphite-600')}>
-                  {price === 0 ? t.forever : billing === 'monthly' ? t.perMonth : t.perMonthYearly}
+                  {billing === 'monthly' ? t.perMonth : t.perMonthYearly}
                 </span>
               </p>
               <ul className="mt-8 space-y-3 text-[15px]">

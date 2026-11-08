@@ -85,13 +85,16 @@ export function AskPanel({ jobs, t }: { jobs: { id: string; title: string }[]; t
                   {turn.candidates && turn.candidates.length > 0 && (
                     <ul className="mt-4 space-y-2">
                       {turn.candidates.map((c) => (
-                        <li key={c.id}>
-                          <Link
-                            href={`/dashboard/candidates/${c.id}`}
-                            className="flex flex-col gap-0.5 rounded-[10px] border border-graphite/10 px-4 py-3 hover:border-graphite/40 sm:flex-row sm:items-center sm:gap-3"
-                          >
+                        <li key={c.id} className="flex flex-col gap-2 rounded-[10px] border border-graphite/10 px-4 py-3 hover:border-graphite/40 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                          <Link href={`/dashboard/candidates/${c.id}`} className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-3">
                             <span className="font-bold">{turn.names?.[c.id] ?? t.candidate}</span>
                             <span className="text-sm text-graphite-600">{c.reason}</span>
+                          </Link>
+                          <Link
+                            href={`/dashboard/candidates/${c.id}#schedule`}
+                            className="flex-none self-start rounded-full bg-signal px-3 py-1.5 text-xs font-bold text-graphite hover:brightness-95 sm:self-auto"
+                          >
+                            {t.invite}
                           </Link>
                         </li>
                       ))}

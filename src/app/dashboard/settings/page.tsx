@@ -3,8 +3,13 @@ import { PageHeader } from '../_components/ui';
 import { CopyButton } from '../_components/CopyButton';
 import { SettingsForm } from './SettingsForm';
 import { getDict } from '@/i18n/server';
+import { Integrations } from './Integrations';
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: { connected?: string; integration_error?: string; provider?: string };
+}) {
   const { company } = await requireCompany();
   const { t } = getDict();
   const st = t.dash.settings;
@@ -60,11 +65,14 @@ export default async function SettingsPage() {
           </section>
         </div>
 
-        <section className="card p-6">
-          <h2 className="font-semibold">{st.brandTitle}</h2>
-          <p className="mt-1 text-sm text-ink-soft">{st.brandBody}</p>
-          <SettingsForm company={company} t={st} />
-        </section>
+        <div className="space-y-6">
+          <section className="card p-6">
+            <h2 className="font-semibold">{st.brandTitle}</h2>
+            <p className="mt-1 text-sm text-ink-soft">{st.brandBody}</p>
+            <SettingsForm company={company} t={st} />
+          </section>
+          <Integrations company={company} t={t.dash.integrations} searchParams={searchParams} />
+        </div>
       </div>
     </div>
   );

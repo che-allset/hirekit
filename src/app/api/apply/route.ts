@@ -4,6 +4,7 @@ import { screenCandidate } from '@/lib/ai';
 import { isEmail, safeUrl } from '@/lib/utils';
 import type { Job } from '@/lib/types';
 import { DICTS, fmt, isLocale } from '@/i18n';
+import { canScreen, getBilling } from '@/lib/billing';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // AI screening of a PDF can take a few seconds
@@ -65,6 +66,10 @@ export async function POST(req: Request) {
   if (!jobRow) return bad(E.closed, 404);
   const job = jobRow as Job;
 
+  // Companies whose trial or subscription has ended don't accept applications.
+  const { data: companyRow } = await admin.from('companies').select('id, slug').eq('id', job.company_id).maybeSingle();
+  if (!companyRow || !(await getBilling(companyRow)).active) return bad(E.closed, 404);
+
   // Basic duplicate protection: one application per email per job.
   const { count } = await admin
     .from('applications')
@@ -106,8 +111,9 @@ export async function POST(req: Request) {
     return bad(E.save, 500);
   }
 
-  // AI screening. If it fails, the application is still saved and the
-  // recruiter can re-run screening from the dashboard.
+  // AI screening. If it fails (or the monthly screening allowance is used
+  // up), the application is still saved and can be screened later.
+  if (!(await canScreen(companyRow))) return NextResponse.json({ ok: true });
   try {
     const result = await screenCandidate(job, {
       fullName,

@@ -43,8 +43,8 @@ const STRINGS = {
     trustTitle: 'The assistant advises.<br/>People decide.',
     trust: [['Nobody is rejected by software.', 'Every decision is made by your team.'], ['Personal details are ignored.', 'Only the requirements you wrote count.'], ['Data stays private.', 'Consent, private CV storage, expiring links.']],
     ctaTitle: 'Post your first role today.',
-    ctaNote: 'Free for up to 3 open roles. No card needed.',
-    ctaBtn: 'Start hiring free',
+    ctaNote: '7 days free. No card needed.',
+    ctaBtn: 'Start free trial',
   },
   de: {
     slogan: 'Recruiting, eingesteckt.',
@@ -89,7 +89,7 @@ const STRINGS = {
     trustTitle: 'Der Assistent berät.<br/>Menschen entscheiden.',
     trust: [['Niemand wird von Software abgelehnt.', 'Jede Entscheidung trifft Ihr Team.'], ['Persönliche Angaben zählen nicht.', 'Nur Ihre Anforderungen zählen.'], ['Daten bleiben privat.', 'Einwilligung, private CV-Ablage, ablaufende Links.']],
     ctaTitle: 'Schreiben Sie heute Ihre erste Stelle aus.',
-    ctaNote: 'Kostenlos für bis zu 3 offene Stellen. Keine Kreditkarte nötig.',
+    ctaNote: '7 Tage kostenlos. Keine Kreditkarte nötig.',
     ctaBtn: 'Kostenlos starten',
   },
   es: {
@@ -135,7 +135,7 @@ const STRINGS = {
     trustTitle: 'El asistente aconseja.<br/>Las personas deciden.',
     trust: [['Ningún software descarta a nadie.', 'Cada decisión la toma tu equipo.'], ['Se ignoran los datos personales.', 'Solo cuentan tus requisitos.'], ['Los datos son privados.', 'Consentimiento, CV privados, enlaces que caducan.']],
     ctaTitle: 'Publica tu primera oferta hoy.',
-    ctaNote: 'Gratis hasta 3 ofertas abiertas. Sin tarjeta.',
+    ctaNote: '7 días gratis. Sin tarjeta.',
     ctaBtn: 'Empieza gratis',
   },
   fr: {
@@ -181,7 +181,7 @@ const STRINGS = {
     trustTitle: 'L’assistant conseille.<br/>Les humains décident.',
     trust: [['Aucun logiciel ne rejette personne.', 'Chaque décision revient à votre équipe.'], ['Les données personnelles sont ignorées.', 'Seuls vos critères comptent.'], ['Les données restent privées.', 'Consentement, CV privés, liens qui expirent.']],
     ctaTitle: 'Publiez votre première offre aujourd’hui.',
-    ctaNote: 'Gratuit jusqu’à 3 offres ouvertes. Sans carte bancaire.',
+    ctaNote: '7 jours gratuits. Sans carte bancaire.',
     ctaBtn: 'Commencer gratuitement',
   },
 };

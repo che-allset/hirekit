@@ -5,6 +5,9 @@ import { NavLinks } from './_components/NavLinks';
 import { signOut } from '../(auth)/actions';
 import { getDict } from '@/i18n/server';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { getBilling } from '@/lib/billing';
+import { fmt } from '@/i18n';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 // AI calls (screening, job drafts) run inside server actions on these pages.
@@ -14,6 +17,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { company, user } = await requireCompany();
   const { locale, t } = getDict();
   const navLabels = t.dash.nav;
+  const billing = await getBilling(company);
+  const b = t.dash.billing;
+  const banner =
+    billing.plan === 'demo'
+      ? null
+      : !billing.active
+        ? { tone: 'bg-rose-600 text-white', text: billing.trial ? b.bannerTrialEnded : b.bannerInactive, cta: b.bannerChoose }
+        : billing.trial
+          ? { tone: 'bg-signal text-graphite', text: fmt(b.bannerTrial, { days: billing.daysLeft }), cta: b.bannerUpgrade }
+          : null;
 
   return (
     <div className="min-h-screen md:grid md:grid-cols-[240px_1fr]">
@@ -67,7 +80,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </header>
 
-      <main className="min-w-0 px-4 py-6 md:px-10 md:py-10">{children}</main>
+      <main className="min-w-0">
+        {banner && (
+          <div className={`flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 text-sm md:px-10 ${banner.tone}`}>
+            <span className="font-medium">{banner.text}</span>
+            <Link href="/dashboard/billing" className="font-bold underline underline-offset-4">
+              {banner.cta}
+            </Link>
+          </div>
+        )}
+        <div className="px-4 py-6 md:px-10 md:py-10">{children}</div>
+      </main>
     </div>
   );
 }

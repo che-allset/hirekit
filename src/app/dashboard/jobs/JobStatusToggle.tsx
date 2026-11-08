@@ -17,20 +17,30 @@ export function JobStatusToggle({
 }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const next = status === 'open' ? 'closed' : 'open';
   return (
+    <span className="inline-flex flex-col items-end gap-1">
     <button
       type="button"
       disabled={pending}
       onClick={async () => {
         setPending(true);
-        await setJobStatus(id, next);
+        setError(null);
+        const res = await setJobStatus(id, next);
         setPending(false);
-        router.refresh();
+        if (res?.error) setError(res.error);
+        else router.refresh();
       }}
       className="btn-ghost px-3 py-1.5 text-xs"
     >
       {pending ? '…' : status === 'open' ? closeLabel : reopenLabel}
     </button>
+    {error && (
+      <span role="alert" className="max-w-[260px] text-right text-xs text-rose-700">
+        {error}
+      </span>
+    )}
+    </span>
   );
 }

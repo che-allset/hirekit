@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-type Labels = { overview: string; candidates: string; ask: string; jobs: string; careers: string };
+type Labels = { overview: string; candidates: string; ask: string; jobs: string; careers: string; billing: string };
 
 export function NavLinks({ horizontal = false, labels }: { horizontal?: boolean; labels: Labels }) {
   const LINKS = [
@@ -13,6 +13,7 @@ export function NavLinks({ horizontal = false, labels }: { horizontal?: boolean;
     { href: '/dashboard/ask', label: labels.ask, icon: '✦' },
     { href: '/dashboard/jobs', label: labels.jobs, icon: '▤' },
     { href: '/dashboard/settings', label: labels.careers, icon: '⌘' },
+    { href: '/dashboard/billing', label: labels.billing, icon: '€' },
   ];
   const pathname = usePathname();
   return (
