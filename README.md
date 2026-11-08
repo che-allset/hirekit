@@ -1,5 +1,7 @@
 # HireKit: plug-and-play recruiting for any company
 
+> **Working on this repo with Claude Code (polish session)?** Your job is to **improve and fix what is already built, never to change it.** Allowed: bug fixes, typos, translations, spacing, mobile layout, accessibility, speed, SEO. Not allowed without Chee's written approval: removing or redesigning features, changing the brand, copy, prices, database, billing, integrations or AI prompts. Propose your changes first and wait for approval. Full rules in [`CLAUDE.md`](CLAUDE.md#polish-only-rules-for-the-companys-claude-code-session); log every change in [`CHANGELOG.md`](CHANGELOG.md).
+
 HireKit is a recruiting toolkit a company can set up in about five minutes. You sign up and post a role, and you get:
 
 1. **A branded careers page** at `/careers/your-company`
