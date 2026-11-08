@@ -34,7 +34,7 @@ export function AuthShell({
         </div>
       </div>
       <div className="relative hidden p-4 lg:block">
-        <Photo src={photo} alt="" className="h-full rounded-[18px]" sizes="45vw" priority />
+        <Photo src={photo} alt="" className="h-full rounded-[18px]" sizes="45vw" />
         <p className="absolute bottom-10 left-10 right-10 max-w-sm rounded-[12px] bg-signal p-5 text-lg font-bold leading-snug text-graphite">
           {caption}
         </p>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useId, useState } from 'react';
 import { cn, initials, isEmail } from '@/lib/utils';
 import { LogoMark } from '@/components/Logo';
+import { Photo } from '@/components/landing/Photo';
 import { signUp } from '../actions';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { fmt, type Dict, type Locale } from '@/i18n';
@@ -304,10 +305,8 @@ function SidePanel({ step, texts }: { step: number; texts: string[] }) {
   const p = { photo: PANEL_PHOTOS[step] ?? PANEL_PHOTOS[0]!, text: texts[step] ?? texts[0]! };
   return (
     <div className="relative hidden p-4 lg:block">
-      <div className="duotone relative h-full rounded-[18px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img key={p.photo} src={p.photo} alt="" className="absolute inset-0 h-full w-full object-cover" />
-      </div>
+      {/* Optimised and resized by next/image; lazy, so phones (panel hidden) don't download it. */}
+      <Photo key={p.photo} src={p.photo} alt="" className="h-full rounded-[18px]" sizes="45vw" />
       <p className="absolute bottom-10 left-10 right-10 max-w-sm rounded-[12px] bg-signal p-5 text-lg font-bold leading-snug text-graphite">
         {p.text}
       </p>
