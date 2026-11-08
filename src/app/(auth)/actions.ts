@@ -13,21 +13,24 @@ export async function signUp(input: {
   website?: string;
   brandColor?: string;
 }) {
+  const { getLocale } = await import('@/i18n/server');
+  const { DICTS } = await import('@/i18n');
+  const E = DICTS[getLocale()].auth.signup.errors;
   const companyName = input.companyName.trim().slice(0, 80);
   const email = input.email.trim().toLowerCase();
   const password = input.password;
 
-  if (companyName.length < 2) return { error: 'Please enter your company name.' };
-  if (!isEmail(email)) return { error: 'Please enter a valid work email.' };
-  if (password.length < 8) return { error: 'Use at least 8 characters for your password.' };
+  if (companyName.length < 2) return { error: E.company };
+  if (!isEmail(email)) return { error: E.email };
+  if (password.length < 8) return { error: E.password };
 
   // Created server-side and pre-confirmed so new companies can start immediately.
   const admin = createAdminClient();
   const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
   if (error || !data.user) {
     const msg = error?.message ?? '';
-    if (/already|registered|exists/i.test(msg)) return { error: 'An account with this email already exists. Try logging in.' };
-    return { error: 'We could not create your account. Please try again.' };
+    if (/already|registered|exists/i.test(msg)) return { error: E.exists };
+    return { error: E.failed };
   }
 
   try {
@@ -37,7 +40,7 @@ export async function signUp(input: {
     });
   } catch {
     await admin.auth.admin.deleteUser(data.user.id);
-    return { error: 'We could not set up your company. Please try again.' };
+    return { error: E.companyFailed };
   }
 
   const supabase = createClient();

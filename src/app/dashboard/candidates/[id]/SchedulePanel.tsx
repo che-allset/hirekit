@@ -122,7 +122,7 @@ export function SchedulePanel({
                 <div>
                   <p className="font-semibold text-emerald-900">{fullFmt.format(new Date(iv.starts_at))}</p>
                   <p className="text-emerald-800">
-                    {typeLabel(iv.meeting_type)} · {iv.duration_min} min
+                    {typeLabel(iv.meeting_type)} · {fmt(t.minutes, { n: iv.duration_min })}
                   </p>
                   {iv.join_url && (
                     <a href={iv.join_url} target="_blank" rel="noreferrer" className="mt-1 inline-block break-all text-emerald-700 underline">
@@ -207,7 +207,7 @@ export function SchedulePanel({
         <select id="duration" value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="input mt-2">
           {[15, 30, 45, 60, 90].map((d) => (
             <option key={d} value={d}>
-              {d} min
+              {fmt(t.minutes, { n: d })}
             </option>
           ))}
         </select>

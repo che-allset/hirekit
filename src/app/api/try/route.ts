@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { screenCandidate } from '@/lib/ai';
 import type { Job } from '@/lib/types';
-import { AI_LANGUAGE, isLocale } from '@/i18n';
+import { AI_LANGUAGE, DICTS, isLocale } from '@/i18n';
+import { getLocale } from '@/i18n/server';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -28,13 +29,15 @@ const bad = (error: string, status = 400) => NextResponse.json({ error }, { stat
 /** Public "try it" screening on the landing page. Nothing is stored. */
 export async function POST(req: Request) {
   const ip = (req.headers.get('x-forwarded-for') ?? 'local').split(',')[0]!.trim();
-  if (limited(ip)) return bad('You’ve tried a few already. Sign up free to screen real applications.', 429);
+  // Visitor's language (cookie / browser) until the form tells us the page language.
+  let E = DICTS[getLocale()].tryIt.errors;
+  if (limited(ip)) return bad(E.limit, 429);
 
   let form: FormData;
   try {
     form = await req.formData();
   } catch {
-    return bad('Something was wrong with that request. Try again.');
+    return bad(E.request);
   }
 
   const str = (k: string, max: number) => {
@@ -46,18 +49,19 @@ export async function POST(req: Request) {
   const text = str('application', 6000);
   const lang = str('lang', 5);
   const language = isLocale(lang) ? AI_LANGUAGE[lang] : 'English';
+  if (isLocale(lang)) E = DICTS[lang].tryIt.errors;
 
-  if (requirements.length < 15) return bad('Add a few must-haves so there’s something to score against.');
+  if (requirements.length < 15) return bad(E.requirements);
 
   let pdf: string | null = null;
   const file = form.get('cv');
   if (file instanceof File && file.size > 0) {
-    if (file.size > MAX_PDF) return bad('Use a PDF under 3 MB.');
+    if (file.size > MAX_PDF) return bad(E.pdfSize);
     const buf = Buffer.from(await file.arrayBuffer());
-    if (buf.subarray(0, 5).toString('latin1') !== '%PDF-') return bad('That file isn’t a PDF.');
+    if (buf.subarray(0, 5).toString('latin1') !== '%PDF-') return bad(E.notPdf);
     pdf = buf.toString('base64');
   }
-  if (!pdf && text.length < 40) return bad('Paste a CV or a few lines about the candidate, or upload a PDF.');
+  if (!pdf && text.length < 40) return bad(E.empty);
 
   const job: Job = {
     id: 'demo',
@@ -79,6 +83,6 @@ export async function POST(req: Request) {
     return NextResponse.json(result);
   } catch (err) {
     console.error('Try-it screening failed', err);
-    return bad('The assistant is busy right now. Try again in a moment.', 503);
+    return bad(E.busy, 503);
   }
 }

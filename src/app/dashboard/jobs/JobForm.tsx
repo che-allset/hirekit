@@ -130,7 +130,7 @@ export function JobForm({ job, t, locale }: { job?: Job; t: Dict['dash']; locale
               className="input resize-y leading-relaxed"
               value={values.requirements}
               onChange={(e) => set('requirements', e.target.value)}
-              placeholder={'- 5+ years with TypeScript\n- Experience running Postgres in production'}
+              placeholder={f.requirementsPh}
             />
             <p className="mt-1.5 text-xs text-ink-mute">
               {f.requirementsHint}

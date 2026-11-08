@@ -58,8 +58,8 @@ async function openRoleBlocked(company: { id: string; slug: string }, exceptJobI
 export async function saveJob(jobId: string | null, input: JobInput): Promise<Result> {
   const { supabase, company } = await requireCompany();
   const job = cleanJob(input);
-  if (job.title.length < 2) return { error: 'Give the role a title.' };
-  if (job.description.length < 20) return { error: 'Add a short description (or use “Draft with AI”).' };
+  if (job.title.length < 2) return { error: DICTS[getLocale()].dash.errors.jobTitle };
+  if (job.description.length < 20) return { error: DICTS[getLocale()].dash.errors.jobDescription };
   if (job.status === 'open') {
     const blocked = await openRoleBlocked(company, jobId);
     if (blocked) return { error: blocked };
@@ -67,10 +67,10 @@ export async function saveJob(jobId: string | null, input: JobInput): Promise<Re
 
   if (jobId) {
     const { error } = await supabase.from('jobs').update(job).eq('id', jobId).eq('company_id', company.id);
-    if (error) return { error: error.message };
+    if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   } else {
     const { error } = await supabase.from('jobs').insert({ ...job, company_id: company.id });
-    if (error) return { error: error.message };
+    if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   }
   revalidatePath('/dashboard', 'layout');
   redirect('/dashboard/jobs');
@@ -105,7 +105,7 @@ export async function generateJobDraft(input: {
   locale?: string;
 }): Promise<{ error?: string; description?: string; requirements?: string }> {
   const { company } = await requireCompany();
-  if (input.title.trim().length < 2) return { error: 'Add a job title first.' };
+  if (input.title.trim().length < 2) return { error: DICTS[getLocale()].dash.errors.draftTitle };
   try {
     const draft = await draftJobPost({
       companyName: company.name,
@@ -118,14 +118,14 @@ export async function generateJobDraft(input: {
     return draft;
   } catch (err) {
     console.error('Job draft failed', err);
-    return { error: 'The AI writer is unavailable right now. Please try again.' };
+    return { error: DICTS[getLocale()].dash.errors.aiWriter };
   }
 }
 
 // ───────────────────────── Candidates ─────────────────────────
 
 export async function setStage(applicationId: string, stage: Stage): Promise<Result> {
-  if (!STAGES.some((s) => s.key === stage)) return { error: 'Unknown stage' };
+  if (!STAGES.some((s) => s.key === stage)) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   const { supabase, company } = await requireCompany();
   const { error } = await supabase
     .from('applications')
@@ -144,7 +144,7 @@ export async function saveNotes(applicationId: string, notes: string): Promise<R
     .update({ notes: notes.slice(0, 5000) })
     .eq('id', applicationId)
     .eq('company_id', company.id);
-  if (error) return { error: error.message };
+  if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   revalidatePath(`/dashboard/candidates/${applicationId}`);
   return { ok: true };
 }
@@ -159,7 +159,7 @@ export async function rescreen(applicationId: string): Promise<Result> {
     .eq('id', applicationId)
     .eq('company_id', company.id)
     .maybeSingle();
-  if (!app || !app.jobs) return { error: 'Application not found' };
+  if (!app || !app.jobs) return { error: DICTS[getLocale()].dash.errors.notFound };
   if (app.ai_status !== 'done' && !(await canScreen(company))) {
     return { error: DICTS[getLocale()].dash.billing.screenLimit };
   }
@@ -195,7 +195,7 @@ export async function rescreen(applicationId: string): Promise<Result> {
   } catch (err) {
     console.error('Re-screen failed', err);
     await admin.from('applications').update({ ai_status: 'failed' }).eq('id', applicationId);
-    return { error: 'AI screening failed. Check the Anthropic API key and try again.' };
+    return { error: DICTS[getLocale()].dash.errors.screening };
   }
 
   revalidatePath('/dashboard', 'layout');
@@ -212,7 +212,7 @@ export async function saveSettings(input: {
 }): Promise<Result> {
   const { supabase, company } = await requireCompany();
   const name = input.name.trim().slice(0, 80);
-  if (name.length < 2) return { error: 'Company name is too short.' };
+  if (name.length < 2) return { error: DICTS[getLocale()].dash.errors.companyName };
   const brand = isHexColor(input.brand_color) ? input.brand_color : company.brand_color;
   const { error } = await supabase
     .from('companies')
@@ -223,7 +223,7 @@ export async function saveSettings(input: {
       brand_color: brand,
     })
     .eq('id', company.id);
-  if (error) return { error: error.message };
+  if (error) return { error: DICTS[getLocale()].dash.errors.saveFailed };
   revalidatePath('/', 'layout');
   return { ok: true };
 }
@@ -235,7 +235,7 @@ export async function askAboutCandidates(
   jobId: string | null,
 ): Promise<{ error?: string; result?: PipelineAnswer & { names: Record<string, string> } }> {
   const q = question.trim().slice(0, 500);
-  if (q.length < 4) return { error: 'Type a question about your candidates.' };
+  if (q.length < 4) return { error: DICTS[getLocale()].dash.errors.askEmpty };
 
   const { supabase, company } = await requireCompany();
   let query = supabase
@@ -246,8 +246,8 @@ export async function askAboutCandidates(
     .limit(60);
   if (jobId) query = query.eq('job_id', jobId);
   const { data, error } = await query;
-  if (error) return { error: error.message };
-  if (!data || data.length === 0) return { error: 'There are no candidates to ask about yet.' };
+  if (error) return { error: DICTS[getLocale()].dash.errors.assistant };
+  if (!data || data.length === 0) return { error: DICTS[getLocale()].dash.errors.askNone };
 
   const locale = getLocale();
   const stageNames = DICTS[locale].dash.stages as Record<string, string>;
@@ -272,7 +272,7 @@ export async function askAboutCandidates(
     return { result: { ...answer, names } };
   } catch (err) {
     console.error('Ask pipeline failed', err);
-    return { error: 'The assistant is unavailable right now. Try again in a moment.' };
+    return { error: DICTS[getLocale()].dash.errors.assistant };
   }
 }
 
