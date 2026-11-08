@@ -5,6 +5,11 @@ Newest first. Every session (Chee's Claude or the company's Claude Code) adds an
 ## Suggestions for Chee's session
 _(The polish session lists bigger ideas here instead of building them.)_
 
+## 2026-11-08 · Chee's Claude: emails
+- Transactional emails over Resend, built up to the key: candidate confirmation (candidate's language, company colour), recruiter alert with AI score (recruiter's dashboard language), password reset (forgot / reset pages, one-time link, demo account protected).
+- Migration `003_email_language.sql`: `companies.locale` remembers the dashboard language. Needs to be run in Supabase.
+- New env vars: `RESEND_API_KEY`, `EMAIL_FROM`.
+
 ## 2026-11-08 · Chee's Claude
 - Added polish-only rules to `CLAUDE.md`: the company's Claude Code improves what exists and never changes features, brand, copy meaning, pricing, database, billing or integrations without explicit approval.
 - Added `CLAUDE.md` (project rules and how the two Claude sessions share this repo) and this changelog.

@@ -14,8 +14,12 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { company, user } = await requireCompany();
+  const { supabase, company, user } = await requireCompany();
   const { locale, t } = getDict();
+  // Remember the recruiter's language for notification emails (ignored if migration 003 isn't run yet).
+  if (company.locale !== undefined && company.locale !== locale) {
+    await supabase.from('companies').update({ locale }).eq('id', company.id);
+  }
   const navLabels = t.dash.nav;
   const billing = await getBilling(company);
   const b = t.dash.billing;

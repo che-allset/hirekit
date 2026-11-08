@@ -191,3 +191,9 @@ create policy "interviews owner all" on public.interviews
   for all
   using (company_id in (select id from public.companies where owner_id = auth.uid()))
   with check (company_id in (select id from public.companies where owner_id = auth.uid()));
+
+-- ═════════ Migration 003 (also in supabase/migrations/003_email_language.sql) ═════════
+
+alter table public.companies
+  add column if not exists locale text not null default 'en'
+  check (locale in ('en','de','es','fr'));

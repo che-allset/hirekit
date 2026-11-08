@@ -39,6 +39,9 @@ export function LoginForm({ t }: { t: Dict['auth']['login'] }) {
         <div>
           <label className="label" htmlFor="password">{t.password}</label>
           <input id="password" name="password" type="password" required className="input" autoComplete="current-password" />
+          <p className="mt-2 text-right text-sm">
+            <Link href="/forgot-password" className="text-ink-mute underline hover:text-ink">{t.forgot}</Link>
+          </p>
         </div>
         {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">{error}</p>}
         <button type="submit" disabled={pending} className="btn-primary w-full py-3">

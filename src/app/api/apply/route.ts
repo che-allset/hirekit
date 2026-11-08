@@ -5,6 +5,8 @@ import { isEmail, safeUrl } from '@/lib/utils';
 import type { Job } from '@/lib/types';
 import { DICTS, fmt, isLocale } from '@/i18n';
 import { canScreen, getBilling } from '@/lib/billing';
+import { sendApplicationEmails } from '@/lib/notifications';
+import type { Company } from '@/lib/types';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // AI screening of a PDF can take a few seconds
@@ -33,7 +35,8 @@ export async function POST(req: Request) {
   }
 
   const langRaw = text(form, 'lang', 5);
-  const E = DICTS[isLocale(langRaw) ? langRaw : 'en'].apply.errors;
+  const lang = isLocale(langRaw) ? langRaw : 'en';
+  const E = DICTS[lang].apply.errors;
 
   // Honeypot: real people never fill this hidden field.
   if (text(form, 'company_website')) return NextResponse.json({ ok: true });
@@ -67,7 +70,8 @@ export async function POST(req: Request) {
   const job = jobRow as Job;
 
   // Companies whose trial or subscription has ended don't accept applications.
-  const { data: companyRow } = await admin.from('companies').select('id, slug').eq('id', job.company_id).maybeSingle();
+  const { data: companyData } = await admin.from('companies').select('*').eq('id', job.company_id).maybeSingle();
+  const companyRow = companyData as Company | null;
   if (!companyRow || !(await getBilling(companyRow)).active) return bad(E.closed, 404);
 
   // Basic duplicate protection: one application per email per job.
@@ -113,31 +117,44 @@ export async function POST(req: Request) {
 
   // AI screening. If it fails (or the monthly screening allowance is used
   // up), the application is still saved and can be screened later.
-  if (!(await canScreen(companyRow))) return NextResponse.json({ ok: true });
-  try {
-    const result = await screenCandidate(job, {
-      fullName,
-      linkedinUrl,
-      portfolioUrl,
-      coverLetter,
-      cvPdfBase64: cvBuffer ? cvBuffer.toString('base64') : null,
-    });
-    await admin
-      .from('applications')
-      .update({
-        ai_status: 'done',
-        ai_score: result.score,
-        ai_verdict: result.verdict,
-        ai_summary: result.summary,
-        ai_strengths: result.strengths,
-        ai_gaps: result.gaps,
-        ai_questions: result.questions,
-      })
-      .eq('id', app.id);
-  } catch (err) {
-    console.error('AI screening failed', err);
-    await admin.from('applications').update({ ai_status: 'failed' }).eq('id', app.id);
+  let screening: { score: number; verdict: 'strong' | 'possible' | 'weak' } | null = null;
+  if (await canScreen(companyRow)) {
+    try {
+      const result = await screenCandidate(job, {
+        fullName,
+        linkedinUrl,
+        portfolioUrl,
+        coverLetter,
+        cvPdfBase64: cvBuffer ? cvBuffer.toString('base64') : null,
+      });
+      await admin
+        .from('applications')
+        .update({
+          ai_status: 'done',
+          ai_score: result.score,
+          ai_verdict: result.verdict,
+          ai_summary: result.summary,
+          ai_strengths: result.strengths,
+          ai_gaps: result.gaps,
+          ai_questions: result.questions,
+        })
+        .eq('id', app.id);
+      screening = { score: result.score, verdict: result.verdict };
+    } catch (err) {
+      console.error('AI screening failed', err);
+      await admin.from('applications').update({ ai_status: 'failed' }).eq('id', app.id);
+    }
   }
+
+  // Confirmation to the candidate + alert to the recruiter (skipped without RESEND_API_KEY).
+  await sendApplicationEmails({
+    company: companyRow,
+    jobTitle: job.title,
+    application: { id: app.id, full_name: fullName, email },
+    candidateLang: lang,
+    screening,
+    origin: (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/$/, ''),
+  });
 
   return NextResponse.json({ ok: true });
 }

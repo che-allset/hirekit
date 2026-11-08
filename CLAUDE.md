@@ -57,8 +57,9 @@ Next.js 14 (App Router, server components, server actions) · TypeScript · Tail
 - `src/app/page.tsx`: landing page · `src/app/careers`, `src/app/embed`, `public/widget.js`: public careers page and widget
 - `src/app/api/apply`: public application endpoint (validation, CV upload, screening)
 - `src/app/dashboard/*`: recruiter app (jobs, candidates, ask, settings + integrations, billing)
+- `src/lib/email.ts` + `src/lib/notifications.ts`: emails (Resend) · `src/app/auth/confirm`: email link landing
 - `src/lib/ai.ts`: all Claude calls · `src/lib/integrations.ts`: Google/Microsoft/Zoom · `src/lib/stripe.ts` + `src/app/api/stripe/webhook`: payments
 
 ## Waiting on the company
 
-Env vars for Stripe (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`) and the Google / Microsoft / Zoom OAuth apps. They must be created on the company's accounts, not Chee's. Setup steps are in the README.
+Env vars for Stripe (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`), Resend (`RESEND_API_KEY`, `EMAIL_FROM`) and the Google / Microsoft / Zoom OAuth apps. They must be created on the company's accounts, not Chee's. Setup steps are in the README.

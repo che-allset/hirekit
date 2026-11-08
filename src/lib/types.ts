@@ -22,6 +22,8 @@ export interface Company {
   tagline: string | null;
   website: string | null;
   brand_color: string;
+  /** Dashboard language, used for the recruiter's notification emails (migration 003). */
+  locale?: string;
   created_at: string;
 }
 

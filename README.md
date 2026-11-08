@@ -211,3 +211,12 @@ Limits are enforced: publishing a role beyond the plan is blocked with a clear m
 ### Database
 
 Run `supabase/migrations/002_billing_scheduling.sql` once in the Supabase SQL editor (adds `billing`, `integrations`, `interviews`).
+
+### Emails (Resend), built up to the key
+
+- **Candidate confirmation** in the language they applied in ("We received your application"), in the company's brand colour.
+- **Recruiter alert** for every new application, with the AI score and a button to the candidate, in the recruiter's dashboard language (not sent for the shared demo workspace).
+- **Password reset**: "Forgot your password?" on the login page → branded email in 4 languages → one-time link → choose a new password. Same answer whether or not the email has an account; the demo account's password can't be reset.
+- Interview invites keep going out through Google Calendar / Outlook (or the ready-made email when no calendar is connected).
+
+To go live: add `RESEND_API_KEY` and `EMAIL_FROM` in Vercel (the domain in `EMAIL_FROM` must be verified in Resend), and run `supabase/migrations/003_email_language.sql` once. Without the key nothing is sent and nothing breaks.
