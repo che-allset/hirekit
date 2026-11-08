@@ -5,11 +5,11 @@ Newest first. Every session (Chee's Claude or the company's Claude Code) adds an
 ## Suggestions for Chee's session
 _(The polish session lists bigger ideas here instead of building them.)_
 
-- **Video slogans in Spanish and German (needs a re-render; I didn't touch the videos or `design/video/strings.js`).**
-  - Spanish: "Contratar, enchufado." (`strings.js:96`). In Spain *enchufado* means someone who got a job through connections, the opposite of fair hiring. Suggested: "Contratar, conectado." or "La contratación, lista para usar."
-  - German: "Recruiting, eingesteckt." (`strings.js:50`) can read as "pocketed" or "took a hit", and "In Ihre Website einstecken." (`strings.js:69`) is a literal "plug in". The app already says *einbinden*. Suggested: "Recruiting, eingebunden." and "In Ihre Website einbinden."
-  - Smaller wording mismatches with the app, worth fixing in the same render: Spanish "Escríbela por mí" (`strings.js:110`) vs the app's "Escríbelo por mí"; French "Rédiger pour moi" (`strings.js:156`) vs the app's "Rédigez pour moi"; the French video says "critères essentiels" where the app says "critères indispensables"; the "Hired" stamp (`strings.js:134`) is "¡Contratada!" in Spanish but has no exclamation marks in the other languages.
-  - The intro poster images (`public/video/intro-poster-*.jpg`) show the slogan too, so re-render them with the videos. Link previews use the tour poster for now, so they don't show the slogan.
+_(None open.)_
+
+## 2026-11-08 · Chee's Claude: video slogans
+- Fixed the suggestion from the polish session: Spanish slogan "Contratar, enchufado." → "Contratar, conectado." (*enchufado* means hired through connections); German "Recruiting, eingesteckt." → "Recruiting, eingebunden." and "In Ihre Website einstecken." → "einbinden."; matched the app's wording ("Escríbelo por mí", "Rédigez pour moi", "critères indispensables") and dropped the exclamation marks on the Spanish "Hired" stamp.
+- Re-rendered the intro and tour videos and the intro posters for ES, DE and FR. English unchanged.
 
 ## 2026-11-08 · Company Claude Code (polish)
 - **Faster pages: the language picker no longer downloads all translations.** It used to read the four language names from the full dictionaries, so every page with the picker sent all four complete translation files to the browser. The names now come from a small list in `src/i18n/names.ts`; keep it in sync with `languageName` if a language is ever added. About 40 KB less JavaScript on each of those pages (from the build output): landing 146 → 106 KB, login 213 → 173 KB, sign-up 146 → 106 KB, careers page 138 → 97 KB, candidate page 141 → 101 KB. Why: quicker loading, especially on phones.
