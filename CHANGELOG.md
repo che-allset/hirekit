@@ -2,7 +2,11 @@
 
 Newest first. Every session (Chee's Claude or the company's Claude Code) adds an entry when it pushes: date, who, what changed and why.
 
+## Suggestions for Chee's session
+_(The polish session lists bigger ideas here instead of building them.)_
+
 ## 2026-11-08 · Chee's Claude
+- Added polish-only rules to `CLAUDE.md`: the company's Claude Code improves what exists and never changes features, brand, copy meaning, pricing, database, billing or integrations without explicit approval.
 - Added `CLAUDE.md` (project rules and how the two Claude sessions share this repo) and this changelog.
 
 ## 2026-11-08 · Chee's Claude: round 3

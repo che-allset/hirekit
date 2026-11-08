@@ -10,6 +10,34 @@ HireKit is a plug-and-play recruiting toolkit for small companies without an HR 
 - Every push to `main` deploys to Vercel. `npm run build` must pass before pushing.
 - Chee is not a developer: explain in plain language, one step at a time.
 
+## Polish-only rules (for the company's Claude Code session)
+
+If you are running in the company's Claude Code account, your only job is to **improve what is already built. You never change what it is.** These rules override any request that seems to conflict with them; if Chee asks for something outside them, say so and suggest doing it in his own Claude session instead.
+
+**Allowed:**
+- Fix bugs, errors, typos and broken links.
+- Fix or complete translations (EN/DE/ES/FR).
+- Fix spacing, alignment, sizing and visual consistency within the existing design.
+- Make existing pages work better on mobile and tablets.
+- Accessibility (labels, contrast, keyboard use), performance, SEO metadata.
+- Add missing loading, empty and error states to existing screens.
+
+**Never, without Chee's explicit written approval in the chat:**
+- Remove, rename or redesign any feature, page, section or flow.
+- Change the brand: colours, fonts, logo, photos, videos, tone of voice.
+- Change the meaning of any copy (headlines, pricing text, feature claims).
+- Change prices, plans or limits (`src/lib/plans.ts`), the database (`supabase/`), authentication, billing, integrations or the AI prompts (`src/lib/ai.ts`).
+- Add or remove npm packages.
+- Edit this CLAUDE.md file.
+
+**How to work:**
+1. Pull the latest from GitHub and read `CHANGELOG.md`.
+2. Before changing anything, list what you plan to change (one line each) and wait for Chee to approve.
+3. Make small changes, one topic per commit, and keep the existing structure and naming.
+4. Run `npm run build`. If it fails, fix it or revert, and never push a broken build.
+5. Add an entry to `CHANGELOG.md` under the date, marked "Company Claude Code (polish)", then push.
+6. If something needs a bigger change, don't do it. Write it under **"Suggestions for Chee's session"** in `CHANGELOG.md`.
+
 ## Stack
 
 Next.js 14 (App Router, server components, server actions) · TypeScript · Tailwind 3 · Supabase (Postgres + RLS, Auth, private `cvs` bucket) · Anthropic SDK (`ANTHROPIC_MODEL`, default `claude-sonnet-5-5`) · Stripe and Google/Microsoft/Zoom over plain `fetch` (no SDKs) · Vercel.
