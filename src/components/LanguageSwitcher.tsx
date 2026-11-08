@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { DICTS, LOCALES, LOCALE_COOKIE, type Locale } from '@/i18n';
+import { LOCALES, LOCALE_COOKIE, type Locale } from '@/i18n';
+import { LANGUAGE_NAMES } from '@/i18n/names';
 import { cn } from '@/lib/utils';
 
 export function LanguageSwitcher({
@@ -36,7 +37,7 @@ export function LanguageSwitcher({
       >
         {LOCALES.map((l: Locale) => (
           <option key={l} value={l} className="text-graphite">
-            {DICTS[l].languageName}
+            {LANGUAGE_NAMES[l]}
           </option>
         ))}
       </select>
