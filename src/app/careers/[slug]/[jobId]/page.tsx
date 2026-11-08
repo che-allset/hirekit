@@ -16,9 +16,17 @@ export const dynamic = 'force-dynamic';
 type Props = { params: { slug: string; jobId: string } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { t } = getDict();
   const data = await getPublicJob(params.slug, params.jobId);
-  if (!data) return { title: 'Job not found' };
-  return { title: `${data.job.title} · ${data.company.name}` };
+  if (!data) return { title: { absolute: t.meta.jobNotFound } };
+  const title = `${data.job.title} · ${data.company.name}`;
+  const description = data.company.tagline ?? fmt(t.meta.careersDesc, { company: data.company.name });
+  return {
+    title: { absolute: title },
+    description,
+    openGraph: { type: 'website', title, description },
+    twitter: { card: 'summary', title, description },
+  };
 }
 
 export default async function PublicJobPage({ params }: Props) {

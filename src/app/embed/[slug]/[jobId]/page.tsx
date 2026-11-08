@@ -15,7 +15,8 @@ export default async function EmbedJobPage({ params, searchParams }: { params: {
   const job = await translateJob(data.job, locale);
   const q = searchParams.lang ? `?lang=${locale}` : '';
   return (
-    <div className="p-1">
+    // lang: the widget can be set to a language (data-lang) that differs from the page's <html lang>.
+    <div className="p-1" lang={locale}>
       <JobDetail company={data.company} job={job} backHref={`/embed/${data.company.slug}${q}`} t={t} locale={locale} />
       <PoweredBy newTab label={t.careers.poweredBy} />
       <EmbedResizer />

@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { getDict } from '@/i18n/server';
 import { AuthShell } from '../AuthShell';
 import { ForgotForm } from './ForgotForm';
+
+export function generateMetadata(): Metadata {
+  const { t } = getDict();
+  return { title: t.auth.forgot.title };
+}
 
 export default function ForgotPasswordPage() {
   const { locale, t } = getDict();

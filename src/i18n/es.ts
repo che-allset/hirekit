@@ -2,6 +2,16 @@ import type en from './en';
 
 const es: typeof en = {
   languageName: 'Español',
+  meta: {
+    title: 'HireKit: contrata como si tuvieras un equipo de RR. HH.',
+    description: 'Una página de empleo, un widget de ofertas para la web que ya tienes y un asistente que lee cada candidatura según tus requisitos.',
+    signup: 'Regístrate',
+    dashboard: 'Panel',
+    careers: 'Empleo',
+    careersTitle: 'Empleo en {company}',
+    careersDesc: 'Ofertas abiertas en {company}',
+    jobNotFound: 'Oferta no encontrada',
+  },
   loading: 'Cargando…',
   notFound: {
     title: 'Página no encontrada',

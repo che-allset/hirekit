@@ -2,6 +2,16 @@ import type en from './en';
 
 const de: typeof en = {
   languageName: 'Deutsch',
+  meta: {
+    title: 'HireKit: Einstellen, als hätten Sie eine Personalabteilung',
+    description: 'Eine Karriereseite, ein Stellen-Widget für die Website, die Sie schon haben, und ein Assistent, der jede Bewerbung mit Ihren Anforderungen abgleicht.',
+    signup: 'Registrieren',
+    dashboard: 'Dashboard',
+    careers: 'Karriere',
+    careersTitle: 'Karriere bei {company}',
+    careersDesc: 'Offene Stellen bei {company}',
+    jobNotFound: 'Stelle nicht gefunden',
+  },
   loading: 'Wird geladen …',
   notFound: {
     title: 'Seite nicht gefunden',

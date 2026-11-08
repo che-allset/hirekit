@@ -8,8 +8,13 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { getBilling } from '@/lib/billing';
 import { fmt } from '@/i18n';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export function generateMetadata(): Metadata {
+  return { title: getDict().t.meta.dashboard, robots: { index: false, follow: false } };
+}
 // AI calls (screening, job drafts) run inside server actions on these pages.
 export const maxDuration = 60;
 

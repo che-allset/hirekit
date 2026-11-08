@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { getDict } from '@/i18n/server';
 import { AuthShell } from '../AuthShell';
 import { LoginForm } from './LoginForm';
+
+export function generateMetadata(): Metadata {
+  const { t } = getDict();
+  return { title: t.nav.login };
+}
 
 export default function LoginPage() {
   const { locale, t } = getDict();

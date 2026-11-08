@@ -3,6 +3,16 @@
 
 const en = {
   languageName: 'English',
+  meta: {
+    title: 'HireKit: hire like you have an HR team',
+    description: 'A careers page, a jobs widget for the website you already have, and an assistant that reads every application against your requirements.',
+    signup: 'Sign up',
+    dashboard: 'Dashboard',
+    careers: 'Careers',
+    careersTitle: 'Careers at {company}',
+    careersDesc: 'Open roles at {company}',
+    jobNotFound: 'Job not found',
+  },
   loading: 'Loading…',
   notFound: {
     title: 'Page not found',

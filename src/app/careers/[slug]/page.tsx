@@ -16,11 +16,17 @@ export const dynamic = 'force-dynamic';
 type Props = { params: { slug: string } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { t } = getDict();
   const data = await getCareers(params.slug);
-  if (!data) return { title: 'Careers' };
+  if (!data) return { title: { absolute: t.meta.careers } };
+  // The company's own page: no "· HireKit" suffix, and a preview that names the company.
+  const title = fmt(t.meta.careersTitle, { company: data.company.name });
+  const description = data.company.tagline ?? fmt(t.meta.careersDesc, { company: data.company.name });
   return {
-    title: `Careers at ${data.company.name}`,
-    description: data.company.tagline ?? `Open roles at ${data.company.name}`,
+    title: { absolute: title },
+    description,
+    openGraph: { type: 'website', title, description },
+    twitter: { card: 'summary', title, description },
   };
 }
 

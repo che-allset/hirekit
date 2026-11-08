@@ -2,6 +2,16 @@ import type en from './en';
 
 const fr: typeof en = {
   languageName: 'Français',
+  meta: {
+    title: 'HireKit : recrutez comme si vous aviez un service RH',
+    description: 'Une page carrières, un widget d’offres pour le site que vous avez déjà et un assistant qui lit chaque candidature au regard de vos critères.',
+    signup: 'Inscription',
+    dashboard: 'Tableau de bord',
+    careers: 'Carrières',
+    careersTitle: 'Carrières chez {company}',
+    careersDesc: 'Offres ouvertes chez {company}',
+    jobNotFound: 'Offre introuvable',
+  },
   loading: 'Chargement…',
   notFound: {
     title: 'Page introuvable',

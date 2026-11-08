@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { getDict } from '@/i18n/server';
@@ -5,6 +6,11 @@ import { AuthShell } from '../AuthShell';
 import { ResetForm } from './ResetForm';
 
 export const dynamic = 'force-dynamic';
+
+export function generateMetadata(): Metadata {
+  const { t } = getDict();
+  return { title: t.auth.reset.title };
+}
 
 export default async function ResetPasswordPage({ searchParams }: { searchParams: { expired?: string } }) {
   const { locale, t } = getDict();
